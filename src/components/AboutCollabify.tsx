@@ -1,5 +1,5 @@
 import React from 'react';
-import { Network, Handshake, Users, rocket } from 'lucide-react';
+import { Network, Handshake, Users} from 'lucide-react';
 import { Rocket } from 'lucide-react';
 
 const AboutCollabify = () => {
