@@ -61,7 +61,7 @@ const TechBackground = () => {
                 if (!ctx) return;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(34, 211, 238, 0.5)'; // Cyan-400
+                ctx.fillStyle = 'rgba(37, 99, 235, 0.5)'; // Blue-600
                 ctx.fill();
             }
         }
@@ -102,7 +102,7 @@ const TechBackground = () => {
 
                     if (distance < 100) {
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(34, 211, 238, ${0.1 - distance / 1000})`;
+                        ctx.strokeStyle = `rgba(37, 99, 235, ${0.1 - distance / 1000})`; // Blue-600 lines
                         ctx.lineWidth = 1;
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
@@ -117,7 +117,7 @@ const TechBackground = () => {
 
                 if (distance < 150) {
                     ctx.beginPath();
-                    ctx.strokeStyle = `rgba(34, 211, 238, ${0.2 - distance / 1000})`;
+                    ctx.strokeStyle = `rgba(37, 99, 235, ${0.2 - distance / 1000})`; // Blue-600 interaction
                     ctx.lineWidth = 1;
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(mouse.x, mouse.y);
