@@ -1,24 +1,25 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { 
-  Code2, 
-  Brain, 
-  Cpu, 
-  Globe, 
-  Users, 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Trophy, 
-  ChevronRight, 
-  Github, 
-  Linkedin, 
-  Twitter, 
-  Mail, 
-  Phone, 
-  Download, 
-  CheckCircle2, 
+import TechBackground from '@/components/TechBackground';
+import {
+  Code2,
+  Brain,
+  Cpu,
+  Globe,
+  Users,
+  Calendar,
+  Clock,
+  MapPin,
+  Trophy,
+  ChevronRight,
+  Github,
+  Linkedin,
+  Twitter,
+  Mail,
+  Phone,
+  Download,
+  CheckCircle2,
   AlertCircle,
   Menu,
   X,
@@ -126,6 +127,7 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [teamSize, setTeamSize] = useState('Individual');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -207,7 +209,7 @@ export default function Home() {
                   {item.label}
                 </button>
               ))}
-              <button 
+              <button
                 onClick={() => scrollToSection('register')}
                 className="px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full text-sm font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/25 transition-all transform hover:scale-105"
               >
@@ -216,7 +218,7 @@ export default function Home() {
             </div>
 
             {/* Mobile Menu Button */}
-            <button 
+            <button
               className="md:hidden p-2 text-slate-300 hover:text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
@@ -238,7 +240,7 @@ export default function Home() {
                   {item.label}
                 </button>
               ))}
-              <button 
+              <button
                 onClick={() => scrollToSection('register')}
                 className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg text-sm font-semibold text-white"
               >
@@ -255,6 +257,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-slate-950">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+          <TechBackground />
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20" />
         </div>
 
@@ -289,14 +292,14 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button 
+            <button
               onClick={() => scrollToSection('register')}
               className="group px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full text-lg font-semibold text-white hover:shadow-2xl hover:shadow-cyan-500/25 transition-all transform hover:scale-105 flex items-center gap-2"
             >
               Register Now
               <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <button 
+            <button
               onClick={() => scrollToSection('domains')}
               className="px-8 py-4 bg-slate-800/50 border border-slate-700 rounded-full text-lg font-semibold text-slate-300 hover:bg-slate-800 hover:border-slate-600 transition-all"
             >
@@ -309,12 +312,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-slate-600 rounded-full flex justify-center pt-2">
-            <div className="w-1.5 h-3 bg-cyan-400 rounded-full" />
-          </div>
-        </div>
+
       </section>
 
       {/* About Section */}
@@ -398,7 +396,7 @@ export default function Home() {
       {/* Domains Section */}
       <section id="domains" className="py-24 bg-slate-950 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
@@ -411,20 +409,20 @@ export default function Home() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {domains.map((domain) => (
-              <div 
+              <div
                 key={domain.id}
                 className="group relative bg-slate-900/50 border border-slate-800 rounded-2xl p-8 hover:border-slate-600 transition-all duration-300 hover:transform hover:-translate-y-1 overflow-hidden"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${domain.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-                
+
                 <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${domain.color} bg-opacity-10 text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   {domain.icon}
                 </div>
-                
+
                 <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-cyan-400 group-hover:to-blue-400 transition-all">
                   {domain.title}
                 </h3>
-                
+
                 <p className="text-slate-400 leading-relaxed mb-6">
                   {domain.description}
                 </p>
@@ -462,13 +460,13 @@ export default function Home() {
                       <p className="text-slate-400">{phase.description}</p>
                     </div>
                   </div>
-                  
+
                   <div className="relative z-10 flex-shrink-0">
                     <div className="w-12 h-12 rounded-full bg-slate-900 border-2 border-cyan-500 flex items-center justify-center text-cyan-400 font-bold shadow-lg shadow-cyan-500/20">
                       {phase.number}
                     </div>
                   </div>
-                  
+
                   <div className="flex-1" />
                 </div>
               ))}
@@ -480,7 +478,7 @@ export default function Home() {
       {/* Prizes Section */}
       <section id="prizes" className="py-24 bg-slate-950 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-96 bg-gradient-to-b from-cyan-500/5 to-transparent pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
@@ -567,32 +565,32 @@ export default function Home() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-300">Full Name</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
                     placeholder="Enter your full name"
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-300">Email Address</label>
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
                     placeholder="you@example.com"
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-300">Phone Number</label>
-                  <input 
-                    type="tel" 
+                  <input
+                    type="tel"
                     className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
                     placeholder="+91 98765 43210"
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-300">College Name</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
                     placeholder="Your institution"
                   />
@@ -618,31 +616,83 @@ export default function Home() {
 
               <div className="border-t border-slate-800 pt-8">
                 <h3 className="text-lg font-semibold text-white mb-4">Team Details (Optional)</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">Team Name</label>
-                    <input 
-                      type="text" 
-                      className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
-                      placeholder="Your team name"
-                    />
+                <div className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-300">Team Name</label>
+                      <input
+                        type="text"
+                        className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                        placeholder="Your team name"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-300">Team Size</label>
+                      <select
+                        value={teamSize}
+                        onChange={(e) => setTeamSize(e.target.value)}
+                        className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                      >
+                        <option value="Individual">Individual</option>
+                        <option value="2 Members">2 Members</option>
+                        <option value="3 Members">3 Members</option>
+                        <option value="4 Members">4 Members</option>
+                      </select>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-300">Team Size</label>
-                    <select className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all">
-                      <option>Individual</option>
-                      <option>2 Members</option>
-                      <option>3 Members</option>
-                      <option>4 Members</option>
-                    </select>
-                  </div>
+
+                  {teamSize !== 'Individual' && (
+                    <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                      {Array.from({ length: parseInt(teamSize) - 1 }).map((_, index) => (
+                        <div key={index} className="bg-slate-900/30 border border-slate-800 rounded-xl p-6 space-y-4">
+                          <h4 className="text-md font-medium text-cyan-400 flex items-center gap-2">
+                            <Users className="w-4 h-4" />
+                            Team Member {index + 2}
+                          </h4>
+                          <div className="grid md:grid-cols-3 gap-4">
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-slate-300">Full Name</label>
+                              <input
+                                type="text"
+                                className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                                placeholder="Member name"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-slate-300">Email Address</label>
+                              <input
+                                type="email"
+                                className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                                placeholder="Member email"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-slate-300">Phone Number</label>
+                              <input
+                                type="tel"
+                                className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all"
+                                placeholder="Member phone"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
               <div className="bg-slate-950/50 rounded-2xl p-6 border border-slate-800">
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-slate-400">Registration Fee</span>
-                  <span className="text-2xl font-bold text-white">₹199</span>
+                  <div className="text-right">
+                    <span className="text-2xl font-bold text-white">
+                      ₹{teamSize === 'Individual' ? 199 : 199 * parseInt(teamSize)}
+                    </span>
+                    <p className="text-xs text-slate-500">
+                      (₹199 × {teamSize === 'Individual' ? 1 : teamSize})
+                    </p>
+                  </div>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 text-sm text-slate-400">
@@ -656,7 +706,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <button 
+              <button
                 type="submit"
                 className="w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl text-lg font-bold text-white hover:shadow-lg hover:shadow-cyan-500/25 transition-all transform hover:scale-[1.02]"
               >
@@ -693,43 +743,52 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-24 bg-slate-950 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16">
+      <section id="contact" className="py-24 bg-slate-950 relative overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                Get in <span className="text-cyan-400">Touch</span>
+                Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Touch</span>
               </h2>
-              <p className="text-slate-400 text-lg mb-8">
+              <p className="text-slate-400 text-lg mb-8 leading-relaxed max-w-lg">
                 Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
               </p>
 
               <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-slate-900 rounded-xl text-cyan-400">
+                <div className="group flex items-center gap-6 p-4 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900/80 transition-all duration-300">
+                  <div className="p-4 bg-slate-900 rounded-xl text-cyan-400 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-cyan-500/20 transition-all">
                     <Mail className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="text-sm text-slate-500">Email</div>
-                    <div className="text-white font-medium">contact@codeandchill.tech</div>
+                    <div className="text-sm text-slate-500 mb-1">Email Us</div>
+                    <a href="mailto:contact@codeandchill.tech" className="text-white font-medium text-lg hover:text-cyan-400 transition-colors">
+                      contact@codeandchill.tech
+                    </a>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-slate-900 rounded-xl text-cyan-400">
+
+                <div className="group flex items-center gap-6 p-4 rounded-2xl bg-slate-900/50 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-900/80 transition-all duration-300">
+                  <div className="p-4 bg-slate-900 rounded-xl text-cyan-400 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-cyan-500/20 transition-all">
                     <Phone className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="text-sm text-slate-500">Phone</div>
-                    <div className="text-white font-medium">+91 98765 43210</div>
+                    <div className="text-sm text-slate-500 mb-1">Call Us</div>
+                    <a href="tel:+919876543210" className="text-white font-medium text-lg hover:text-cyan-400 transition-colors">
+                      +91 98765 43210
+                    </a>
                   </div>
                 </div>
               </div>
 
               <div className="mt-12">
-                <div className="text-sm text-slate-500 mb-4">Follow Us</div>
+                <div className="text-sm text-slate-500 mb-4 font-medium uppercase tracking-wider">Follow Us</div>
                 <div className="flex gap-4">
                   {[Twitter, Linkedin, Github].map((Icon, index) => (
-                    <button key={index} className="p-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-400 hover:text-cyan-400 hover:border-cyan-500/50 transition-all">
+                    <button key={index} className="p-4 bg-slate-900 border border-slate-800 rounded-xl text-slate-400 hover:text-white hover:bg-cyan-500 hover:border-cyan-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-cyan-500/25">
                       <Icon className="w-5 h-5" />
                     </button>
                   ))}
@@ -737,36 +796,21 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8">
-              <form className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">Name</label>
-                  <input 
-                    type="text" 
-                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 transition-all"
-                    placeholder="Your name"
-                  />
+            {/* Contact Visual/Form (Placeholder for now, keeping grid balance) */}
+            <div className="hidden lg:flex items-center justify-center relative">
+              <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 rounded-full blur-[100px] animate-pulse" />
+              <div className="relative p-8 bg-slate-900/30 border border-slate-800/50 backdrop-blur-xl rounded-3xl max-w-sm w-full text-center space-y-6">
+                <div className="w-20 h-20 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-2xl mx-auto flex items-center justify-center shadow-xl shadow-cyan-500/20 rotate-3">
+                  <Mail className="w-10 h-10 text-white" />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">Email</label>
-                  <input 
-                    type="email" 
-                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 transition-all"
-                    placeholder="your@email.com"
-                  />
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-2">Message Us</h3>
+                  <p className="text-slate-400 text-sm">We are here to help you with any queries.</p>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-300">Message</label>
-                  <textarea 
-                    rows={4}
-                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500/50 transition-all resize-none"
-                    placeholder="How can we help?"
-                  />
-                </div>
-                <button className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl font-semibold text-white hover:shadow-lg hover:shadow-cyan-500/25 transition-all">
-                  Send Message
+                <button className="w-full py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-white font-medium transition-colors">
+                  Start Chat
                 </button>
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -806,7 +850,7 @@ export default function Home() {
           </div>
           <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-slate-500 text-sm">© 2024 Code & Chill. All rights reserved.</p>
-            <p className="text-slate-600 text-sm">Organized with ❤️ for Bharat</p>
+            <p className="text-slate-600 text-sm">Developed by <a href="https://dinestx.com" className="hover:text-cyan-400 transition-colors">Dinex Services</a></p>
           </div>
         </div>
       </footer>
