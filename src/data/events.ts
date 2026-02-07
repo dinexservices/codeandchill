@@ -2,6 +2,7 @@
 export interface Event {
     id: string;
     title: string;
+    shortDescription?: string; // Optional for now
     description: string;
     date: string;
     time: string;
@@ -15,11 +16,12 @@ export const events: Event[] = [
     {
         id: 'code-and-chill',
         title: 'Code & Chill 2.0',
+        shortDescription: 'The ultimate 24-hour AI innovation hackathon.',
         description: 'The ultimate 24-hour AI innovation hackathon. Build solutions for real-world Bharat challenges.',
         date: 'To Be Announced',
         time: '24 Hours',
         location: 'Offline',
-        image: 'from-cyan-500 to-blue-600',
+        image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop', // Coding background
         color: 'cyan',
         link: '/events/code-and-chill'
     },

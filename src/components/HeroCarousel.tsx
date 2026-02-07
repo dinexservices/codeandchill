@@ -1,107 +1,159 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Clock, Calendar, MapPin } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowRight, ChevronLeft, ChevronRight, Calendar, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { events } from '@/data/events';
 
 const HeroCarousel = () => {
+    // Filter to show only "Code & Chill" if user requested, or show all. 
+    // Assuming we want to show all enabled events or just Code & Chill based on previous context.
+    // For now, let's use the events from data but style for full screen.
+    const activeEvents = events.filter(event => event.id === 'code-and-chill');
+
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % events.length);
-        }, 5000); // Auto-advance every 5 seconds
-
-        return () => clearInterval(interval);
-    }, []);
-
     const nextSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % events.length);
+        setCurrentIndex((prev) => (prev + 1) % activeEvents.length);
     };
 
     const prevSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + events.length) % events.length);
+        setCurrentIndex((prev) => (prev - 1 + activeEvents.length) % activeEvents.length);
     };
 
+    useEffect(() => {
+        if (activeEvents.length <= 1) return;
+        const timer = setInterval(nextSlide, 5000);
+        return () => clearInterval(timer);
+    }, [activeEvents.length]);
+
+    if (activeEvents.length === 0) return null;
+
+    const event = activeEvents[currentIndex];
+
     return (
-        <div className="relative w-full max-w-5xl mx-auto mt-12 bg-white/80 backdrop-blur-md rounded-3xl shadow-2xl border border-white/50 overflow-hidden">
-            <div
-                className="flex transition-transform duration-700 ease-in-out"
-                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-            >
-                {events.map((event) => (
-                    <div key={event.id} className="w-full flex-shrink-0 grid md:grid-cols-2">
-                        <div className={`h-64 md:h-96 bg-gradient-to-br ${event.image} p-8 md:p-12 flex flex-col justify-end text-white relative overflow-hidden`}>
-                            <div className="absolute top-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-                            <div className="relative z-10">
-                                <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-semibold mb-3 border border-white/20">
-                                    Featured Event
-                                </span>
-                                <h2 className="text-3xl md:text-5xl font-bold mb-2">{event.title}</h2>
-                            </div>
-                        </div>
-                        <div className="p-8 md:p-12 flex flex-col justify-center">
-                            <h3 className="text-2xl font-bold text-slate-900 mb-4">{event.title}</h3>
-                            <p className="text-slate-600 mb-8 text-lg leading-relaxed">{event.description}</p>
-
-                            <div className="grid grid-cols-2 gap-4 mb-8">
-                                <div className="flex items-center gap-3">
-                                    <div className={`p-2 rounded-lg bg-${event.color}-50 text-${event.color}-600`}>
-                                        <Calendar className="w-5 h-5" />
-                                    </div>
-                                    <div className="text-sm">
-                                        <div className="text-slate-500">Date</div>
-                                        <div className="font-semibold text-slate-900">{event.date}</div>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className={`p-2 rounded-lg bg-${event.color}-50 text-${event.color}-600`}>
-                                        <Clock className="w-5 h-5" />
-                                    </div>
-                                    <div className="text-sm">
-                                        <div className="text-slate-500">Time</div>
-                                        <div className="font-semibold text-slate-900">{event.time}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <Link
-                                href="/events/code-and-chill"
-                                className={`inline-flex items-center justify-center px-6 py-3 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-${event.color}-500/20`}
-                            >
-                                Register Now
-                            </Link>
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Navigation Buttons */}
-            <button
-                onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white text-slate-900 shadow-lg backdrop-blur-sm transition-all hover:scale-110"
-            >
-                <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-                onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/80 hover:bg-white text-slate-900 shadow-lg backdrop-blur-sm transition-all hover:scale-110"
-            >
-                <ChevronRight className="w-6 h-6" />
-            </button>
-
-            {/* Dots */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {events.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex ? 'w-8 bg-slate-900' : 'bg-slate-300 hover:bg-slate-400'
-                            }`}
+        <div className="relative h-screen w-full overflow-hidden bg-slate-900">
+            {/* Background Image / Gradient */}
+            <div className="absolute inset-0">
+                {event.image.startsWith('http') || event.image.startsWith('/') ? (
+                    <Image
+                        src={event.image}
+                        alt={event.title}
+                        fill
+                        className="object-cover"
+                        priority
                     />
-                ))}
+                ) : (
+                    <div className={`absolute inset-0 bg-gradient-to-br ${event.image} z-0`} />
+                )}
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay z-0"></div>
+                <div className="absolute inset-0 bg-slate-900/60 z-10" /> {/* Overlay for text readability */}
             </div>
+
+            {/* Content */}
+            <div className="relative z-20 h-full flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+                <div className="max-w-5xl mx-auto space-y-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                    >
+                        <span className={`inline-block px-4 py-1.5 bg-${event.color}-500/20 border border-${event.color}-400/30 text-${event.color}-300 rounded-full text-sm font-semibold`}>
+                            {event.date}
+                        </span>
+                    </motion.div>
+
+                    <motion.h1
+                        className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight leading-tight"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.4 }}
+                    >
+                        {event.title}
+                    </motion.h1>
+
+                    <motion.p
+                        className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.6 }}
+                    >
+                        {event.shortDescription}
+                    </motion.p>
+
+                    <motion.div
+                        className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.8 }}
+                    >
+                        <Link
+                            href={event.link}
+                            className={`px-8 py-4 bg-${event.color}-500 text-white font-bold rounded-full hover:bg-${event.color}-400 transition-colors shadow-lg shadow-${event.color}-500/25 min-w-[200px] flex items-center justify-center gap-2`}
+                        >
+                            Register Now <ArrowRight className="w-5 h-5" />
+                        </Link>
+                        <Link
+                            href={event.link}
+                            className="px-8 py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-full border border-white/20 hover:bg-white/20 transition-colors min-w-[200px]"
+                        >
+                            Learn More
+                        </Link>
+                    </motion.div>
+
+                    {/* Quick Stats */}
+                    <motion.div
+                        className="flex items-center justify-center gap-8 pt-8 text-slate-400"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1, delay: 1 }}
+                    >
+                        <div className="flex items-center gap-2">
+                            <Calendar className="w-5 h-5" />
+                            <span>{event.date}</span>
+                        </div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />
+                        <div className="flex items-center gap-2">
+                            <MapPin className="w-5 h-5" />
+                            <span>{event.location}</span>
+                        </div>
+                    </motion.div>
+                </div>
+            </div>
+
+            {/* Navigation Controls (Only if > 1 event) */}
+            {activeEvents.length > 1 && (
+                <>
+                    <button
+                        onClick={prevSlide}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors"
+                    >
+                        <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <button
+                        onClick={nextSlide}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors"
+                    >
+                        <ChevronRight className="w-6 h-6" />
+                    </button>
+
+                    {/* Dots */}
+                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+                        {activeEvents.map((_, index) => (
+                            <button
+                                key={index}
+                                onClick={() => setCurrentIndex(index)}
+                                className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex
+                                    ? `bg-${event.color}-500 w-8`
+                                    : 'bg-white/30 hover:bg-white/50'
+                                    }`}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     );
 };

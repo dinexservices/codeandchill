@@ -1,68 +1,47 @@
 import React from 'react';
-import { Mic, Users, Lightbulb, Zap } from 'lucide-react';
+import { Mic2, Users, Zap, Sparkles, Video } from 'lucide-react';
 
 const AboutConclave = () => {
     return (
-        <section className="py-24  relative overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="py-24 bg-slate-900 relative overflow-hidden">
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
-                    <div className="order-2 lg:order-1 relative">
-                        <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 to-orange-500/20 rounded-3xl blur-3xl transform -rotate-3" />
-                        <div className="relative bg-white rounded-3xl p-8 border border-slate-100 shadow-xl">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-4">
-                                    <div className="bg-amber-50 p-6 rounded-2xl">
-                                        <Mic className="w-8 h-8 text-amber-600 mb-2" />
-                                        <div className="font-bold text-slate-900">Keynotes</div>
-                                        <div className="text-sm text-slate-500">Industry Leaders</div>
-                                    </div>
-                                    <div className="bg-orange-50 p-6 rounded-2xl">
-                                        <Users className="w-8 h-8 text-orange-600 mb-2" />
-                                        <div className="font-bold text-slate-900">Panels</div>
-                                        <div className="text-sm text-slate-500">Interactive Discussions</div>
-                                    </div>
-                                </div>
-                                <div className="space-y-4 pt-8">
-                                    <div className="bg-yellow-50 p-6 rounded-2xl">
-                                        <Lightbulb className="w-8 h-8 text-yellow-600 mb-2" />
-                                        <div className="font-bold text-slate-900">Innovation</div>
-                                        <div className="text-sm text-slate-500">Future Tech Trends</div>
-                                    </div>
-                                    <div className="bg-red-50 p-6 rounded-2xl">
-                                        <Zap className="w-8 h-8 text-red-600 mb-2" />
-                                        <div className="font-bold text-slate-900">Networking</div>
-                                        <div className="text-sm text-slate-500">Connect with Experts</div>
-                                    </div>
-                                </div>
-                            </div>
+                    <div className="relative group">
+                        <div className="relative rounded-2xl overflow-hiddeN  p-8 flex items-center justify-center ">
+                            {/* Conclave Logo */}
+                            <img
+                                src="/conclave.png"
+                                alt="Conclave TechMedia Group"
+                                className="w-full h-auto max-w-sm object-contain opacity-90 group-hover:opacity-100 transition-opacity duration-300"
+                            />
                         </div>
                     </div>
 
-                    <div className="order-1 lg:order-2">
-                        <span className="inline-block px-4 py-2 bg-amber-100 text-amber-700 rounded-full text-sm font-semibold mb-4">
-                            Tech Conclave
-                        </span>
-                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-                            Shaping the Future <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600">
-                                of Technology
-                            </span>
-                        </h2>
-                        <div className="space-y-6 text-slate-600 text-lg leading-relaxed">
-                            <p>
-                                The Tech Conclave is a premier gathering of thought leaders, innovators, and industry experts discussing the latest trends in AI, Web3, and Sustainable Technology.
-                            </p>
-                            <p>
-                                Join us for insightful keynote sessions, engaging panel discussions, and networking opportunities that will broaden your perspective on the tech landscape.
-                            </p>
+                    <div className="space-y-8">
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-medium mb-4">
+                                <Sparkles className="w-4 h-4" />
+                                <span>About Us</span>
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                                Conclave TechMedia <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">Group</span>
+                            </h2>
+                            <div className="space-y-6 text-slate-300 leading-relaxed text-lg">
+                                <p>
+                                    <span className="text-amber-400 font-semibold">Conclave TechMedia Group</span> where your vision meets our creation. We specialize in organizing premium boardrooms and conferences, designed to elevate your business interactions, foster collaboration, and create lasting impressions. With a keen focus on detail, innovation, and seamless execution, we transform any corporate gathering into a remarkable experience.
+                                </p>
+                                <p>
+                                    Our dedicated team of professionals brings a wealth of experience in crafting bespoke event solutions that cater to the unique needs of each client. Whether you're hosting an intimate boardroom discussion or a large-scale conference, we offer a full suite of services, from conceptualization to flawless delivery.
+                                </p>
+                            </div>
                         </div>
-                        <div className="mt-8 flex gap-4">
-                            <button className="px-8 py-4 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors shadow-lg hover:shadow-xl">
-                                View Schedule
-                            </button>
-                            <button className="px-8 py-4 bg-white text-slate-900 border border-slate-200 rounded-xl font-semibold hover:bg-slate-50 transition-colors">
-                                Meet Speakers
-                            </button>
+
+                        <div>
+                            <h3 className="text-2xl font-bold text-white mb-3">Your Vision, Our Creation</h3>
+                            <p className="text-slate-300 leading-relaxed">
+                                At <span className="text-amber-400 font-semibold">Conclave TechMedia</span>, we understand that every event is a reflection of your brand and goals. That's why we collaborate closely with you to design and organize events that align with your objectives and leave a lasting impact on attendees. Boardroom is a completely tailor-made program to suit your requirements where you can present your solutions, network and discuss business with highly targeted buyers comprising of decision makers and influences.
+                            </p>
                         </div>
                     </div>
                 </div>

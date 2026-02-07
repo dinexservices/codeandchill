@@ -1,70 +1,52 @@
 import React from 'react';
-import { Network, Handshake, Users} from 'lucide-react';
+import { Network, Handshake, Users } from 'lucide-react';
 import { Rocket } from 'lucide-react';
 
 const AboutCollabify = () => {
     return (
-        <section className="py-24  relative overflow-hidden">
+        <section className="py-24 bg-slate-900 relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
-
-                    <div>
-                        <span className="inline-block px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-4">
-                            Collabify
-                        </span>
-                        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-                            Connect, Collaborate, <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-600">
-                                Create Together
-                            </span>
-                        </h2>
-                        <div className="space-y-6 text-slate-600 text-lg leading-relaxed">
-                            <p>
-                                Collabify is designed to bridge the gap between student developers and potential co-founders. It's more than just networking; it's about finding the right people to build your dream project with.
-                            </p>
-                            <p>
-                                Whether you need a backend wizard, a frontend artist, or a business strategist, Collabify is the place to meet likeminded individuals.
-                            </p>
+                <div className="grid lg:grid-cols-2 gap-16 items-center lg:flex-row-reverse">
+                    <div className="order-2 lg:order-1 space-y-8">
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-sm font-medium mb-4">
+                                <Rocket className="w-4 h-4" />
+                                <span>About Us</span>
+                            </div>
+                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                                Collabify <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Platform</span>
+                            </h2>
+                            <div className="space-y-6 text-slate-300 leading-relaxed text-lg">
+                                <p>
+                                    <span className="text-purple-400 font-semibold">Collabify Platform</span> where your ideas meet their potential. We specialize in connecting students, professionals, and mentors to foster innovation, collaboration, and growth. With a focus on community building and resource sharing, we transform individual efforts into collective success.
+                                </p>
+                                <p>
+                                    Our platform provides a seamless experience for finding teammates, discovering projects, and accessing mentorship. Whether you're starting a new venture or looking to join one, we offer the tools and network you need to succeed.
+                                </p>
+                            </div>
                         </div>
 
-                        <ul className="mt-8 space-y-4">
-                            {[
-                                "Speed Networking Sessions",
-                                "Team Formation Activities",
-                                "Mentor Matching",
-                                "Idea Pitching Platform"
-                            ].map((item, i) => (
-                                <li key={i} className="flex items-center gap-3 text-slate-700 font-medium">
-                                    <div className="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                                        <Rocket className="w-3 h-3" />
-                                    </div>
-                                    {item}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <div className="relative">
-                        <div className="absolute inset-0 bg-gradient-to-bl from-purple-400/20 to-pink-500/20 rounded-full blur-3xl transform rotate-12" />
-                        <div className="relative grid grid-cols-2 gap-6">
-                            <div className="bg-white p-6 rounded-2xl shadow-xl shadow-purple-100 border border-slate-50 mt-12">
-                                <Users className="w-10 h-10 text-purple-600 mb-4" />
-                                <h3 className="text-xl font-bold text-slate-900 mb-2">Find Teammates</h3>
-                                <p className="text-slate-500 text-sm">Discover skills that complement yours.</p>
-                            </div>
-                            <div className="bg-white p-6 rounded-2xl shadow-xl shadow-pink-100 border border-slate-50">
-                                <Handshake className="w-10 h-10 text-pink-600 mb-4" />
-                                <h3 className="text-xl font-bold text-slate-900 mb-2">Build Trust</h3>
-                                <p className="text-slate-500 text-sm">Form lasting professional relationships.</p>
-                            </div>
-                            <div className="bg-white p-6 rounded-2xl shadow-xl shadow-indigo-100 border border-slate-50">
-                                <Rocket className="w-10 h-10 text-indigo-600 mb-4" />
-                                <h3 className="text-xl font-bold text-slate-900 mb-2">Launch Ideas</h3>
-                                <p className="text-slate-500 text-sm">Turn concepts into reality together.</p>
-                            </div>
+                        <div>
+                            <h3 className="text-2xl font-bold text-white mb-3">Your Network, Our Platform</h3>
+                            <p className="text-slate-300 leading-relaxed">
+                                At <span className="text-purple-400 font-semibold">Collabify</span>, we believe that every connection is an opportunity for growth. That's why we've built a platform that aligns with your professional goals and aspirations. Collabify is a tailor-made ecosystem where you can showcase your skills, network with industry leaders, and collaborate on projects that matter.
+                            </p>
                         </div>
                     </div>
 
+                    <div className="order-1 lg:order-2 relative group">
+                        <div className="absolute -inset-4  opacity-20"></div>
+                        <div className="relative rounded-2xl overflow-hidden   p-12 flex items-center justify-center  aspect-square lg:aspect-auto ">
+                            {/* Collabify Logo Placeholder */}
+                            <div className="flex flex-col items-center gap-4">
+                                <img
+                                    src="/collab3.png"
+                                    alt="Collabify"
+                                    className="w-full h-full object-contain"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

@@ -6,40 +6,44 @@ import HeroCarousel from '@/components/HeroCarousel';
 import AboutCollabify from '@/components/AboutCollabify';
 import AboutConclave from '@/components/AboutConclave';
 import Partners from '@/components/Partners';
+import ScrollAnimatedSection from '@/components/ScrollAnimatedSection';
+import GrainOverlay from '@/components/GrainOverlay';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-cyan-100 selection:text-cyan-900">
-      <Navbar />
+    <div className="min-h-screen bg-slate-900 font-sans text-white selection:bg-cyan-900 selection:text-white relative overflow-hidden">
+      <GrainOverlay />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
-        <TechBackground />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-slate-900">
-              Innovate. <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">Code.</span> Chill.
-            </h1>
-            <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-              Join the ultimate ecosystem of student developers, creators, and innovators.
-              Participate in hackathons, network with peers, and shape the future of tech.
-            </p>
-          </div>
+      {/* Background Gradient Blobs */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-indigo-900/20 rounded-full blur-[150px] animate-pulse-slow"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-cyan-900/20 rounded-full blur-[150px] animate-pulse-slow delay-1000"></div>
+        <div className="absolute top-[40%] left-[30%] w-[40%] h-[40%] bg-fuchsia-900/10 rounded-full blur-[150px] animate-pulse-slow delay-2000"></div>
+      </div>
 
-          <HeroCarousel />
-        </div>
-      </section>
+      <div className="relative z-10">
+        <Navbar />
 
-      {/* About Conclave Section */}
-      <AboutConclave />
+        {/* Hero Section - Full Screen */}
+        <HeroCarousel />
 
-      {/* About Collabify Section */}
-      <AboutCollabify />
+        {/* About Conclave Section */}
+        <ScrollAnimatedSection>
+          <AboutConclave />
+        </ScrollAnimatedSection>
 
-      {/* Partners Section */}
-      <Partners />
+        {/* About Collabify Section */}
+        <ScrollAnimatedSection delay={0.2} direction="left">
+          <AboutCollabify />
+        </ScrollAnimatedSection>
 
-      <Footer />
+        {/* Partners Section */}
+        <ScrollAnimatedSection delay={0.3}>
+          <Partners />
+        </ScrollAnimatedSection>
+
+        <Footer />
+      </div>
     </div>
   );
 }

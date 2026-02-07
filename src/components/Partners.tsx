@@ -12,27 +12,27 @@ const Partners = () => {
     ];
 
     return (
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-slate-900">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 className="text-3xl font-bold text-slate-900 mb-4">Our Partners</h2>
-                <p className="text-slate-600 max-w-2xl mx-auto mb-16">
+                <h2 className="text-3xl font-bold text-white mb-4">Our Partners</h2>
+                <p className="text-slate-400 max-w-2xl mx-auto mb-16">
                     Collaborating with industry leaders to bring you the best experience.
                 </p>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
                     {partners.map((partner, index) => (
-                        <div key={index} className="group flex flex-col items-center justify-center p-6 rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-lg transition-all duration-300">
-                            <div className={`w-16 h-16 ${partner.bg} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                        <div key={index} className="group flex flex-col items-center justify-center p-6 rounded-2xl border border-slate-800 hover:border-slate-700 hover:shadow-lg transition-all duration-300 text-white">
+                            <div className={`w-16 h-16 ${partner.bg} bg-opacity-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                                 <partner.icon className={`w-8 h-8 ${partner.color}`} />
                             </div>
-                            <span className="font-semibold text-slate-700">{partner.name}</span>
+                            <span className="font-semibold text-slate-300">{partner.name}</span>
                         </div>
                     ))}
                 </div>
 
-                <div className="mt-16 p-8 bg-slate-50 rounded-3xl border border-slate-100">
-                    <p className="text-slate-600 mb-6 font-medium">Interested in partnering with us?</p>
-                    <button className="px-8 py-3 bg-white text-slate-900 font-semibold rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm">
+                <div className="mt-16 p-8 bg-slate-800/50 rounded-3xl border border-slate-800">
+                    <p className="text-slate-300 mb-6 font-medium">Interested in partnering with us?</p>
+                    <button className="px-8 py-3 bg-slate-900 text-white font-semibold rounded-xl border border-slate-700 hover:bg-slate-800 hover:border-slate-600 transition-colors shadow-sm">
                         Become a Sponsor
                     </button>
                 </div>
