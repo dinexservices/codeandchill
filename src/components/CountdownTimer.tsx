@@ -46,7 +46,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
         }
 
         return (
-            <div key={interval} className="flex flex-col items-center bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4 min-w-[80px] sm:min-w-[100px]">
+            <div key={interval} className="flex flex-col items-center bg-black/50 backdrop-blur-sm border border-blue-900/50 rounded-xl p-4 min-w-[80px] sm:min-w-[100px]">
                 <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tabular-nums">
                     {String(timeLeft[interval as keyof typeof timeLeft]).padStart(2, '0')}
                 </span>

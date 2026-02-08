@@ -12,7 +12,7 @@ const Partners = () => {
     ];
 
     return (
-        <section className="py-24 bg-slate-900">
+        <section className="py-24 bg-transparent">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h2 className="text-3xl font-bold text-white mb-4">Our Partners</h2>
                 <p className="text-slate-400 max-w-2xl mx-auto mb-16">
@@ -30,9 +30,9 @@ const Partners = () => {
                     ))}
                 </div>
 
-                <div className="mt-16 p-8 bg-slate-800/50 rounded-3xl border border-slate-800">
+                <div className="mt-16 p-8 bg-black/50 rounded-3xl border border-blue-900/50">
                     <p className="text-slate-300 mb-6 font-medium">Interested in partnering with us?</p>
-                    <button className="px-8 py-3 bg-slate-900 text-white font-semibold rounded-xl border border-slate-700 hover:bg-slate-800 hover:border-slate-600 transition-colors shadow-sm">
+                    <button className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-xl border border-blue-500 hover:bg-blue-500 hover:border-blue-400 transition-colors shadow-sm">
                         Become a Sponsor
                     </button>
                 </div>

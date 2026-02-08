@@ -1,38 +1,87 @@
+"use client";
+
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, Clock, MapPin, ArrowRight } from 'lucide-react';
-import { Event } from '@/data/events';
+import Image from 'next/image';
+import { Star } from 'lucide-react';
 
-const EventCard = ({ event }: { event: Event }) => {
+interface EventCardProps {
+    id: string;
+    title: string;
+    description: string;
+    date: string;
+    time: string;
+    location: string;
+    image: string;
+    price?: string;
+    rating?: number;
+    link?: string;
+}
+
+const EventCard: React.FC<EventCardProps> = ({
+    id,
+    title,
+    description,
+    date,
+    time,
+    location,
+    image,
+    price,
+    rating = 4.8,
+    link,
+}) => {
     return (
-        <div className="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-cyan-500/10 transition-all duration-300 group">
-            <div className={`h-48 bg-linear-to-br ${event.image} p-6 flex items-end relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <h3 className="text-2xl font-bold text-white relative z-10">{event.title}</h3>
-            </div>
-            <div className="p-6">
-                <p className="text-slate-300 mb-6 line-clamp-2">{event.description}</p>
+        <div className="relative group w-full aspect-3/4 rounded-4xl overflow-hidden isolate shadow-2xl transition-all duration-500 hover:shadow-blue-900/20">
 
-                <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-sm text-slate-400">
-                        <Calendar className="w-4 h-4 text-cyan-400" />
-                        <span>{event.date}</span>
+            {/* Background Image */}
+            <div className="absolute inset-0">
+                <Image
+                    src={image}
+                    alt={title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    priority
+                />
+                {/* Dark Gradient Overlay */}
+                <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+            </div>
+
+            {/* Content Container */}
+            <div className="absolute inset-0 p-6 flex flex-col justify-end text-white z-10 transition-transform duration-500">
+
+                {/* Title & Description */}
+                <div className="mb-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <h3 className="text-2xl font-bold mb-2 drop-shadow-md">
+                        {title}
+                    </h3>
+                    <p className="text-gray-200 text-sm font-light leading-relaxed line-clamp-3 drop-shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
+                        {description}
+                    </p>
+                </div>
+
+                {/* Badges Row */}
+                <div className="flex items-center gap-3 mb-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-75">
+                    {/* Rating Badge */}
+                    <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 shadow-lg">
+                        <span className="text-xs font-semibold">{rating}</span>
+                        <div className="flex gap-0.5">
+                            {[...Array(5)].map((_, i) => (
+                                <Star key={i} className="w-2.5 h-2.5 fill-current text-yellow-400" />
+                            ))}
+                        </div>
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-slate-400">
-                        <Clock className="w-4 h-4 text-cyan-400" />
-                        <span>{event.time}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-slate-400">
-                        <MapPin className="w-4 h-4 text-cyan-400" />
-                        <span>{event.location}</span>
+
+                    {/* Time Badge */}
+                    <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-medium shadow-lg">
+                        {time}
                     </div>
                 </div>
 
-                <Link
-                    href={event.link}
-                    className="inline-flex items-center gap-2 text-cyan-400 font-semibold hover:gap-3 transition-all hover:text-cyan-300"
-                >
-                    View Details <ArrowRight className="w-4 h-4" />
+                {/* Action Button */}
+                <Link href={link || `/events/${id}`} className="block w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-100">
+                    <button className="w-full bg-white text-black font-bold py-3 rounded-full hover:bg-gray-100 active:scale-[0.98] transition-all shadow-xl hover:shadow-white/20 text-sm">
+                        Reserve now
+                    </button>
                 </Link>
             </div>
         </div>

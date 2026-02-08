@@ -8,10 +8,8 @@ import { motion } from 'framer-motion';
 import { events } from '@/data/events';
 
 const HeroCarousel = () => {
-    // Filter to show only "Code & Chill" if user requested, or show all. 
-    // Assuming we want to show all enabled events or just Code & Chill based on previous context.
-    // For now, let's use the events from data but style for full screen.
-    const activeEvents = events.filter(event => event.id === 'code-and-chill');
+    // Use all events for the carousel
+    const activeEvents = events;
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -34,7 +32,7 @@ const HeroCarousel = () => {
     const event = activeEvents[currentIndex];
 
     return (
-        <div className="relative h-screen w-full overflow-hidden bg-slate-900">
+        <div className="relative h-screen w-full overflow-hidden bg-transparent">
             {/* Background Image / Gradient */}
             <div className="absolute inset-0">
                 {event.image.startsWith('http') || event.image.startsWith('/') ? (
@@ -49,7 +47,7 @@ const HeroCarousel = () => {
                     <div className={`absolute inset-0 bg-gradient-to-br ${event.image} z-0`} />
                 )}
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay z-0"></div>
-                <div className="absolute inset-0 bg-slate-900/60 z-10" /> {/* Overlay for text readability */}
+                <div className="absolute inset-0 bg-black/60 z-10" /> {/* Overlay for text readability */}
             </div>
 
             {/* Content */}

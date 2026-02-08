@@ -2,10 +2,21 @@
 
 :root {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 15, 23, 42;
-  /* slate-900 */
-  --background-end-rgb: 15, 23, 42;
-  /* slate-900 */
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+
+  /* Blue Color Theme */
+  --color-blue-50: #f0f9ff;
+  --color-blue-100: #e0f2fe;
+  --color-blue-200: #bae6fd;
+  --color-blue-300: #7dd3fc;
+  --color-blue-400: #8cd5f5;
+  --color-blue-500: #60c0ed;
+  --color-blue-600: #3a9ad9;
+  --color-blue-700: #0284c7;
+  --color-blue-800: #075985;
+  --color-blue-900: #0c4a6e;
+  --color-blue-950: #082f49;
 }
 
 @theme inline {
@@ -16,8 +27,18 @@
 }
 
 body {
-  background: rgb(15, 23, 42);
-  /* slate-900 */
+  background: #000000;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
