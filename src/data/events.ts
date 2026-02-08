@@ -21,11 +21,11 @@ export const events: Event[] = [
         date: 'March 22, 2026',
         time: '10:00 AM - 10:00 AM (Next Day)',
         location: 'Main Auditorium, Tech Campus',
-        image: 'https://images.unsplash.com/photo-1504384308090-c54be3855833?q=80&w=2662&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2670&auto=format&fit=crop',
         color: 'cyan',
         link: '/events/code-and-chill'
     },
-  
+
     {
         id: 'ai-workshop',
         title: 'GenAI Workshop',
