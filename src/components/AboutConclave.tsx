@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mic2, Users, Zap, Sparkles, Video } from 'lucide-react';
+import Link from 'next/link';
 
 const AboutConclave = () => {
     return (
@@ -27,12 +28,11 @@ const AboutConclave = () => {
             </h3>
 
             <p className="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-4">
-                We specialize in organizing premium boardrooms and conferences, designed to elevate your business interactions. From conceptualization to flawless delivery, we transform corporate gatherings into remarkable experiences.
-            </p>
+We specialize in curating high-impact corporate events, executive boardroom experiences, and premium conferences. From strategic planning to flawless execution, we design experiences that strengthen business relationships, enhance brand positioning, and create meaningful professional engagement. We focus on transforming corporate gatherings into memorable and result-driven experiences.            </p>
 
-            <button className="mt-auto px-6 py-2 bg-transparent border border-amber-500/50 text-amber-400 rounded-full text-sm font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300">
+            <Link href="https://conclavetechmedia.com" className="mt-auto px-6 py-2 bg-transparent border border-amber-500/50 text-amber-400 rounded-full text-sm font-semibold hover:bg-amber-500 hover:text-white transition-all duration-300">
                 Learn More
-            </button>
+            </Link>
         </div>
     );
 };

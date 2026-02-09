@@ -1,6 +1,7 @@
 import React from 'react';
 import { Network, Handshake, Users } from 'lucide-react';
 import { Rocket } from 'lucide-react';
+import Link from 'next/link';
 
 const AboutCollabify = () => {
     return (
@@ -24,16 +25,15 @@ const AboutCollabify = () => {
 
             {/* Content */}
             <h3 className="text-2xl font-bold text-white mb-3">
-                Collabify <span className="text-purple-400">Platform</span>
+                Collabify <span className="text-purple-400">Growth</span>
             </h3>
 
             <p className="text-slate-400 text-sm leading-relaxed mb-6 line-clamp-4">
-                Where your ideas meet their potential. We specialize in connecting students, professionals, and mentors to foster innovation. With a focus on community building, we transform individual efforts into collective success.
-            </p>
+we create a collaborative innovation ecosystem that connects students, founders, professionals, and mentors. We aim to foster meaningful networking, skill development, and strategic collaborations. Through our platform, we empower individuals and communities to transform ideas into scalable ventures and impactful career opportunities.            </p>
 
-            <button className="mt-auto px-6 py-2 bg-transparent border border-purple-500/50 text-purple-400 rounded-full text-sm font-semibold hover:bg-purple-500 hover:text-white transition-all duration-300">
+            <Link href="https://collabify.sbs" className="mt-auto px-6 py-2 bg-transparent border border-purple-500/50 text-purple-400 rounded-full text-sm font-semibold hover:bg-purple-500 hover:text-white transition-all duration-300">
                 Explore Platform
-            </button>
+            </Link>
         </div>
     );
 };
