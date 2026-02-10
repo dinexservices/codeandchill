@@ -4,15 +4,15 @@ import { Metadata, ResolvingMetadata } from 'next';
 import EventDetailsClient from './EventDetailsClient';
 
 type Props = {
-    params: { slug: string }
-    searchParams: { [key: string]: string | string[] | undefined }
+    params: Promise<{ slug: string }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }
 
 export async function generateMetadata(
     { params }: Props,
     parent: ResolvingMetadata
 ): Promise<Metadata> {
-    const slug = params.slug;
+    const { slug } = await params;
 
     // Fetch data
     try {
