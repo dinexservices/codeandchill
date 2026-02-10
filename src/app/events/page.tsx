@@ -11,12 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store/store';
 import { fetchAllEvents } from '@/store/slices/eventSlice';
 
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: "Events",
-    description: "Browse upcoming coding events, hackathons, and workshops. Register now to participate.",
-};
+// Metadata moved to layout.tsx
 
 const EventsPage = () => {
     const dispatch = useDispatch<AppDispatch>();

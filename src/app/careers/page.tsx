@@ -40,12 +40,7 @@ interface Job {
 
 const jobs: Job[] = [];
 
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: "Careers",
-    description: "Join the Code & Chill team. We are looking for passionate developers and designers to build the future of tech events.",
-};
+// Metadata moved to layout.tsx
 
 export default function CareersPage() {
     return (

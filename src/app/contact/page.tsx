@@ -37,12 +37,7 @@ const socialLinks = [
     { icon: <Instagram className="w-5 h-5" />, href: "#", label: "Instagram" },
 ];
 
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: "Contact Us",
-    description: "Get in touch with the Code & Chill team. We are here to answer your questions and help you get started.",
-};
+// Metadata moved to layout.tsx
 
 export default function ContactPage() {
     return (

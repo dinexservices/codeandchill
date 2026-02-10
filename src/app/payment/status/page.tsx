@@ -101,16 +101,7 @@ function PaymentStatusContent() {
     );
 }
 
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: "Payment Status",
-    description: "Check the status of your payment and registration.",
-    robots: {
-        index: false,
-        follow: false,
-    },
-};
+// Metadata removed and moved to layout.tsx due to "use client" directive
 
 export default function PaymentStatusPage() {
     return (
