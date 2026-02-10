@@ -1,6 +1,58 @@
 import crypto from "crypto";
+import Payment from "../model/payment.js";
 import EventRegistration from "../model/eventRegistration.js";
 import sendRegistrationEmail from "../utils/sendRegistration.js";
+import Event from "../model/event.js";
+
+const verifyPaymentLogic = async (razorpay_order_id, razorpay_payment_id) => {
+  const payment = await Payment.findOne({ orderId: razorpay_order_id }).populate("event");
+
+  if (!payment) {
+    throw new Error("Payment record not found");
+  }
+
+  if (payment.status === "paid") {
+    return { success: true, message: "Payment already verified", alreadyPaid: true };
+  }
+
+  // Update payment status
+  payment.status = "paid";
+  payment.paymentId = razorpay_payment_id;
+  await payment.save();
+
+  // Create Event Registration
+  const registration = new EventRegistration({
+    event: payment.event._id,
+    participants: payment.participants,
+    ticketCount: payment.ticketCount,
+    teamName: payment.teamName,
+    teamLeaderName: payment.teamLeaderName,
+    payment: {
+      amount: payment.amount,
+      status: "paid",
+      paymentId: razorpay_payment_id,
+      orderId: razorpay_order_id
+    }
+  });
+
+  await registration.save();
+
+  // Send Emails
+  await Promise.all(
+    registration.participants.map((p, index) =>
+      sendRegistrationEmail({
+        to: p.email,
+        participantName: p.name,
+        eventTitle: payment.event.title,
+        ticketNumber: index + 1,
+        totalTickets: registration.ticketCount,
+        amount: payment.amount
+      })
+    )
+  );
+
+  return { success: true, message: "Payment verified & registration confirmed", registrationId: registration._id };
+}
 
 const verifyPayment = async (req, res) => {
   try {
@@ -29,42 +81,15 @@ const verifyPayment = async (req, res) => {
       });
     }
 
-    const registration = await EventRegistration.findOne({
-      "payment.orderId": razorpay_order_id
-    }).populate("event");
+    const result = await verifyPaymentLogic(razorpay_order_id, razorpay_payment_id);
 
-    if (!registration) {
-      return res.status(404).json({ message: "Registration not found" });
-    }
+    return res.json(result);
 
-    // mark payment success
-    registration.payment.status = "paid";
-    registration.payment.paymentId = razorpay_payment_id;
-    await registration.save();
-
-    // send confirmation email per participant
-    await Promise.all(
-      registration.participants.map((p, index) =>
-        sendRegistrationEmail({
-          to: p.email,
-          participantName: p.name,
-          eventTitle: registration.event.title,
-          ticketNumber: index + 1,
-          totalTickets: registration.ticketCount,
-          amount: registration.event.registrationFee
-        })
-      )
-    );
-
-    return res.json({
-      success: true,
-      message: "Payment verified & registration confirmed",
-      paymentId: razorpay_payment_id
-    });
   } catch (error) {
     console.error("Verify Payment Error:", error);
-    res.status(500).json({ message: "Payment verification failed" });
+    res.status(500).json({ message: "Payment verification failed", error: error.message });
   }
 };
 
+export { verifyPaymentLogic }; // Export for webhook to use if needed
 export default verifyPayment;

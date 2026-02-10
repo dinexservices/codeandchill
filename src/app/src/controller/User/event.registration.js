@@ -1,6 +1,5 @@
 import Event from "../../model/event.js";
 import EventRegistration from "../../model/eventRegistration.js";
-import sendRegistrationEmail from "../../utils/sendRegistration.js";
 
 
 const registerForEvent = async (req, res) => {
@@ -63,19 +62,7 @@ const registerForEvent = async (req, res) => {
       }
     });
 
-   
-    await Promise.all(
-      participants.map((participant, index) =>
-        sendRegistrationEmail({
-          to: participant.email,
-          participantName: participant.name,
-          eventTitle: eventExist.title,
-          ticketNumber: index + 1,
-          totalTickets: tktCount,
-          amount: eventExist.registrationFee
-        })
-      )
-    );
+
 
     return res.status(201).json({
       success: true,
