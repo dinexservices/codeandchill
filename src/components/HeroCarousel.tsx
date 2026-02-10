@@ -5,11 +5,28 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, ChevronLeft, ChevronRight, Calendar, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { events } from '@/data/events';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { fetchAllEvents } from '@/store/slices/eventSlice';
 
 const HeroCarousel = () => {
-    // Use all events for the carousel
-    const activeEvents = events;
+    const dispatch = useDispatch<AppDispatch>();
+    const { events, loading } = useSelector((state: RootState) => state.event);
+
+    useEffect(() => {
+        dispatch(fetchAllEvents());
+    }, [dispatch]);
+
+    // Use fetched events for the carousel
+    // Filter for featured if possible, or just take first 5
+    const activeEvents = events.slice(0, 5).map(evt => ({
+        ...evt,
+        image: evt.imageUrl || '/images/default-event.jpg', // Fallback image
+        shortDescription: evt.description ? evt.description.slice(0, 150) + '...' : 'Join us for this amazing event!',
+        link: evt.slug ? `/events/${evt.slug}` : `/events/${evt.id}`,
+        location: evt.venue,
+        color: ['cyan', 'blue', 'purple', 'emerald', 'amber'][Math.floor(Math.random() * 5)] // Random color for theme
+    }));
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -27,6 +44,7 @@ const HeroCarousel = () => {
         return () => clearInterval(timer);
     }, [activeEvents.length]);
 
+    if (loading) return null; // Or a skeleton loader
     if (activeEvents.length === 0) return null;
 
     const event = activeEvents[currentIndex];

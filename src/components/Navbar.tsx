@@ -70,7 +70,7 @@ const Navbar = () => {
                                     </div>
                                 </div>
                             </div>
-                            <Link href="/career" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Career</Link>
+                            <Link href="/careers" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Career</Link>
                             <Link href="/contact" className="px-5 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50">
                                 Contact Us
                             </Link>

@@ -2,13 +2,21 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchAllEvents } from '@/store/slices/eventSlice';
 import EventCard from './EventCard';
-import { events } from '@/data/events';
 
 const UpcomingEvents = () => {
-    // displayed events (slice if you want to show only a few, or show all)
-    const displayEvents = events;
+    const dispatch = useAppDispatch();
+    const { events, loading, error } = useAppSelector((state) => state.event);
 
+    React.useEffect(() => {
+        dispatch(fetchAllEvents());
+    }, [dispatch]);
+
+    // displayed events (filter for future events if needed, or just show all)
+    // For now, let's just show all fetched events
+    const displayEvents = events;
 
     return (
         <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden">
@@ -32,6 +40,24 @@ const UpcomingEvents = () => {
 
                 {/* Events Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto">
+                    {loading && (
+                        <div className="col-span-full flex justify-center py-20">
+                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
+                        </div>
+                    )}
+
+                    {error && (
+                        <div className="col-span-full text-center text-red-400 py-10">
+                            Failed to load events. Please try again later.
+                        </div>
+                    )}
+
+                    {!loading && !error && displayEvents.length === 0 && (
+                        <div className="col-span-full text-center text-slate-500 py-10">
+                            No upcoming events at the moment.
+                        </div>
+                    )}
+
                     {displayEvents.map((event, index) => (
                         <motion.div
                             key={event.id}
@@ -42,6 +68,10 @@ const UpcomingEvents = () => {
                         >
                             <EventCard
                                 {...event}
+                                image={event.imageUrl} // Ensure correct prop mapping
+                                time={new Date(event.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                location={event.venue}
+                                link={event.slug ? `/events/${event.slug}` : `/events/${event.id}`}
                             />
                         </motion.div>
                     ))}

@@ -10,6 +10,16 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'www.codenchill.tech',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**', // Allow all HTTPS domains
+      },
     ],
   },
 };

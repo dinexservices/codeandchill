@@ -1,22 +1,39 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import EventCard from '@/components/EventCard';
-import { events } from '@/data/events';
+// import { events } from '@/data/events'; // Removed mock data
 import CountdownTimer from '@/components/CountdownTimer';
 import { Calendar, Clock, Sparkles } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store/store';
+import { fetchAllEvents } from '@/store/slices/eventSlice';
+
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: "Events",
+    description: "Browse upcoming coding events, hackathons, and workshops. Register now to participate.",
+};
 
 const EventsPage = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    const { events, loading, error } = useSelector((state: RootState) => state.event);
+
+    useEffect(() => {
+        dispatch(fetchAllEvents());
+    }, [dispatch]);
+
     // Determine the next big event target date
     const targetEventDate = "2024-12-31T00:00:00";
+    // You could also dynamically set this from the fetched events if needed
 
     return (
-        <div className="min-h-screen bg-transparent text-white font-sans selection:bg-blue-900 selection:text-white">
+        <div className="min-h-screen bg-gradient-to-br from-gray-950 to-black text-white">
             <Navbar />
 
-            {/* Hero Section with Timer */}
             <section className="relative h-[60vh] w-full flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0">
                     <div className="absolute inset-0 bg-linear-to-b from-blue-900/20 via-black to-black z-0" />
@@ -54,15 +71,32 @@ const EventsPage = () => {
                     </h2>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {events.map((event) => (
-                        <EventCard key={event.id} {...event} />
-                    ))}
-                </div>
+                {loading ? (
+                    <div className="flex justify-center items-center h-64">
+                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                ) : error ? (
+                    <div className="text-center text-red-400 py-10">
+                        Failed to load events: {error}
+                    </div>
+                ) : (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {events.map((event) => (
+                            <EventCard
+                                key={event.id}
+                                {...event}
+                                image={event.imageUrl} // Map imageUrl to image prop expected by EventCard
+                                time={new Date(event.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                location={event.venue}
+                                link={event.slug ? `/events/${event.slug}` : `/events/${event.id}`}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
 
             <Footer />
-        </div>
+        </div >
     );
 };
 

@@ -11,6 +11,13 @@ import GrainOverlay from '@/components/GrainOverlay';
 import Marquee from '@/components/Marquee';
 import UpcomingEvents from '@/components/UpcomingEvents';
 
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Home",
+  description: "Join Code & Chill for the best coding events, hackathons, and tech conclaves. Elevate your skills and network with industry leaders.",
+};
+
 export default function Home() {
   const marqueeItems = [
     "24-Hour AI Hackathon",
