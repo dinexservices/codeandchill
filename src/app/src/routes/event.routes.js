@@ -4,6 +4,7 @@ import registerForEvent from "../controller/User/event.registration.js";
 import createPayment from "../controller/createPayment.js";
 import verifyPayment from "../controller/verifyPayment.js";
 import webhookPayment from "../controller/webhookPayment.js";
+import paymentCallback from "../controller/paymentCallback.js";
 
 export const eventRouter = Router();
 
@@ -14,6 +15,7 @@ eventRouter.post("/event-register/:eventId", registerForEvent);
 // Payment routes
 eventRouter.post("/create-payment", createPayment);
 eventRouter.post("/payment-success", verifyPayment);
+eventRouter.post("/payment-callback", paymentCallback);
 eventRouter.post("/webhook/razorpay", webhookPayment);
 
 // Get Routes
