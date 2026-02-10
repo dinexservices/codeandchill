@@ -123,9 +123,9 @@ export const registerForEvent = createAsyncThunk(
 
 export const createPayment = createAsyncThunk(
     'event/createPayment',
-    async (registrationId: string, { rejectWithValue }) => {
+    async (paymentPayload: any, { rejectWithValue }) => {
         try {
-            const response = await api.post(`/api/v1/events/create-payment/${registrationId}`);
+            const response = await api.post(`/api/v1/events/create-payment`, paymentPayload);
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error);

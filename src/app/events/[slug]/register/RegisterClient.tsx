@@ -74,14 +74,13 @@ export default function RegisterClient() {
     // Handle Registration Success -> Move to next step (Payment creation happens in background or on button click?)
     // Actually, traditionally: 
     // Step 3 is "Review & Pay". Clicking "Pay" -> Registers -> Creates Payment -> Opens Razorpay.
+    // Registration step removed, payment handles everything
     useEffect(() => {
-        if (registrationStatus === 'success' && registrationData) {
-            dispatch(createPayment(registrationData.data._id));
-        } else if (registrationStatus === 'error') {
+        if (registrationStatus === 'error') {
             toast.error(error || "Registration failed. Please try again.");
             setIsSubmitting(false);
         }
-    }, [registrationStatus, registrationData, dispatch, error]);
+    }, [registrationStatus, error]);
 
     useEffect(() => {
         if (paymentStatus === 'success' && paymentData && paymentData.orderId) {
@@ -89,7 +88,7 @@ export default function RegisterClient() {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
                 amount: paymentData.amount * 100,
                 currency: "INR",
-                name: "Code & Chill",
+                name: "Codenchill",
                 description: `Registration for ${event?.title}`,
                 order_id: paymentData.orderId,
                 handler: async function (response: any) {
@@ -192,7 +191,7 @@ export default function RegisterClient() {
         if (!event) return;
         setIsSubmitting(true);
 
-        const registrationPayload = {
+        const paymentPayload = {
             tktCount: participants.length,
             participants: participants,
             teamName: participationType === 'team' ? teamName : undefined,
@@ -200,7 +199,7 @@ export default function RegisterClient() {
             eventId: event.id || event._id || ''
         };
 
-        dispatch(registerForEvent({ eventId: event.id || event._id || '', registrationData: registrationPayload }));
+        dispatch(createPayment(paymentPayload));
     };
 
     if (loading || !event) {
