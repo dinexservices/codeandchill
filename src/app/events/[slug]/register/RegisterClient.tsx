@@ -84,6 +84,7 @@ export default function RegisterClient() {
 
     useEffect(() => {
         if (paymentStatus === 'success' && paymentData && paymentData.orderId) {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
             const options = {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
                 amount: paymentData.amount * 100,
@@ -91,14 +92,8 @@ export default function RegisterClient() {
                 name: "Codenchill",
                 description: `Registration for ${event?.title}`,
                 order_id: paymentData.orderId,
-                handler: async function (response: any) {
-                    setIsSubmitting(true);
-                    await dispatch(verifyPayment({
-                        razorpay_order_id: response.razorpay_order_id,
-                        razorpay_payment_id: response.razorpay_payment_id,
-                        razorpay_signature: response.razorpay_signature
-                    }));
-                },
+                callback_url: `${apiUrl}/api/v1/events/payment-callback`,
+                redirect: true, // Auto-redirect to callback_url
                 prefill: {
                     name: participants[0].name,
                     email: participants[0].email,
@@ -106,30 +101,21 @@ export default function RegisterClient() {
                 },
                 theme: {
                     color: "#06b6d4"
+                },
+                modal: {
+                    ondismiss: function () {
+                        setIsSubmitting(false);
+                    }
                 }
             };
 
             const rzp1 = new (window as any).Razorpay(options);
-            rzp1.on('payment.failed', function (response: any) {
-                toast.error(response.error.description || "Payment Failed");
-                setIsSubmitting(false);
-            });
             rzp1.open();
         } else if (paymentStatus === 'error') {
             toast.error(error || "Payment initialization failed.");
             setIsSubmitting(false);
         }
-    }, [paymentStatus, paymentData, dispatch, event, participants, error]);
-
-    useEffect(() => {
-        if (paymentStatus === 'success' && paymentData) {
-            const message = paymentData.message || "Payment verified & registration confirmed";
-            const transactionId = paymentData.paymentId || paymentData.transactionId || "";
-            router.push(`/payment/status?status=success&message=${encodeURIComponent(message)}&transactionId=${transactionId}&eventSlug=${slug}`);
-        } else if (paymentStatus === 'error') {
-            router.push(`/payment/status?status=failure&message=${encodeURIComponent(error || "Payment verification failed")}&eventSlug=${slug}`);
-        }
-    }, [paymentStatus, paymentData, error, router, slug]);
+    }, [paymentStatus, paymentData, event, participants, error]);
 
 
     const handleParticipantChange = (index: number, field: keyof Participant, value: string) => {
