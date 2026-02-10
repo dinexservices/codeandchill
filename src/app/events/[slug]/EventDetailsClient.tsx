@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import CountdownTimer from '@/components/CountdownTimer';
 import ScrollAnimatedSection from '@/components/ScrollAnimatedSection';
 import { fetchEventBySlug } from '@/store/slices/eventSlice';
+import { Skeleton } from "@/components/ui/Skeleton";
 // Removed metadata imports as this is now a client component
 
 const DOMAIN_DETAILS: Record<string, { description: string, icon: any }> = {
@@ -54,8 +55,32 @@ export default function EventDetailsClient() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-black text-white flex items-center justify-center">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500/30">
+                <Navbar />
+
+                {/* Hero Skeleton */}
+                <div className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+                    <div className="container mx-auto px-4 relative z-10">
+                        <div className="max-w-4xl mx-auto text-center space-y-6">
+                            <Skeleton className="h-20 w-3/4 mx-auto bg-white/10" />
+                            <Skeleton className="h-6 w-2/3 mx-auto bg-white/10" />
+                            <div className="flex justify-center gap-6 pt-6">
+                                <Skeleton className="h-14 w-48 rounded-full bg-white/10" />
+                                <Skeleton className="h-6 w-32 bg-white/10 my-auto" />
+                            </div>
+                            <Skeleton className="h-24 w-full max-w-2xl mx-auto rounded-xl bg-white/10 mt-12" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Content Skeleton */}
+                <div className="container mx-auto px-4 py-20">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                        {[1, 2, 3].map((i) => (
+                            <Skeleton key={i} className="h-40 rounded-3xl bg-white/5" />
+                        ))}
+                    </div>
+                </div>
             </div>
         );
     }

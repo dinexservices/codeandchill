@@ -44,8 +44,47 @@ const HeroCarousel = () => {
         return () => clearInterval(timer);
     }, [activeEvents.length]);
 
-    if (loading) return null; // Or a skeleton loader
-    if (activeEvents.length === 0) return null;
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Skeleton Loading State
+    if (!mounted || loading) {
+        return (
+            <div className="relative h-screen w-full overflow-hidden bg-black">
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900 animate-pulse" />
+                <div className="relative z-20 h-full flex items-center justify-center text-center px-4">
+                    <div className="max-w-4xl mx-auto space-y-8 w-full">
+                        <div className="h-8 w-32 bg-white/10 rounded-full mx-auto animate-pulse" />
+                        <div className="h-24 w-3/4 bg-white/10 rounded-lg mx-auto animate-pulse" />
+                        <div className="h-20 w-1/2 bg-white/10 rounded-lg mx-auto animate-pulse" />
+                        <div className="flex justify-center gap-4 pt-8">
+                            <div className="h-14 w-48 bg-white/10 rounded-full animate-pulse" />
+                            <div className="h-14 w-48 bg-white/10 rounded-full animate-pulse" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Empty State
+    if (!loading && activeEvents.length === 0) {
+        return (
+            <div className="relative h-screen w-full overflow-hidden bg-black flex items-center justify-center">
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay z-0"></div>
+                <div className="relative z-10 text-center px-4">
+                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">Something Amazing is Coming Soon</h1>
+                    <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">We're crafting new experiences for you. Stay tuned for upcoming events tailored just for you.</p>
+                    <Link href="/events" className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors border border-white/20">
+                        View All Events
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     const event = activeEvents[currentIndex];
 

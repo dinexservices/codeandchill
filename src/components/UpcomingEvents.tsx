@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchAllEvents } from '@/store/slices/eventSlice';
 import EventCard from './EventCard';
+import EventCardSkeleton from './EventCardSkeleton';
 
 const UpcomingEvents = () => {
     const dispatch = useAppDispatch();
@@ -41,9 +42,11 @@ const UpcomingEvents = () => {
                 {/* Events Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto">
                     {loading && (
-                        <div className="col-span-full flex justify-center py-20">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
-                        </div>
+                        Array(3).fill(0).map((_, i) => (
+                            <div key={i} className="w-full">
+                                <EventCardSkeleton />
+                            </div>
+                        ))
                     )}
 
                     {error && (
