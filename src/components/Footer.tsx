@@ -47,7 +47,7 @@ const Footer = () => {
 
                 <div className="border-t border-blue-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-slate-500 text-sm">
-                        © 2024 Code & Chill. All rights reserved.
+                        ©{new Date().getFullYear()} Codenchill. All rights reserved.
                     </p>
                     <div className="text-slate-500 text-sm flex items-center gap-1">
                         Developed by <span className="font-semibold text-slate-300">Dinex Services</span>

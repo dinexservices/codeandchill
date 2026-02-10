@@ -10,22 +10,22 @@ const contactDetails = [
     {
         icon: <Mail className="w-8 h-8 text-cyan-400" />,
         title: "Email Us",
-        value: "hello@codeandchill.com",
-        link: "mailto:hello@codeandchill.com",
+        value: "vikram.razz@conclavetechmedia.com",
+        link: "mailto:vikram.razz@conclavetechmedia.com",
         description: "For general inquiries and support."
     },
     {
         icon: <Phone className="w-8 h-8 text-purple-400" />,
         title: "Call Us",
-        value: "+91 98765 43210",
-        link: "tel:+919876543210",
+        value: "+91 6205905116 / +91 120 4387396",
+        link: "tel:+916205905116",
         description: "Mon-Fri from 9am to 6pm."
     },
     {
         icon: <MapPin className="w-8 h-8 text-pink-400" />,
         title: "Visit Us",
-        value: "Bengaluru, India",
-        link: "https://maps.google.com",
+        value: "B-79, B Block Rd, B Block, Sector 63, Noida, Uttar Pradesh 201307",
+        link: "https://maps.google.com/?q=B-79, B Block Rd, B Block, Sector 63, Noida, Uttar Pradesh 201307",
         description: "Come say hello at our HQ."
     }
 ];
