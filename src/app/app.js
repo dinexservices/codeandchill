@@ -8,8 +8,15 @@ dotenv.config();
 const app = express();
 
 // Enable CORS for frontend
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://www.codenchill.tech',
+    'https://codenchill.tech',
+    process.env.CORS_ORIGIN
+].filter(Boolean);
+
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true
 }));
 app.use(cookieParser());
