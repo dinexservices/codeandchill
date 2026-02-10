@@ -15,20 +15,36 @@ const createEvent = async (req, res) => {
       highlights,
       domains,
       hackathonFlow,
+      eventStructure,
+      whatParticipantsWillReceive,
+      rulesAndGuidelines,
+      prizes,
+      submissionRequirements,
       coverImage,
       tags
     } = req.body;
 
+    // ✅ Generate slug from title if not provided
+    let eventSlug = slug;
+    if (!eventSlug && title) {
+      eventSlug = title
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, '') // Remove non-word chars (except spaces and hyphens)
+        .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+        .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    }
+
     // ✅ Validation
-    if (!title || !slug || !shortDescription) {
+    if (!title || !eventSlug || !shortDescription) {
       return res.status(400).json({
         success: false,
-        message: "Title, Slug and Short Description are required."
+        message: "Title and Short Description are required."
       });
     }
 
     // ✅ Slug uniqueness check
-    const existingEvent = await Event.findOne({ slug });
+    const existingEvent = await Event.findOne({ slug: eventSlug });
     if (existingEvent) {
       return res.status(409).json({
         success: false,
@@ -39,7 +55,7 @@ const createEvent = async (req, res) => {
     // ✅ Create event
     const newEvent = await Event.create({
       title,
-      slug,
+      slug: eventSlug,
       shortDescription,
       longDescription,
       eventDate,
@@ -50,6 +66,11 @@ const createEvent = async (req, res) => {
       highlights,
       domains,
       hackathonFlow,
+      eventStructure,
+      whatParticipantsWillReceive,
+      rulesAndGuidelines,
+      prizes,
+      submissionRequirements,
       coverImage,
       tags
     });

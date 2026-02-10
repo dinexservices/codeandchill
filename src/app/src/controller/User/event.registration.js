@@ -6,7 +6,7 @@ import sendRegistrationEmail from "../../utils/sendRegistration.js";
 const registerForEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const { participants, tktCount } = req.body;
+    const { participants, tktCount, teamName, teamLeaderName } = req.body;
 
     // ✅ Validation
     if (!participants || !Array.isArray(participants)) {
@@ -36,7 +36,8 @@ const registerForEvent = async (req, res) => {
     const emails = participants.map(p => p.email);
     const duplicate = await EventRegistration.findOne({
       event: eventId,
-      "participants.email": { $in: emails }
+      "participants.email": { $in: emails },
+      "payment.status": "paid"
     });
 
     if (duplicate) {
@@ -54,25 +55,27 @@ const registerForEvent = async (req, res) => {
       event: eventId,
       participants,
       ticketCount: tktCount,
+      teamName,
+      teamLeaderName,
       payment: {
         amount: totalAmount,
         status: "pending"
       }
     });
 
-     // ✅ SEND EMAIL TO EACH PARTICIPANT
-    // await Promise.all(
-    //   participants.map((participant, index) =>
-    //     sendRegistrationEmail({
-    //       to: participant.email,
-    //       participantName: participant.name,
-    //       eventTitle: eventExist.title,
-    //       ticketNumber: index + 1,
-    //       totalTickets: tktCount,
-    //       amount: eventExist.registrationFee
-    //     })
-    //   )
-    // );
+   
+    await Promise.all(
+      participants.map((participant, index) =>
+        sendRegistrationEmail({
+          to: participant.email,
+          participantName: participant.name,
+          eventTitle: eventExist.title,
+          ticketNumber: index + 1,
+          totalTickets: tktCount,
+          amount: eventExist.registrationFee
+        })
+      )
+    );
 
     return res.status(201).json({
       success: true,

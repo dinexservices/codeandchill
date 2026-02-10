@@ -12,4 +12,10 @@ eventRouter.post("/event-register/:eventId", registerForEvent);
 
 // Payment routes
 eventRouter.post("/create-payment/:registrationId", createPayment);
-eventRouter.get("/payment-success", verifyPayment);
+eventRouter.post("/payment-success", verifyPayment);
+
+// Get Routes
+import { getAllEvents, getEventById, getEventBySlug } from "../controller/Event/get.event.js";
+eventRouter.get("/all", getAllEvents);
+eventRouter.get("/get/:eventId", getEventById);
+eventRouter.get("/get-slug/:slug", getEventBySlug);

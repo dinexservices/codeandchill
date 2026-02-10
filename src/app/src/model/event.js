@@ -62,6 +62,35 @@ const eventSchema = new mongoose.Schema(
       }
     ],
 
+    eventStructure: [
+      {
+        phaseName: { type: String, required: true },
+        time: { type: String, required: true },
+        description: String
+      }
+    ],
+
+    whatParticipantsWillReceive: {
+      type: [String],
+      default: []
+    },
+
+    rulesAndGuidelines: {
+      type: [String],
+      default: []
+    },
+
+    prizes: {
+      firstPlace: String,
+      secondPlace: String,
+      thirdPlace: String
+    },
+
+    submissionRequirements: {
+      type: [String],
+      default: []
+    },
+
     coverImage: String,
 
     tags: {

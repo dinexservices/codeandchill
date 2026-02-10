@@ -9,7 +9,7 @@ const sendRegistrationEmail = async ({
   amount
 }) => {
   const mailOptions = {
-    from: `"Event Team" <${process.env.EMAIL_USER}>`,
+    from: `"Event Team" <${process.env.MAIL_ADMINISTRATOR}>`,
     to,
     subject: `🎟️ Registration Confirmed – ${eventTitle}`,
     html: `

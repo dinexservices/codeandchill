@@ -7,14 +7,34 @@ const participantSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
-    phoneNum: {
+    registrationNumber: {
       type: String,
-      required: true
+      required: true,
+      trim: true
     },
     email: {
       type: String,
       required: true,
       lowercase: true
+    },
+    phoneNum: {
+      type: String,
+      required: true
+    },
+    collegeName: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    course: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    yearOfStudy: {
+      type: String,
+      required: true,
+      trim: true
     }
   },
   { _id: false }
@@ -37,6 +57,16 @@ const eventRegistrationSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 1
+    },
+
+    teamName: {
+      type: String,
+      trim: true
+    },
+
+    teamLeaderName: {
+      type: String,
+      trim: true
     },
 
     payment: {
