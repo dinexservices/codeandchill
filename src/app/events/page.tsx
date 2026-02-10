@@ -22,8 +22,11 @@ const EventsPage = () => {
     }, [dispatch]);
 
     // Determine the next big event target date
-    const targetEventDate = "2024-12-31T00:00:00";
-    // You could also dynamically set this from the fetched events if needed
+    const upcomingEvent = events
+        .filter(event => new Date(event.startDate).getTime() > Date.now())
+        .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())[0];
+
+    const targetEventDate = upcomingEvent ? upcomingEvent.startDate : "";
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-950 to-black text-white">
@@ -51,9 +54,16 @@ const EventsPage = () => {
                         Join the community of innovators. Participate in hackathons, workshops, and tech talks.
                     </p>
 
-                    <div className="animate-fade-in-up delay-300">
-                        <CountdownTimer targetDate={targetEventDate} />
-                    </div>
+                    {targetEventDate && (
+                        <div className="animate-fade-in-up delay-300">
+                            <CountdownTimer targetDate={targetEventDate} />
+                            {upcomingEvent && (
+                                <p className="text-blue-200 mt-4 text-sm font-medium tracking-widest uppercase">
+                                    {upcomingEvent.title}
+                                </p>
+                            )}
+                        </div>
+                    )}
                 </div>
             </section>
 
