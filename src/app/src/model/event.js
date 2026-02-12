@@ -96,7 +96,25 @@ const eventSchema = new mongoose.Schema(
     tags: {
       type: [String],
       default: []
-    }
+    },
+
+    speakers: [
+      {
+        name: String,
+        role: String,
+        image: String,
+        linkedin: String,
+        about: String
+      }
+    ],
+
+    sponsors: [
+      {
+        name: String,
+        image: String,
+        website: String
+      }
+    ]
   },
   {
     timestamps: true

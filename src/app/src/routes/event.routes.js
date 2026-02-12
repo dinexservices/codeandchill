@@ -1,5 +1,6 @@
 import { Router } from "express";
 import createEvent from "../controller/Event/create.event.js";
+import updateEvent from "../controller/Event/update.event.js";
 import registerForEvent from "../controller/User/event.registration.js";
 import createPayment from "../controller/createPayment.js";
 import verifyPayment from "../controller/verifyPayment.js";
@@ -10,6 +11,7 @@ export const eventRouter = Router();
 
 
 eventRouter.post("/event-create", createEvent);
+eventRouter.put("/event-update/:eventId", updateEvent);
 eventRouter.post("/event-register/:eventId", registerForEvent);
 
 // Payment routes

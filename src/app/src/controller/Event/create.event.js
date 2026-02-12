@@ -21,7 +21,9 @@ const createEvent = async (req, res) => {
       prizes,
       submissionRequirements,
       coverImage,
-      tags
+      tags,
+      speakers,
+      sponsors
     } = req.body;
 
     // ✅ Generate slug from title if not provided
@@ -72,7 +74,9 @@ const createEvent = async (req, res) => {
       prizes,
       submissionRequirements,
       coverImage,
-      tags
+      tags,
+      speakers,
+      sponsors
     });
 
     return res.status(201).json({
