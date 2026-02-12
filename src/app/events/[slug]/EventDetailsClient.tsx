@@ -247,7 +247,47 @@ export default function EventDetailsClient() {
                 {/* Main Content Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Left Column - Main Info */}
-                    <div className="lg:col-span-8 space-y-20">                {/* Domains */}
+                    <div className="lg:col-span-8 space-y-20">         
+                        
+                            {event.speakers && event.speakers.length > 0 && (
+                            <ScrollAnimatedSection>
+                                <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                                    Speakers & Mentors
+                                </h2>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                    {event.speakers.map((speaker, index) => (
+                                        <div key={index} className="group relative overflow-hidden rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-all">
+                                            <div className="aspect-square relative overflow-hidden">
+                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                <img
+                                                    src={speaker.image}
+                                                    alt={speaker.name}
+                                                    className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                            </div>
+                                            <div className="p-4 relative">
+                                                <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors mb-1">{speaker.name}</h3>
+                                                {speaker.role && (
+                                                    <p className="text-sm text-blue-400 font-medium mb-2">{speaker.role}</p>
+                                                )}
+                                                {speaker.linkedin && (
+                                                    <a href={speaker.linkedin} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 hover:text-white transition-colors mt-1 inline-block">
+                                                        View Profile
+                                                    </a>
+                                                )}
+                                                {speaker.about && (
+                                                    <p className="text-sm text-gray-400 mt-2 line-clamp-3">{speaker.about}</p>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </ScrollAnimatedSection>
+                        )}
+                        
+                        
+                               {/* Domains */}
                         {event.domains && event.domains.length > 0 && (
                             <ScrollAnimatedSection>
                                 <div className="text-center mb-12">
@@ -284,7 +324,6 @@ export default function EventDetailsClient() {
                         {event.eventStructure && event.eventStructure.length > 0 && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-                                    <span className="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-sm">03</span>
                                     Event Schedule
                                 </h2>
                                 <div className="space-y-4">
@@ -312,7 +351,6 @@ export default function EventDetailsClient() {
                         {event.hackathonFlow && event.hackathonFlow.length > 0 && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-12 flex items-center gap-3">
-                                    <span className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-sm">04</span>
                                     Event Sandbox Timeline
                                 </h2>
                                 <div className="relative">
@@ -338,7 +376,6 @@ export default function EventDetailsClient() {
                         {event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-                                    <span className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 text-sm">05</span>
                                     Prizes
                                 </h2>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -348,7 +385,7 @@ export default function EventDetailsClient() {
                                             <div className="w-16 h-16 rounded-full bg-gray-500/10 flex items-center justify-center mb-4 border border-gray-500/20">
                                                 <span className="text-2xl font-bold text-gray-400">2</span>
                                             </div>
-                                            <h3 className="text-lg font-bold text-gray-300 mb-2">2nd Place</h3>
+                                            <h3 className="text-lg font-bold text-gray-300 mb-2">2nd Runner Up</h3>
                                             <p className="text-gray-400 text-sm">{event.prizes.secondPlace}</p>
                                         </div>
                                     )}
@@ -366,10 +403,46 @@ export default function EventDetailsClient() {
                                             <div className="w-16 h-16 rounded-full bg-orange-700/10 flex items-center justify-center mb-4 border border-orange-700/20">
                                                 <span className="text-2xl font-bold text-orange-400">3</span>
                                             </div>
-                                            <h3 className="text-lg font-bold text-orange-400 mb-2">3rd Place</h3>
+                                            <h3 className="text-lg font-bold text-orange-400 mb-2">3rd Runner Up</h3>
                                             <p className="text-gray-400 text-sm">{event.prizes.thirdPlace}</p>
                                         </div>
                                     )}
+                                </div>
+                            </ScrollAnimatedSection>
+                        )}
+
+                        {/* Speakers Section */}
+                    
+
+                        {/* Sponsors Section */}
+                        {event.sponsors && event.sponsors.length > 0 && (
+                            <ScrollAnimatedSection>
+                                <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                                    <span className="w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 text-sm">07</span>
+                                    Our Sponsors
+                                </h2>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                    {event.sponsors.map((sponsor, index) => (
+                                        <div key={index} className="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-pink-500/30 transition-all flex items-center justify-center aspect-video relative overflow-hidden hover:bg-white/10">
+                                            {sponsor.website ? (
+                                                <a href={sponsor.website} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img
+                                                        src={sponsor.image}
+                                                        alt={sponsor.name}
+                                                        className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                                                    />
+                                                </a>
+                                            ) : (
+                                                /* eslint-disable-next-line @next/next/no-img-element */
+                                                <img
+                                                    src={sponsor.image}
+                                                    alt={sponsor.name}
+                                                    className="max-w-full max-h-full object-contain filter grayscale group-hover:grayscale-0 transition-all duration-300"
+                                                />
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
                             </ScrollAnimatedSection>
                         )}

@@ -33,7 +33,12 @@ export interface EventData {
     subCategory?: string;
     tags?: string[];
     highlights?: string[];
+
     domains?: string[];
+
+    // Speakers & Sponsors
+    speakers?: Array<{ name: string; role?: string; image: string; linkedin?: string; about?: string; }>;
+    sponsors?: Array<{ name: string; image: string; website?: string; }>;
 
     // Structure and flow
     eventStructure?: Array<{

@@ -17,8 +17,8 @@ const contactDetails = [
     {
         icon: <Phone className="w-8 h-8 text-purple-400" />,
         title: "Call Us",
-        value: "+91 6205905116 / +91 120 4387396",
-        link: "tel:+916205905116",
+        value: "+91 9355214750",
+        link: "tel:+919355214750",
         description: "Mon-Fri from 9am to 6pm."
     },
     {

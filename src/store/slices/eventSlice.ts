@@ -53,7 +53,8 @@ const mapBackendEvent = (backendEvent: any): EventData => {
         whatParticipantsWillReceive: backendEvent.whatParticipantsWillReceive,
         rulesAndGuidelines: backendEvent.rulesAndGuidelines,
         submissionRequirements: backendEvent.submissionRequirements,
-
+        speakers: backendEvent.speakers,
+        sponsors: backendEvent.sponsors,
         // Prizes
         prizes: backendEvent.prizes,
 
