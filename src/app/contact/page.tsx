@@ -3,7 +3,7 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Mail, Phone, MapPin, Twitter, Linkedin, Github, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Instagram } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const contactDetails = [
@@ -31,10 +31,8 @@ const contactDetails = [
 ];
 
 const socialLinks = [
-    { icon: <Twitter className="w-5 h-5" />, href: "#", label: "Twitter" },
-    { icon: <Linkedin className="w-5 h-5" />, href: "#", label: "LinkedIn" },
-    { icon: <Github className="w-5 h-5" />, href: "#", label: "GitHub" },
-    { icon: <Instagram className="w-5 h-5" />, href: "#", label: "Instagram" },
+    { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/codenchill_hackathon/", label: "Instagram" },
+    { icon: <Linkedin className="w-5 h-5" />, href: "https://www.linkedin.com/company/codenchil/", label: "LinkedIn" },
 ];
 
 // Metadata moved to layout.tsx
@@ -49,7 +47,7 @@ export default function ContactPage() {
 
             <Navbar />
 
-            <div className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative z-10 flex-grow flex flex-col justify-center">
+            <div className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative z-10 grow flex flex-col justify-center">
 
                 {/* Hero Section */}
                 <div className="max-w-4xl mx-auto text-center mb-20">
@@ -58,7 +56,7 @@ export default function ContactPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
                     >
-                        <h1 className="text-4xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-500">
+                        <h1 className="text-4xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-linear-to-r from-white via-slate-200 to-slate-500">
                             Get in Touch.
                         </h1>
                         <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">

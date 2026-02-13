@@ -1,9 +1,14 @@
 import React from 'react';
-import { Github, Linkedin, Twitter, Mail, Code2 } from 'lucide-react';
+import { Linkedin, Mail, Code2, Instagram } from 'lucide-react';
 import Image from 'next/image';
 
 
 const Footer = () => {
+    const socialLinks = [
+        { icon: Instagram, href: "https://www.instagram.com/codenchill_hackathon/" },
+        { icon: Linkedin, href: "https://www.linkedin.com/company/codenchil/" }
+    ];
+
     return (
         <footer className="bg-black py-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,8 +22,14 @@ const Footer = () => {
                             Empowering students to build innovative AI solutions for real-world challenges. Join the movement today.
                         </p>
                         <div className="flex items-center gap-4">
-                            {[Github, Linkedin, Twitter, Mail].map((Icon, i) => (
-                                <a key={i} href="#" className="p-2 bg-blue-900/20 text-slate-400 rounded-lg hover:bg-blue-500/20 hover:text-blue-400 transition-colors">
+                            {socialLinks.map(({ icon: Icon, href }, i) => (
+                                <a
+                                    key={i}
+                                    href={href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-2 bg-blue-900/20 text-slate-400 rounded-lg hover:bg-blue-500/20 hover:text-blue-400 transition-colors"
+                                >
                                     <Icon className="w-5 h-5" />
                                 </a>
                             ))}
