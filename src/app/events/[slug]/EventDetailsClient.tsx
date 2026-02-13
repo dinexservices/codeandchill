@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import Link from 'next/link';
-import { Calendar, Clock, MapPin, Trophy, Users, CheckCircle, ArrowRight, Target, AlertCircle, Sparkles, Gift, ScrollText, ShieldAlert } from 'lucide-react';
+import { Calendar, Clock, MapPin, Trophy, Users, CheckCircle, ArrowRight, Target, AlertCircle, Sparkles, Gift, ScrollText, ShieldAlert, X, Linkedin } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CountdownTimer from '@/components/CountdownTimer';
@@ -46,6 +46,7 @@ export default function EventDetailsClient() {
     const slug = params.slug as string;
     const dispatch = useAppDispatch();
     const { event, loading, error } = useAppSelector((state) => state.event);
+    const [selectedSpeaker, setSelectedSpeaker] = React.useState<any>(null);
 
     useEffect(() => {
         if (slug) {
@@ -182,23 +183,23 @@ export default function EventDetailsClient() {
 
             {/* Event Details Grid */}
             <div className="container mx-auto px-4 py-20">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
-                    <ScrollAnimatedSection className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
-                        <Clock className="w-10 h-10 text-purple-400 mb-4" />
-                        <h3 className="text-xl font-bold mb-2">Duration</h3>
-                        <p className="text-gray-400">{event.durationHours} Hours of non-stop innovation</p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8 mb-12 md:mb-20">
+                    <ScrollAnimatedSection className="p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
+                        <Clock className="w-8 h-8 md:w-10 md:h-10 text-purple-400 mb-3 md:mb-4" />
+                        <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Duration</h3>
+                        <p className="text-sm md:text-base text-gray-400">{event.durationHours} Hours of non-stop innovation</p>
                     </ScrollAnimatedSection>
 
-                    <ScrollAnimatedSection className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.2}>
-                        <MapPin className="w-10 h-10 text-blue-400 mb-4" />
-                        <h3 className="text-xl font-bold mb-2">Location</h3>
-                        <p className="text-gray-400">{event.location}</p>
+                    <ScrollAnimatedSection className="p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.2}>
+                        <MapPin className="w-8 h-8 md:w-10 md:h-10 text-blue-400 mb-3 md:mb-4" />
+                        <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Location</h3>
+                        <p className="text-sm md:text-base text-gray-400">{event.location}</p>
                     </ScrollAnimatedSection>
 
-                    <ScrollAnimatedSection className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.4}>
-                        <Trophy className="w-10 h-10 text-yellow-400 mb-4" />
-                        <h3 className="text-xl font-bold mb-2">Prize Pool</h3>
-                        <p className="text-gray-400">Total prizes worth significant value</p>
+                    <ScrollAnimatedSection className="col-span-2 md:col-span-1 p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.4}>
+                        <Trophy className="w-8 h-8 md:w-10 md:h-10 text-yellow-400 mb-3 md:mb-4" />
+                        <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Prize Pool</h3>
+                        <p className="text-sm md:text-base text-gray-400">Total prizes worth significant value</p>
                     </ScrollAnimatedSection>
                 </div>
 
@@ -247,47 +248,95 @@ export default function EventDetailsClient() {
                 {/* Main Content Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                     {/* Left Column - Main Info */}
-                    <div className="lg:col-span-8 space-y-20">         
-                        
-                            {event.speakers && event.speakers.length > 0 && (
+                    <div className="lg:col-span-8 space-y-20">
+
+                        {event.speakers && event.speakers.length > 0 && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
                                     Speakers & Mentors
                                 </h2>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                     {event.speakers.map((speaker, index) => (
-                                        <div key={index} className="group relative overflow-hidden rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-all">
+                                        <div
+                                            key={index}
+                                            onClick={() => setSelectedSpeaker(speaker)}
+                                            className="group relative overflow-hidden rounded-xl bg-white/5 border border-white/10 hover:border-blue-500/50 transition-all cursor-pointer hover:shadow-[0_0_20px_-5px_rgba(59,130,246,0.3)]"
+                                        >
                                             <div className="aspect-square relative overflow-hidden">
                                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                                 <img
                                                     src={speaker.image}
                                                     alt={speaker.name}
-                                                    className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                                                    className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500 grayscale group-hover:grayscale-0"
                                                 />
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                            </div>
-                                            <div className="p-4 relative">
-                                                <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors mb-1">{speaker.name}</h3>
-                                                {speaker.role && (
-                                                    <p className="text-sm text-blue-400 font-medium mb-2">{speaker.role}</p>
-                                                )}
-                                                {speaker.linkedin && (
-                                                    <a href={speaker.linkedin} target="_blank" rel="noopener noreferrer" className="text-sm text-gray-400 hover:text-white transition-colors mt-1 inline-block">
-                                                        View Profile
-                                                    </a>
-                                                )}
-                                                {speaker.about && (
-                                                    <p className="text-sm text-gray-400 mt-2 line-clamp-3">{speaker.about}</p>
-                                                )}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+
+                                                <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                                                    <h3 className="text-sm font-bold text-white leading-tight mb-0.5">{speaker.name}</h3>
+                                                    {speaker.role && (
+                                                        <p className="text-xs text-blue-400 font-medium truncate">{speaker.role}</p>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
                                 </div>
+
+                                {/* Speaker Modal */}
+                                {selectedSpeaker && (
+                                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedSpeaker(null)}>
+                                        <div
+                                            className="relative w-full max-w-lg bg-[#0A0A0A] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden"
+                                            onClick={(e) => e.stopPropagation()}
+                                        >
+                                            <button
+                                                onClick={() => setSelectedSpeaker(null)}
+                                                className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                                            >
+                                                <X className="w-5 h-5" />
+                                            </button>
+
+                                            <div className="flex flex-col sm:flex-row gap-6 mb-6">
+                                                <div className="w-24 h-24 sm:w-32 sm:h-32 shrink-0 rounded-2xl overflow-hidden border-2 border-blue-500/30">
+                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                    <img
+                                                        src={selectedSpeaker.image}
+                                                        alt={selectedSpeaker.name}
+                                                        className="object-cover w-full h-full"
+                                                    />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h3 className="text-2xl font-bold text-white mb-1">{selectedSpeaker.name}</h3>
+                                                    {selectedSpeaker.role && (
+                                                        <p className="text-blue-400 font-medium text-lg mb-3">{selectedSpeaker.role}</p>
+                                                    )}
+                                                    {selectedSpeaker.linkedin && (
+                                                        <a
+                                                            href={selectedSpeaker.linkedin}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5]/20 transition-colors text-sm font-semibold"
+                                                        >
+                                                            <Linkedin className="w-4 h-4" />
+                                                            LinkedIn Profile
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {selectedSpeaker.about && (
+                                                <div className="prose prose-invert prose-sm max-w-none">
+                                                    <p className="text-gray-300 leading-relaxed">{selectedSpeaker.about}</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </ScrollAnimatedSection>
                         )}
-                        
-                        
-                               {/* Domains */}
+
+
+                        {/* Domains */}
                         {event.domains && event.domains.length > 0 && (
                             <ScrollAnimatedSection>
                                 <div className="text-center mb-12">
@@ -295,7 +344,7 @@ export default function EventDetailsClient() {
                                     <p className="text-gray-400">Select a domain to build your solution.</p>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
                                     {event.domains.map((domain, index) => {
                                         const details = DOMAIN_DETAILS[domain] || {
                                             description: "Innovate and build solutions in this domain using cutting-edge AI technologies.",
@@ -304,15 +353,11 @@ export default function EventDetailsClient() {
                                         const Icon = details.icon;
 
                                         return (
-                                            <div key={index} className="group p-8 rounded-3xl bg-[#0A0A0A] border border-white/10 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-[0_0_30px_-10px_rgba(6,182,212,0.15)] flex flex-col items-center justify-center h-full">
-                                                <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-cyan-500/20 group-hover:border-cyan-500/50">
-                                                    <div className="relative">
-                                                        <div className="absolute inset-0 bg-cyan-500 blur-md opacity-20" />
-                                                        <Icon className="w-6 h-6 text-cyan-400 relative z-10" />
-                                                    </div>
+                                            <div key={index} className="group relative p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center text-center">
+                                                <div className="w-12 h-12 mb-4 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 group-hover:border-cyan-500/50 transition-all duration-300">
+                                                    <Icon className="w-6 h-6 text-cyan-400" />
                                                 </div>
-
-                                                <h3 className="text-xl font-bold text-white group-hover:text-cyan-400 transition-colors w-full text-center">{domain}</h3>
+                                                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">{domain}</h3>
                                             </div>
                                         );
                                     })}
@@ -412,7 +457,7 @@ export default function EventDetailsClient() {
                         )}
 
                         {/* Speakers Section */}
-                    
+
 
                         {/* Sponsors Section */}
                         {event.sponsors && event.sponsors.length > 0 && (

@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, ChevronDown, Rocket, Calendar, Users } from 'lucide-react';
+import { Menu, X, Rocket, Calendar, Users } from 'lucide-react';
 import Image from 'next/image';
 const logo = "/logo.png"
 
 const Navbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const [eventsDropdownOpen, setEventsDropdownOpen] = useState(false);
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Added for the new mobile menu
 
     useEffect(() => {
@@ -46,30 +46,7 @@ const Navbar = () => {
 
                         <div className="hidden md:flex items-center gap-8">
                             <Link href="/" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Home</Link>
-                            <div
-                                className="relative"
-                                onMouseEnter={() => setEventsDropdownOpen(true)}
-                                onMouseLeave={() => setEventsDropdownOpen(false)}
-                            >
-                                <Link href="/events" className="flex items-center gap-1 text-slate-300 hover:text-blue-400 font-medium transition-colors py-2">
-                                    Events <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${eventsDropdownOpen ? 'rotate-180' : ''}`} />
-                                </Link>
-
-                                {/* Dropdown Menu */}
-                                <div className={`absolute top-full left-1/2 -translate-x-1/2 pt-2 w-64 transition-all duration-200 ${eventsDropdownOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
-                                    <div className="bg-black rounded-xl shadow-xl border border-blue-800 p-2 overflow-hidden">
-                                        <Link href="/events" className="block p-3 rounded-lg hover:bg-blue-900/30 group transition-colors">
-                                            <div className="font-semibold text-white group-hover:text-blue-400 mb-0.5">All Events</div>
-                                            <div className="text-xs text-slate-400">View upcoming events</div>
-                                        </Link>
-                                        {/* Code & Chill */}
-                                        <Link href="/events/code-and-chill" className="block p-3 rounded-lg hover:bg-blue-900/30 group transition-colors">
-                                            <div className="font-semibold text-white group-hover:text-blue-400 mb-0.5">Code & Chill</div>
-                                            <div className="text-xs text-slate-400">24-hour AI Hackathon</div>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
+                            <Link href="/events" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Events</Link>
                             <Link href="/careers" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Career</Link>
                             <Link href="/contact" className="px-5 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50">
                                 Contact Us
@@ -109,15 +86,9 @@ const Navbar = () => {
                             Home
                         </Link>
 
-                        <div className="space-y-4">
-                            <div className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Events</div>
-                            <Link href="/events" className="block pl-4 text-slate-300 hover:text-blue-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                                All Events
-                            </Link>
-                            <Link href="/events/code-and-chill" className="block pl-4 text-slate-300 hover:text-blue-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                                Code & Chill
-                            </Link>
-                        </div>
+                        <Link href="/events" className="block text-lg font-medium text-slate-300 hover:text-blue-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                            Events
+                        </Link>
 
                         <Link href="/career" className="block text-lg font-medium text-slate-300 hover:text-blue-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                             Career
