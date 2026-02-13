@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import transporter from "./src/config/email.js";
 
 
 dotenv.config();
@@ -29,6 +30,11 @@ app.get("/", (req, res) => {
         message: "Welcome to Event Booking API! 🚀"
     });
 });
+transporter.verify((err, success) => {
+  if (err) console.log(err);
+  else console.log("Server is ready to send mail");
+});
+
 
 // Routes
 import { eventRouter } from "./src/routes/event.routes.js";
