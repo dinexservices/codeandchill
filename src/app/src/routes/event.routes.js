@@ -18,7 +18,13 @@ eventRouter.post("/event-register/:eventId", registerForEvent);
 eventRouter.post("/create-payment", createPayment);
 eventRouter.post("/payment-success", verifyPayment);
 eventRouter.post("/payment-callback", paymentCallback);
-eventRouter.post("/webhook/razorpay", webhookPayment);
+
+eventRouter.post(
+  "/webhook/razorpay",
+  express.raw({ type: "application/json" }),
+  webhookPayment
+);
+
 
 // Get Routes
 import { getAllEvents, getEventById, getEventBySlug } from "../controller/Event/get.event.js";
