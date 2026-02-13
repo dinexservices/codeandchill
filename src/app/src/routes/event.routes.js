@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express from "express";
 import createEvent from "../controller/Event/create.event.js";
 import updateEvent from "../controller/Event/update.event.js";
 import registerForEvent from "../controller/User/event.registration.js";
@@ -7,7 +7,7 @@ import verifyPayment from "../controller/verifyPayment.js";
 import webhookPayment from "../controller/webhookPayment.js";
 import paymentCallback from "../controller/paymentCallback.js";
 
-export const eventRouter = Router();
+export const eventRouter = express.Router();
 
 
 eventRouter.post("/event-create", createEvent);
@@ -20,9 +20,9 @@ eventRouter.post("/payment-success", verifyPayment);
 eventRouter.post("/payment-callback", paymentCallback);
 
 eventRouter.post(
-  "/webhook/razorpay",
-  express.raw({ type: "application/json" }),
-  webhookPayment
+    "/webhook/razorpay",
+    express.raw({ type: "application/json" }),
+    webhookPayment
 );
 
 
