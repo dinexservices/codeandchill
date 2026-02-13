@@ -10,6 +10,8 @@ import paymentCallback from "../controller/paymentCallback.js";
 export const eventRouter = express.Router();
 
 
+
+
 eventRouter.post("/event-create", createEvent);
 eventRouter.put("/event-update/:eventId", updateEvent);
 eventRouter.post("/event-register/:eventId", registerForEvent);
@@ -19,11 +21,7 @@ eventRouter.post("/create-payment", createPayment);
 eventRouter.post("/payment-success", verifyPayment);
 eventRouter.post("/payment-callback", paymentCallback);
 
-eventRouter.post(
-    "/webhook/razorpay",
-    express.raw({ type: "application/json" }),
-    webhookPayment
-);
+
 
 
 // Get Routes

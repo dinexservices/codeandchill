@@ -21,8 +21,19 @@ app.use(cors({
     credentials: true
 }));
 app.use(cookieParser());
+import webhookPayment from "./src/controller/webhookPayment.js";
+
+app.post(
+  "/api/v1/events/webhook/razorpay",
+  express.raw({ type: "application/json" }),
+  webhookPayment
+);
+
+/* ---------------- BODY PARSERS AFTER ---------------- */
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+
+
 
 app.get("/", (req, res) => {
     res.status(200).json({
