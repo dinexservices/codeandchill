@@ -22,7 +22,9 @@ eventRouter.post("/payment-success", verifyPayment);
 eventRouter.post("/payment-callback", paymentCallback);
 
 
-
+// Fetch event participation
+import fetchEventParticipation from "../controller/User/fetch.eventParticipation.js";
+eventRouter.get("/participation/:eventId", fetchEventParticipation);
 
 // Get Routes
 import { getAllEvents, getEventById, getEventBySlug } from "../controller/Event/get.event.js";
