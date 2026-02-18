@@ -299,49 +299,51 @@ export default function EventDetailsClient() {
                                 {selectedSpeaker && (
                                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedSpeaker(null)}>
                                         <div
-                                            className="relative w-full max-w-lg bg-[#0A0A0A] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden"
+                                            className="relative w-full max-w-lg max-h-[90vh] flex flex-col bg-[#0A0A0A] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <button
                                                 onClick={() => setSelectedSpeaker(null)}
-                                                className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                                                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
                                             >
                                                 <X className="w-5 h-5" />
                                             </button>
 
-                                            <div className="flex flex-col sm:flex-row gap-6 mb-6">
-                                                <div className="w-24 h-24 sm:w-32 sm:h-32 shrink-0 rounded-2xl overflow-hidden border-2 border-blue-500/30">
-                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                    <img
-                                                        src={selectedSpeaker.image}
-                                                        alt={selectedSpeaker.name}
-                                                        className="object-cover w-full h-full"
-                                                    />
+                                            <div className="overflow-y-auto pr-2 custom-scrollbar mt-2">
+                                                <div className="flex flex-col sm:flex-row gap-6 mb-6">
+                                                    <div className="w-24 h-24 sm:w-32 sm:h-32 shrink-0 rounded-2xl overflow-hidden border-2 border-blue-500/30">
+                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                        <img
+                                                            src={selectedSpeaker.image}
+                                                            alt={selectedSpeaker.name}
+                                                            className="object-cover w-full h-full"
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <h3 className="text-2xl font-bold text-white mb-1">{selectedSpeaker.name}</h3>
+                                                        {selectedSpeaker.role && (
+                                                            <p className="text-blue-400 font-medium text-lg mb-3">{selectedSpeaker.role}</p>
+                                                        )}
+                                                        {selectedSpeaker.linkedin && (
+                                                            <a
+                                                                href={selectedSpeaker.linkedin}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5]/20 transition-colors text-sm font-semibold"
+                                                            >
+                                                                <Linkedin className="w-4 h-4" />
+                                                                LinkedIn Profile
+                                                            </a>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                                <div className="flex-1">
-                                                    <h3 className="text-2xl font-bold text-white mb-1">{selectedSpeaker.name}</h3>
-                                                    {selectedSpeaker.role && (
-                                                        <p className="text-blue-400 font-medium text-lg mb-3">{selectedSpeaker.role}</p>
-                                                    )}
-                                                    {selectedSpeaker.linkedin && (
-                                                        <a
-                                                            href={selectedSpeaker.linkedin}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0077b5]/10 text-[#0077b5] hover:bg-[#0077b5]/20 transition-colors text-sm font-semibold"
-                                                        >
-                                                            <Linkedin className="w-4 h-4" />
-                                                            LinkedIn Profile
-                                                        </a>
-                                                    )}
-                                                </div>
-                                            </div>
 
-                                            {selectedSpeaker.about && (
-                                                <div className="prose prose-invert prose-sm max-w-none">
-                                                    <p className="text-gray-300 leading-relaxed">{selectedSpeaker.about}</p>
-                                                </div>
-                                            )}
+                                                {selectedSpeaker.about && (
+                                                    <div className="prose prose-invert prose-sm max-w-none">
+                                                        <p className="text-gray-300 leading-relaxed">{selectedSpeaker.about}</p>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
