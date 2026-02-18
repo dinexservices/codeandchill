@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchEventBySlug, registerForEvent, createPayment, verifyPayment, clearPayment, clearRegistration } from '@/store/slices/eventSlice';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Users, User, ArrowRight, CheckCircle, AlertCircle, Loader2, CreditCard, ChevronLeft } from 'lucide-react';
+import { Users, User, ArrowRight, CheckCircle, AlertCircle, Loader2, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 // Metadata import removed as this is now a client component
@@ -433,9 +433,7 @@ export default function RegisterClient() {
                                 <h2 className="text-2xl font-bold text-white mb-8 text-center">Registration Summary</h2>
 
                                 <div className="bg-black/30 rounded-2xl p-8 border border-white/10 mb-8 relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-3 opacity-10">
-                                        <CreditCard className="w-24 h-24 text-white" />
-                                    </div>
+                                 
                                     <div className="space-y-4 relative z-10">
                                         <div className="flex justify-between items-center">
                                             <span className="text-slate-400">Event</span>
