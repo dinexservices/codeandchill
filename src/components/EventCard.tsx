@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star } from 'lucide-react';
 
 interface EventCardProps {
     id: string;
@@ -61,14 +60,9 @@ const EventCard: React.FC<EventCardProps> = ({
 
                 {/* Badges Row */}
                 <div className="flex items-center gap-3 mb-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-75">
-                    {/* Rating Badge */}
-                    <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 shadow-lg">
-                        <span className="text-xs font-semibold">{rating}</span>
-                        <div className="flex gap-0.5">
-                            {[...Array(5)].map((_, i) => (
-                                <Star key={i} className="w-2.5 h-2.5 fill-current text-yellow-400" />
-                            ))}
-                        </div>
+                    {/* Date Badge */}
+                    <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-medium shadow-lg">
+                        {date}
                     </div>
 
                     {/* Time Badge */}
