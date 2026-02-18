@@ -69,6 +69,11 @@ const EventCard: React.FC<EventCardProps> = ({
                     <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-medium shadow-lg">
                         {time}
                     </div>
+
+                    {/* Price Badge */}
+                    <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-medium shadow-lg">
+                        {price === 'Free' ? 'Free' : `₹${price}`}
+                    </div>
                 </div>
 
                 {/* Action Button */}

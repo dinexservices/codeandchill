@@ -176,6 +176,19 @@ export default function EventDetailsClient() {
                                     </p>
                                 </div>
                             </div>
+
+                            {/* Registration Fee Card */}
+                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-8 py-6 rounded-3xl min-w-[280px] hover:border-cyan-500/30 transition-colors group">
+                                <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors">
+                                    <Target className="w-7 h-7 text-cyan-400" />
+                                </div>
+                                <div className="text-left">
+                                    <p className="text-gray-400 text-sm font-medium mb-1">Registration Fee</p>
+                                    <p className="text-white text-xl font-bold">
+                                        {event.price === 'Free' ? 'Free' : `₹${event.price} / person`}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
