@@ -443,7 +443,7 @@ export default function EventDetailsClient() {
                                             <div className="w-16 h-16 rounded-full bg-gray-500/10 flex items-center justify-center mb-4 border border-gray-500/20">
                                                 <span className="text-2xl font-bold text-gray-400">2</span>
                                             </div>
-                                            <h3 className="text-lg font-bold text-gray-300 mb-2">2nd Runner Up</h3>
+                                            <h3 className="text-lg font-bold text-gray-300 mb-2">Runner Up</h3>
                                             <p className="text-gray-400 text-sm">{event.prizes.secondPlace}</p>
                                         </div>
                                     )}
@@ -461,7 +461,7 @@ export default function EventDetailsClient() {
                                             <div className="w-16 h-16 rounded-full bg-orange-700/10 flex items-center justify-center mb-4 border border-orange-700/20">
                                                 <span className="text-2xl font-bold text-orange-400">3</span>
                                             </div>
-                                            <h3 className="text-lg font-bold text-orange-400 mb-2">3rd Runner Up</h3>
+                                            <h3 className="text-lg font-bold text-orange-400 mb-2">2nd Runner Up</h3>
                                             <p className="text-gray-400 text-sm">{event.prizes.thirdPlace}</p>
                                         </div>
                                     )}
