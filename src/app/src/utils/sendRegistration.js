@@ -6,10 +6,13 @@ const sendRegistrationEmail = async ({
   eventTitle,
   ticketNumber,
   totalTickets,
-  amount
+  amount,
 }) => {
   const mailOptions = {
-    from: `"Event Team" <${process.env.MAIL_ADMINISTRATOR}>`,
+    from: {
+      name: "CodeNchill",
+      address: "codenchil@conclavetechmedia.com",
+    },
     to,
     subject: `🎟️ Registration Confirmed – ${eventTitle}`,
     html: `
@@ -28,7 +31,7 @@ const sendRegistrationEmail = async ({
         <br/>
         <p>Regards,<br/>Event Team</p>
       </div>
-    `
+    `,
   };
 
   await transporter.sendMail(mailOptions);
