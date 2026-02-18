@@ -32,7 +32,7 @@ const sendRegistrationEmail = async ({
                 <!-- Header with Logo -->
                 <tr>
                   <td align="center" style="background-color: #0c0c0c; padding: 25px;">
-                    <img src="https://codenchil.tech/logo.png" alt="CodeNchill" style="height: 40px; display: block; border: 0;">
+                    <img src="https://www.codenchill.tech/logo.png" alt="CodeNchill" style="height: 40px; display: block; border: 0;">
                   </td>
                 </tr>
 
