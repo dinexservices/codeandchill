@@ -60,6 +60,7 @@ const mapBackendEvent = (backendEvent: any): EventData => {
 
         // Registration
         registrationLink: backendEvent.registrationLink,
+        redirectUrl: backendEvent.redirectUrl,
         isRegistrationOpen: backendEvent.isRegistrationOpen !== false,
 
         // Display flags

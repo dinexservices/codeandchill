@@ -66,6 +66,7 @@ export interface EventData {
 
     // Registration
     registrationLink?: string;
+    redirectUrl?: string;
     isRegistrationOpen?: boolean;
 
     // Additional info

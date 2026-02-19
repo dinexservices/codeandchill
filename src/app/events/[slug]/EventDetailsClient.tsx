@@ -127,13 +127,25 @@ export default function EventDetailsClient() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
-                            <Link
-                                href={`/events/${slug}/register`}
-                                className="group relative px-8 py-4 bg-white text-black rounded-full font-bold transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] flex items-center gap-2"
-                            >
-                                Register Now
-                                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                            </Link>
+                            {event.redirectUrl ? (
+                                <a
+                                    href={event.redirectUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group relative px-8 py-4 bg-white text-black rounded-full font-bold transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] flex items-center gap-2"
+                                >
+                                    Register Now
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </a>
+                            ) : (
+                                <Link
+                                    href={`/events/${slug}/register`}
+                                    className="group relative px-8 py-4 bg-white text-black rounded-full font-bold transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] flex items-center gap-2"
+                                >
+                                    Register Now
+                                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                            )}
                             <div className="flex items-center gap-2 text-gray-400">
                                 <Users className="w-5 h-5" />
                                 <span>500+ Registered</span>
