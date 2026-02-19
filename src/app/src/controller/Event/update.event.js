@@ -13,6 +13,7 @@ const updateEvent = async (req, res) => {
             location,
             registrationFee,
             registrationLink,
+            redirectUrl,
             highlights,
             domains,
             hackathonFlow,
@@ -63,6 +64,7 @@ const updateEvent = async (req, res) => {
         if (location) event.location = location;
         if (registrationFee !== undefined) event.registrationFee = registrationFee;
         if (registrationLink) event.registrationLink = registrationLink;
+        if (redirectUrl) event.redirectUrl = redirectUrl;
         if (highlights) event.highlights = highlights;
         if (domains) event.domains = domains;
         if (hackathonFlow) event.hackathonFlow = hackathonFlow;

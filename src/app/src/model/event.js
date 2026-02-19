@@ -44,6 +44,8 @@ const eventSchema = new mongoose.Schema(
 
     registrationLink: String,
 
+    redirectUrl: String, // URL to redirect to when "Register" is clicked
+
     highlights: {
       type: [String],
       default: []
