@@ -147,10 +147,24 @@ export const verifyPayment = createAsyncThunk(
     }
 );
 
+export const fetchTicketsByEvent = createAsyncThunk(
+    'event/fetchTicketsByEvent',
+    async (eventId: string, { rejectWithValue }) => {
+        try {
+            const response = await api.get(`/api/v1/events/${eventId}/tickets`);
+            return response.data.tickets;
+        } catch (error: any) {
+            return rejectWithValue(error);
+        }
+    }
+);
+
 // State interface
 interface EventState {
     events: EventData[];
     event: EventData | null;
+    tickets: any[];
+    ticketsLoading: boolean;
     loading: boolean;
     error: string | null;
     registrationStatus: 'idle' | 'loading' | 'success' | 'error';
@@ -162,6 +176,8 @@ interface EventState {
 const initialState: EventState = {
     events: [],
     event: null,
+    tickets: [],
+    ticketsLoading: false,
     loading: false,
     error: null,
     registrationStatus: 'idle',
@@ -186,6 +202,10 @@ const eventSlice = createSlice({
         clearPayment: (state) => {
             state.paymentStatus = 'idle';
             state.paymentData = null;
+        },
+        clearTickets: (state) => {
+            state.tickets = [];
+            state.ticketsLoading = false;
         },
     },
     extraReducers: (builder) => {
@@ -275,8 +295,22 @@ const eventSlice = createSlice({
                 state.paymentStatus = 'error';
                 state.error = action.payload as string;
             });
+
+        // Fetch Tickets By Event
+        builder
+            .addCase(fetchTicketsByEvent.pending, (state) => {
+                state.ticketsLoading = true;
+            })
+            .addCase(fetchTicketsByEvent.fulfilled, (state, action) => {
+                state.ticketsLoading = false;
+                state.tickets = action.payload;
+            })
+            .addCase(fetchTicketsByEvent.rejected, (state) => {
+                state.ticketsLoading = false;
+                state.tickets = [];
+            });
     },
 });
 
-export const { clearEvent, clearRegistration, clearPayment } = eventSlice.actions;
+export const { clearEvent, clearRegistration, clearPayment, clearTickets } = eventSlice.actions;
 export default eventSlice.reducer;

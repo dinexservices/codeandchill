@@ -5,12 +5,12 @@ import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import Link from 'next/link';
-import { Calendar, Clock, MapPin, Trophy, Users, CheckCircle, ArrowRight, Target, AlertCircle, Sparkles, Gift, ScrollText, ShieldAlert, X, Linkedin } from 'lucide-react';
+import { Calendar, Clock, MapPin, Trophy, Users, CheckCircle, ArrowRight, Target, AlertCircle, Sparkles, Gift, ScrollText, ShieldAlert, X, Linkedin, Tag, Users2 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CountdownTimer from '@/components/CountdownTimer';
 import ScrollAnimatedSection from '@/components/ScrollAnimatedSection';
-import { fetchEventBySlug } from '@/store/slices/eventSlice';
+import { fetchEventBySlug, fetchTicketsByEvent, clearTickets } from '@/store/slices/eventSlice';
 import { Skeleton } from "@/components/ui/Skeleton";
 // Removed metadata imports as this is now a client component
 
@@ -45,7 +45,7 @@ export default function EventDetailsClient() {
     const params = useParams();
     const slug = params.slug as string;
     const dispatch = useAppDispatch();
-    const { event, loading, error } = useAppSelector((state) => state.event);
+    const { event, loading, error, tickets, ticketsLoading } = useAppSelector((state) => state.event);
     const [selectedSpeaker, setSelectedSpeaker] = React.useState<any>(null);
 
     useEffect(() => {
@@ -53,6 +53,14 @@ export default function EventDetailsClient() {
             dispatch(fetchEventBySlug(slug));
         }
     }, [dispatch, slug]);
+
+    useEffect(() => {
+        if (event) {
+            const eventId = (event as any).id || (event as any)._id;
+            if (eventId) dispatch(fetchTicketsByEvent(eventId));
+        }
+        return () => { dispatch(clearTickets()); };
+    }, [dispatch, event]);
 
     if (loading) {
         return (
@@ -205,6 +213,85 @@ export default function EventDetailsClient() {
                     </div>
                 </div>
             </div>
+
+            {/* ── Tickets Section ─────────────────────────────────────────── */}
+            {(tickets && tickets.length > 0) && (
+                <div className="container mx-auto px-4 pb-8">
+                    <ScrollAnimatedSection>
+                        <h2 className="text-3xl font-bold mb-8 text-white text-center">Available Tickets</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            {tickets.map((tkt: any) => {
+                                const available = tkt.availableSlots;
+                                const isSoldOut = available !== null && available <= 0;
+                                return (
+                                    <div key={tkt._id || tkt.id}
+                                        className={`relative p-6 rounded-2xl border transition-all ${
+                                            isSoldOut
+                                                ? 'border-white/5 bg-white/2 opacity-60'
+                                                : 'border-white/10 bg-white/5 hover:border-cyan-500/40 hover:bg-white/10'
+                                        }`}>
+                                        {/* Type badge */}
+                                        <span className={`absolute top-4 right-4 text-xs font-bold px-2.5 py-0.5 rounded-full border ${
+                                            tkt.type === 'group'
+                                                ? 'bg-purple-900/30 border-purple-500/40 text-purple-300'
+                                                : 'bg-cyan-900/30 border-cyan-500/40 text-cyan-300'
+                                        }`}>
+                                            {tkt.type === 'group' ? `Group × ${tkt.groupSize}` : 'Individual'}
+                                        </span>
+
+                                        {isSoldOut && (
+                                            <span className="absolute top-4 left-4 text-xs font-bold px-2 py-0.5 rounded-full bg-red-900/30 border border-red-500/40 text-red-300">Sold Out</span>
+                                        )}
+
+                                        <div className="flex items-center gap-3 mb-4 mt-2">
+                                            <div className="w-11 h-11 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                                                {tkt.type === 'group' ? <Users2 className="w-5 h-5 text-cyan-400" /> : <Tag className="w-5 h-5 text-cyan-400" />}
+                                            </div>
+                                            <h3 className="text-lg font-bold text-white">{tkt.name}</h3>
+                                        </div>
+
+                                        {tkt.description && (
+                                            <p className="text-slate-400 text-sm mb-4 leading-relaxed">{tkt.description}</p>
+                                        )}
+
+                                        <div className="flex items-end justify-between mt-4">
+                                            <div>
+                                                <p className="text-3xl font-bold text-cyan-400">
+                                                    {tkt.price === 0 ? 'Free' : `₹${tkt.price}`}
+                                                </p>
+                                                {tkt.price > 0 && <p className="text-slate-500 text-xs mt-0.5">per person</p>}
+                                                {tkt.type === 'group' && tkt.price > 0 && (
+                                                    <p className="text-purple-300 text-xs mt-1 font-medium">
+                                                        ₹{tkt.price * tkt.groupSize} total for {tkt.groupSize} people
+                                                    </p>
+                                                )}
+                                            </div>
+                                            {available !== null && !isSoldOut && (
+                                                <span className={`text-xs font-medium ${
+                                                    available <= 10 ? 'text-red-400' : 'text-slate-500'
+                                                }`}>
+                                                    {available} left
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <Link
+                                            href={`/events/${slug}/register`}
+                                            className={`mt-5 w-full py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all ${
+                                                isSoldOut
+                                                    ? 'bg-white/5 text-slate-500 cursor-not-allowed pointer-events-none'
+                                                    : 'bg-cyan-600 hover:bg-cyan-500 text-white'
+                                            }`}
+                                        >
+                                            {isSoldOut ? 'Sold Out' : 'Register'} <ArrowRight className="w-4 h-4" />
+                                        </Link>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </ScrollAnimatedSection>
+                </div>
+            )}
 
             {/* Event Details Grid */}
             <div className="container mx-auto px-4 py-20">

@@ -1,7 +1,6 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import TechBackground from '@/components/TechBackground';
 import HeroCarousel from '@/components/HeroCarousel';
 import AboutCollabify from '@/components/AboutCollabify';
 import AboutConclave from '@/components/AboutConclave';
@@ -10,6 +9,9 @@ import ScrollAnimatedSection from '@/components/ScrollAnimatedSection';
 import GrainOverlay from '@/components/GrainOverlay';
 import Marquee from '@/components/Marquee';
 import UpcomingEvents from '@/components/UpcomingEvents';
+import StatsCounter from '@/components/StatsCounter';
+import MissionVision from '@/components/MissionVision';
+import WhatWeOffer from '@/components/WhatWeOffer';
 
 import { Metadata } from 'next';
 
@@ -50,6 +52,17 @@ export default function Home() {
 
         {/* Upcoming Events Section */}
         <UpcomingEvents />
+
+        {/* Stats Counter Section */}
+        <ScrollAnimatedSection delay={0.1}>
+          <StatsCounter />
+        </ScrollAnimatedSection>
+
+        {/* Mission & Vision Section */}
+        <MissionVision />
+
+        {/* What We Offer Section */}
+        <WhatWeOffer />
 
         {/* About Sections Grid */}
         <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
