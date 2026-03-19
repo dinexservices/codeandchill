@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import RichTextEditor from "../component/RichTextEditor.js";
+import RichTextEditor from "./RichTextEditor.js";
 
 export default function CreateEventModal({ onClose }) {
   const [form, setForm] = useState({

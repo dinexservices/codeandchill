@@ -95,13 +95,13 @@ export default function UsersPage() {
 
                   <div className="flex justify-between">
                     <span className="text-gray-500">Phone</span>
-                    <span>{user.phoneNum}</span>
+                    <span>{user.phoneNum || user.phone}</span>
                   </div>
 
                   <div className="flex justify-between">
                     <span className="text-gray-500">College</span>
                     <span className="truncate max-w-[150px]">
-                      {user.collegeName}
+                      {user.collegeName || user.college}
                     </span>
                   </div>
                 </div>
@@ -148,9 +148,9 @@ export default function UsersPage() {
                         {user.email}
                       </td>
 
-                      <td className="px-6 py-4">{user.phoneNum}</td>
+                      <td className="px-6 py-4">{user.phoneNum || user.phone}</td>
 
-                      <td className="px-6 py-4">{user.collegeName}</td>
+                      <td className="px-6 py-4">{user.collegeName || user.college}</td>
                     </tr>
                   ))}
                 </tbody>

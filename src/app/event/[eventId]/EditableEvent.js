@@ -2,8 +2,10 @@
 
 import Toast from "@/component/Toast";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function EditableEvent({ initialEvent }) {
+  const router = useRouter();
   const [event, setEvent] = useState(initialEvent);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -141,6 +143,12 @@ export default function EditableEvent({ initialEvent }) {
 
       {/* Buttons */}
       <div className="mt-6 flex gap-4">
+        <button
+          onClick={() => router.push(`/events/edit/${event._id}`)}
+          className="bg-purple-600 hover:bg-purple-500 px-6 py-2 rounded"
+        >
+          ✏️ Edit Full Event
+        </button>
         {isEditing ? (
           <>
             <button
