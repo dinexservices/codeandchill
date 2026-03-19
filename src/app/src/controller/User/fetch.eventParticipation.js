@@ -11,10 +11,10 @@ const fetchEventParticipation = async (req, res) => {
         name: p.name,
         registrationNumber: p.registrationNumber,
         email: p.email,
-        phoneNum: p.phoneNum,
-        collegeName: p.collegeName,
-        course: p.course,
-        yearOfStudy: p.yearOfStudy,
+        phoneNum: p.phoneNum || p.phone,
+        collegeName: p.collegeName || p.college,
+        course: p.course || p.department,
+        yearOfStudy: p.yearOfStudy || p.year,
       })),
     );
 

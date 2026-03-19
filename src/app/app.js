@@ -11,6 +11,8 @@ const app = express();
 // Enable CORS for frontend
 const allowedOrigins = [
     'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
     'https://www.codenchill.tech',
     'https://codenchill.tech',
     process.env.CORS_ORIGIN
@@ -49,8 +51,10 @@ transporter.verify((err, success) => {
 
 // Routes
 import { eventRouter } from "./src/routes/event.routes.js";
+import { adminRouter } from "./src/routes/admin.routes.js";
 
 app.use("/api/v1/events", eventRouter);
+app.use("/api/v1/admin", adminRouter);
 
 
 export default app;

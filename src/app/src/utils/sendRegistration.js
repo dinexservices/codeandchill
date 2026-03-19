@@ -1,13 +1,50 @@
 import transporter from "../config/email.js";
 
+const formatFieldLabel = (key) => {
+  const map = {
+    name: "Name", email: "Email", phone: "Phone",
+    college: "College", registrationNumber: "Reg No.",
+    year: "Year", department: "Department"
+  };
+  return map[key] || key;
+};
+
 const sendRegistrationEmail = async ({
   to,
   participantName,
   eventTitle,
-  ticketNumber,
   totalTickets,
   amount,
+  teamName,
+  participants = []
 }) => {
+
+  // Generate participant details rows
+  const participantHTML = participants.map((p, index) => {
+    // Filter out standard info fields to display cleanly
+    const fields = Object.entries(p).filter(([k, v]) => 
+      v && typeof v === 'string' && v.trim() !== '' && !['_id'].includes(k)
+    );
+
+    return `
+      <div style="margin-bottom: 20px; border-bottom: 1px solid #eef0f2; padding-bottom: 15px;">
+        <h4 style="margin: 0 0 10px 0; color: #1a1a1a; font-size: 15px;">
+          <span style="background: #2563eb; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-block; text-align: center; line-height: 20px; font-size: 12px; margin-right: 8px;">${index + 1}</span>
+          ${p.name || `Participant ${index + 1}`}
+        </h4>
+        <div style="padding-left: 28px;">
+          ${fields.map(([k, v]) => `
+            <div style="margin-bottom: 4px; font-size: 13px;">
+              <span style="color: #666; width: 90px; display: inline-block;">${formatFieldLabel(k)}:</span>
+              <strong style="color: #1a1a1a;">${v}</strong>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+
   const mailOptions = {
     from: {
       name: "CodeNchill",
@@ -44,10 +81,10 @@ const sendRegistrationEmail = async ({
                     <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">Hi <strong>${participantName}</strong>,</p>
                     
                     <p style="color: #4a4a4a; font-size: 16px; line-height: 1.6; margin: 0 0 25px 0;">
-                      Great news! Your registration for <strong>${eventTitle}</strong> has been successfully confirmed. We're excited to have you join us.
+                      Great news! Your registration for <strong>${eventTitle}</strong> has been successfully confirmed. ${teamName ? `Your team <strong>${teamName}</strong> is ready to go.` : ''} We're excited to have you join us.
                     </p>
 
-                    <!-- Ticket Details Box -->
+                    <!-- Ticket Overview Box -->
                     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f8f9fa; border: 1px solid #eef0f2; border-radius: 8px; margin-bottom: 25px;">
                       <tr>
                         <td style="padding: 20px;">
@@ -60,20 +97,35 @@ const sendRegistrationEmail = async ({
                             </tr>
                             <tr>
                               <td style="padding: 15px 0; border-bottom: 1px solid #eef0f2;">
-                                <p style="margin: 0; font-size: 12px; color: #888888; text-transform: uppercase; letter-spacing: 0.5px;">Ticket</p>
-                                <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #1a1a1a;">${ticketNumber} <span style="font-weight: 400; color: #666;">(Qty: ${totalTickets})</span></p>
+                                <div style="display: flex; justify-content: space-between;">
+                                  <div>
+                                    <p style="margin: 0; font-size: 12px; color: #888888; text-transform: uppercase; letter-spacing: 0.5px;">Participants</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #1a1a1a;">${totalTickets}</p>
+                                  </div>
+                                  ${teamName ? `
+                                  <div style="text-align: right;">
+                                    <p style="margin: 0; font-size: 12px; color: #888888; text-transform: uppercase; letter-spacing: 0.5px;">Team Name</p>
+                                    <p style="margin: 5px 0 0 0; font-size: 16px; font-weight: 600; color: #1a1a1a;">${teamName}</p>
+                                  </div>` : ''}
+                                </div>
                               </td>
                             </tr>
                             <tr>
                               <td style="padding-top: 15px;">
                                 <p style="margin: 0; font-size: 12px; color: #888888; text-transform: uppercase; letter-spacing: 0.5px;">Total Paid</p>
-                                <p style="margin: 5px 0 0 0; font-size: 20px; font-weight: 700; color: #2563eb;">₹${amount}</p>
+                                <p style="margin: 5px 0 0 0; font-size: 20px; font-weight: 700; color: #2563eb;">${amount === 0 ? 'Free' : `₹${amount}`}</p>
                               </td>
                             </tr>
                           </table>
                         </td>
                       </tr>
                     </table>
+
+                    <!-- Participant Details Section -->
+                    <div style="margin-bottom: 30px;">
+                      <h3 style="color: #1a1a1a; font-size: 18px; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #eef0f2;">Registration Details</h3>
+                      ${participantHTML}
+                    </div>
 
                     <!-- Additional Info -->
                     <div style="background-color: #fff8eb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 4px; margin-bottom: 25px;">

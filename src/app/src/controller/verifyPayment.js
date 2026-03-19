@@ -11,18 +11,27 @@ const verifyPaymentLogic = async (razorpay_order_id, razorpay_payment_id) => {
     throw new Error("Payment record not found");
   }
 
+  // Prevent double processing (both webhook and frontend callback might hit this simultaneously)
   if (payment.status === "paid") {
     return { success: true, message: "Payment already verified", alreadyPaid: true };
   }
 
-  // Update payment status
-  payment.status = "paid";
-  payment.paymentId = razorpay_payment_id;
-  await payment.save();
+  // Atomically update payment to prevent race conditions
+  const updatedPayment = await Payment.findOneAndUpdate(
+    { _id: payment._id, status: { $ne: "paid" } },
+    { $set: { status: "paid", paymentId: razorpay_payment_id } },
+    { new: true }
+  );
+
+  // If updatedPayment is null, another request already processed it
+  if (!updatedPayment) {
+     return { success: true, message: "Payment already verified", alreadyPaid: true };
+  }
 
   // Create Event Registration
   const registration = new EventRegistration({
     event: payment.event._id,
+    ticket: payment.ticket,
     participants: payment.participants,
     ticketCount: payment.ticketCount,
     teamName: payment.teamName,
@@ -37,19 +46,19 @@ const verifyPaymentLogic = async (razorpay_order_id, razorpay_payment_id) => {
 
   await registration.save();
 
-  // Send Emails
-  await Promise.all(
-    registration.participants.map((p, index) =>
-      sendRegistrationEmail({
-        to: p.email,
-        participantName: p.name,
-        eventTitle: payment.event.title,
-        ticketNumber: index + 1,
-        totalTickets: registration.ticketCount,
-        amount: payment.amount
-      })
-    )
-  );
+  // Send ONE consolidated Email to the primary participant (or team leader)
+  const primaryParticipant = registration.participants[0];
+  if (primaryParticipant && primaryParticipant.email) {
+    await sendRegistrationEmail({
+      to: primaryParticipant.email,
+      participantName: payment.teamLeaderName || primaryParticipant.name || "Participant",
+      eventTitle: payment.event.title,
+      totalTickets: registration.ticketCount,
+      amount: payment.amount,
+      teamName: payment.teamName,
+      participants: registration.participants
+    });
+  }
 
   return { success: true, message: "Payment verified & registration confirmed", registrationId: registration._id };
 }

@@ -1,43 +1,18 @@
 import mongoose from "mongoose";
 
+// Flexible participant schema — accepts any set of fields the admin configures per ticket
 const participantSchema = new mongoose.Schema(
     {
-        name: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        registrationNumber: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        email: {
-            type: String,
-            required: true,
-            lowercase: true
-        },
-        phoneNum: {
-            type: String,
-            required: true
-        },
-        collegeName: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        course: {
-            type: String,
-            required: true,
-            trim: true
-        },
-        yearOfStudy: {
-            type: String,
-            required: true,
-            trim: true
-        }
+        // Core fields that are always stored if provided (all optional — dynamic per ticket config)
+        name:               { type: String, trim: true },
+        email:              { type: String, lowercase: true },
+        phone:              { type: String },
+        college:            { type: String, trim: true },
+        registrationNumber: { type: String, trim: true },
+        year:               { type: String, trim: true },
+        department:         { type: String, trim: true },
     },
-    { _id: false }
+    { _id: false, strict: false } // strict: false allows extra fields if needed
 );
 
 const paymentSchema = new mongoose.Schema(
@@ -46,6 +21,11 @@ const paymentSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Event",
             required: true
+        },
+        ticket: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Ticket",
+            default: null
         },
         participants: {
             type: [participantSchema],

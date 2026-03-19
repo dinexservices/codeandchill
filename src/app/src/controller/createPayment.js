@@ -1,12 +1,13 @@
 import Razorpay from "../../config/razorpay.js";
 import Event from "../model/event.js";
+import Ticket from "../model/ticket.js";
 import Payment from "../model/payment.js";
 
 const createPayment = async (req, res) => {
   try {
-    // Expect registration data in the body now, not just registrationId in params
     const {
       eventId,
+      ticketId,
       tktCount,
       participants,
       teamName,
@@ -18,49 +19,53 @@ const createPayment = async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    // Calculate amount
-    let amountInRupees = 0;
-    if (event.registrationFee) {
-      amountInRupees = event.registrationFee * tktCount;
+    // Determine price per person
+    let pricePerPerson = 0;
+
+    if (ticketId) {
+      // Use the selected ticket's price
+      const ticket = await Ticket.findById(ticketId);
+      if (ticket) {
+        pricePerPerson = ticket.price || 0;
+      }
+    } else {
+      // Fall back to event-level registration fee
+      pricePerPerson = event.registrationFee || 0;
     }
 
-    // For free events, this flow might need adjustment, but assuming payment flow is for paid events
-    // or we create a 0 amount order (Razorpay doesn't support 0 amount orders usually, handled separately)
-
-    if (amountInRupees === 0) {
-      // If it's free, maybe just return success immediately or skip payment? 
-      // For now behaving as if payment is required or 0 is allowed logic elsewhere.
-      // But usually we just skip payment creation for free events.
-      // The frontend handles free events by not calling createPayment but register directly?
-      // Wait, the new plan is "Registration only on payment success".
-      // For free events, we should have a direct registration route or handle 0 amount here.
-      // Let's assume standard payment flow for now.
-    }
-
+    const amountInRupees = pricePerPerson * (tktCount || participants?.length || 1);
     const amountInPaise = Math.round(amountInRupees * 100);
 
-    const options = {
-      amount: amountInPaise,
-      currency: "INR",
-      receipt: `receipt_${Date.now()}`,
-      notes: {
-        eventTitle: event.title,
-        eventId: event._id.toString()
-      }
-    };
+    let orderId;
 
-    const order = await Razorpay.orders.create(options);
+    if (amountInPaise > 0) {
+      const options = {
+        amount: amountInPaise,
+        currency: "INR",
+        receipt: `receipt_${Date.now()}`,
+        notes: {
+          eventTitle: event.title,
+          eventId: event._id.toString()
+        }
+      };
+      const order = await Razorpay.orders.create(options);
+      orderId = order.id;
+    } else {
+      // Free event / free ticket — generate a synthetic order ID
+      orderId = `free_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    }
 
-    // Create Payment Record with all registration details
+    // Save payment record
     const payment = new Payment({
       event: event._id,
+      ticket: ticketId || null,
       participants,
-      ticketCount: tktCount,
+      ticketCount: tktCount || participants?.length || 1,
       teamName,
       teamLeaderName,
       amount: amountInRupees,
       currency: "INR",
-      orderId: order.id,
+      orderId,
       status: "created"
     });
 
@@ -68,11 +73,12 @@ const createPayment = async (req, res) => {
 
     return res.json({
       success: true,
-      orderId: order.id,
+      orderId,
       amount: amountInRupees,
       keyId: process.env.RAZORPAY_KEY_ID,
       currency: "INR",
-      paymentId: payment._id
+      paymentId: payment._id,
+      isFree: amountInRupees === 0
     });
   } catch (error) {
     console.error("Create Payment Error:", error);
