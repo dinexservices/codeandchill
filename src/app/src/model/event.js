@@ -116,7 +116,20 @@ const eventSchema = new mongoose.Schema(
         image: String,
         website: String
       }
-    ]
+    ],
+
+    visibilityConfig: {
+      showTickets: { type: Boolean, default: true },
+      showAbout: { type: Boolean, default: true },
+      showHighlights: { type: Boolean, default: true },
+      showSpeakers: { type: Boolean, default: true },
+      showDomains: { type: Boolean, default: true },
+      showSchedule: { type: Boolean, default: true },
+      showTimeline: { type: Boolean, default: true },
+      showPrizes: { type: Boolean, default: true },
+      showSponsors: { type: Boolean, default: true },
+      showGuidelines: { type: Boolean, default: true }
+    }
   },
   {
     timestamps: true

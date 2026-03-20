@@ -25,7 +25,8 @@ const updateEvent = async (req, res) => {
             coverImage,
             tags,
             speakers,
-            sponsors
+            sponsors,
+            visibilityConfig
         } = req.body;
 
         if (!eventId) {
@@ -77,6 +78,7 @@ const updateEvent = async (req, res) => {
         if (tags) event.tags = tags;
         if (speakers) event.speakers = speakers;
         if (sponsors) event.sponsors = sponsors;
+        if (visibilityConfig !== undefined) event.visibilityConfig = visibilityConfig;
 
         const updatedEvent = await event.save();
 

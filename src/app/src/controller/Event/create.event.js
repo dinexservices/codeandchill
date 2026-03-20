@@ -24,7 +24,8 @@ const createEvent = async (req, res) => {
       coverImage,
       tags,
       speakers,
-      sponsors
+      sponsors,
+      visibilityConfig
     } = req.body;
 
     // ✅ Generate slug from title if not provided
@@ -78,7 +79,8 @@ const createEvent = async (req, res) => {
       coverImage,
       tags,
       speakers,
-      sponsors
+      sponsors,
+      visibilityConfig
     });
 
     return res.status(201).json({
