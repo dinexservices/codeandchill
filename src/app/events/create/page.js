@@ -15,10 +15,24 @@ const Input = ({ className = "", ...props }) => (
 const Textarea = ({ className = "", ...props }) => (
   <textarea {...props} className={`w-full bg-[#0f172a] border border-gray-700 text-white rounded-lg px-4 py-2.5 text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/40 transition resize-none ${className}`} />
 );
-const SectionCard = ({ title, children }) => (
-  <div className="bg-[#0f172a] border border-gray-800 rounded-2xl p-6 space-y-4">
-    <h3 className="text-sm font-bold text-blue-400 uppercase tracking-widest border-b border-gray-800 pb-3">{title}</h3>
-    {children}
+const SectionCard = ({ title, children, toggleAction, isActive }) => (
+  <div className={`bg-[#0f172a] border ${isActive === false ? 'border-gray-800 opacity-70' : 'border-gray-700'} rounded-2xl p-6 space-y-4 transition`}>
+    <div className="flex items-center justify-between border-b border-gray-800 pb-3">
+      <h3 className="text-sm font-bold text-blue-400 uppercase tracking-widest">{title}</h3>
+      {toggleAction && (
+        <label className="flex items-center gap-2 cursor-pointer group" title="Toggle visibility on public page">
+          <span className="text-xs font-semibold text-gray-500 group-hover:text-gray-400 transition">{isActive ? 'Visible' : 'Hidden'}</span>
+          <div className="relative flex items-center">
+            <input type="checkbox" className="sr-only" checked={isActive} onChange={toggleAction} />
+            <div className={`w-9 h-5 border-2 rounded-full transition-colors ${isActive ? 'bg-blue-600 border-blue-600' : 'bg-gray-800 border-gray-600'}`}></div>
+            <div className={`absolute left-[3px] top-[3px] w-3.5 h-3.5 rounded-full bg-white transition-transform ${isActive ? 'translate-x-[15px]' : 'translate-x-0'}`}></div>
+          </div>
+        </label>
+      )}
+    </div>
+    <div className={`transition-opacity duration-300 ${isActive === false ? 'opacity-40 grayscale-[50%]' : ''}`}>
+      {children}
+    </div>
   </div>
 );
 
@@ -86,6 +100,11 @@ const initialForm = {
   whatParticipantsWillReceive: [], rulesAndGuidelines: [], submissionRequirements: [],
   prizes: { firstPlace: "", secondPlace: "", thirdPlace: "" },
   speakers: [], sponsors: [],
+  visibilityConfig: {
+    showTickets: true, showAbout: true, showHighlights: true, showSpeakers: true,
+    showDomains: true, showSchedule: true, showTimeline: true, showPrizes: true,
+    showSponsors: true, showGuidelines: true
+  }
 };
 
 // ─── Main Page ─────────────────────────────────────────────────────────────
@@ -100,6 +119,11 @@ export default function CreateEventPage() {
   const addToArr = (key, val) => setForm(p => ({ ...p, [key]: [...p[key], val] }));
   const removeFromArr = (key, idx) => setForm(p => ({ ...p, [key]: p[key].filter((_, i) => i !== idx) }));
   const updateArrItem = (key, idx, updated) => setForm(p => ({ ...p, [key]: p[key].map((item, i) => i === idx ? updated : item) }));
+
+  const toggleVisibility = (key) => setForm(p => ({
+    ...p,
+    visibilityConfig: { ...p.visibilityConfig, [key]: !p.visibilityConfig[key] }
+  }));
 
   const addTicket = () => setTickets(p => [...p, emptyTicket()]);
   const removeTicket = (i) => setTickets(p => p.filter((_, idx) => idx !== i));
@@ -177,7 +201,7 @@ export default function CreateEventPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
 
         {/* Basic Info */}
-        <SectionCard title="Basic Information">
+        <SectionCard title="Basic Information" toggleAction={() => toggleVisibility('showAbout')} isActive={form.visibilityConfig.showAbout}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label>Event Title *</Label>
@@ -224,7 +248,7 @@ export default function CreateEventPage() {
         </SectionCard>
 
         {/* Prizes */}
-        <SectionCard title="Prizes">
+        <SectionCard title="Prizes" toggleAction={() => toggleVisibility('showPrizes')} isActive={form.visibilityConfig.showPrizes}>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {["firstPlace", "secondPlace", "thirdPlace"].map(place => (
               <div key={place}>
@@ -236,9 +260,15 @@ export default function CreateEventPage() {
         </SectionCard>
 
         {/* Tags, Domains, Highlights */}
-        <SectionCard title="Tags, Domains & Highlights">
+        <SectionCard title="Tags">
           <ChipAdder label="Tags" placeholder="e.g. AI, Hackathon (press Enter)" chips={form.tags} onAdd={v => addToArr("tags", v)} onRemove={i => removeFromArr("tags", i)} color="blue" />
+        </SectionCard>
+
+        <SectionCard title="Domains" toggleAction={() => toggleVisibility('showDomains')} isActive={form.visibilityConfig.showDomains}>
           <ChipAdder label="Domains" placeholder="e.g. Web Development" chips={form.domains} onAdd={v => addToArr("domains", v)} onRemove={i => removeFromArr("domains", i)} color="emerald" />
+        </SectionCard>
+
+        <SectionCard title="Highlights" toggleAction={() => toggleVisibility('showHighlights')} isActive={form.visibilityConfig.showHighlights}>
           <ChipAdder label="Highlights" placeholder="e.g. 500+ participants" chips={form.highlights} onAdd={v => addToArr("highlights", v)} onRemove={i => removeFromArr("highlights", i)} color="purple" />
         </SectionCard>
 
@@ -248,7 +278,7 @@ export default function CreateEventPage() {
         </SectionCard>
 
         {/* Rules */}
-        <SectionCard title="Rules & Guidelines">
+        <SectionCard title="Rules & Guidelines" toggleAction={() => toggleVisibility('showGuidelines')} isActive={form.visibilityConfig.showGuidelines}>
           <ChipAdder label="Rules" placeholder="e.g. Teams of max 4 members" chips={form.rulesAndGuidelines} onAdd={v => addToArr("rulesAndGuidelines", v)} onRemove={i => removeFromArr("rulesAndGuidelines", i)} color="blue" />
         </SectionCard>
 
@@ -258,7 +288,7 @@ export default function CreateEventPage() {
         </SectionCard>
 
         {/* Hackathon Flow */}
-        <SectionCard title="Hackathon Flow (Steps)">
+        <SectionCard title="Hackathon Flow (Steps)" toggleAction={() => toggleVisibility('showTimeline')} isActive={form.visibilityConfig.showTimeline}>
           <div className="space-y-3">
             {form.hackathonFlow.map((step, i) => (
               <div key={i} className="grid grid-cols-[48px_1fr_2fr_36px] gap-2 items-start bg-gray-900 p-3 rounded-xl border border-gray-700">
@@ -273,7 +303,7 @@ export default function CreateEventPage() {
         </SectionCard>
 
         {/* Event Structure */}
-        <SectionCard title="Event Structure / Schedule">
+        <SectionCard title="Event Structure / Schedule" toggleAction={() => toggleVisibility('showSchedule')} isActive={form.visibilityConfig.showSchedule}>
           <div className="space-y-3">
             {form.eventStructure.map((phase, i) => (
               <div key={i} className="grid grid-cols-[1fr_120px_2fr_36px] gap-2 items-start bg-gray-900 p-3 rounded-xl border border-gray-700">
@@ -288,7 +318,7 @@ export default function CreateEventPage() {
         </SectionCard>
 
         {/* Speakers */}
-        <SectionCard title="Speakers">
+        <SectionCard title="Speakers" toggleAction={() => toggleVisibility('showSpeakers')} isActive={form.visibilityConfig.showSpeakers}>
           <div className="space-y-4">
             {form.speakers.map((sp, i) => (
               <div key={i} className="bg-gray-900 border border-gray-700 rounded-xl p-4 space-y-3">
@@ -310,7 +340,7 @@ export default function CreateEventPage() {
         </SectionCard>
 
         {/* Sponsors */}
-        <SectionCard title="Sponsors">
+        <SectionCard title="Sponsors" toggleAction={() => toggleVisibility('showSponsors')} isActive={form.visibilityConfig.showSponsors}>
           <div className="space-y-4">
             {form.sponsors.map((sp, i) => (
               <div key={i} className="bg-gray-900 border border-gray-700 rounded-xl p-4">
@@ -330,7 +360,7 @@ export default function CreateEventPage() {
         </SectionCard>
 
         {/* ── TICKETS ── */}
-        <SectionCard title="🎟️ Tickets">
+        <SectionCard title="🎟️ Tickets" toggleAction={() => toggleVisibility('showTickets')} isActive={form.visibilityConfig.showTickets}>
           <p className="text-gray-400 text-xs -mt-2 mb-3">
             Add ticket types. Price is always <strong className="text-white">per person</strong>.
             Use <em>Registration Fields</em> to control exactly which participant data to collect.
