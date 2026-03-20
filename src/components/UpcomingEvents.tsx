@@ -15,9 +15,10 @@ const UpcomingEvents = () => {
         dispatch(fetchAllEvents());
     }, [dispatch]);
 
-    // displayed events (filter for future events if needed, or just show all)
-    // For now, let's just show all fetched events
-    const displayEvents = events;
+    // displayed events: filter for future and live events exclusively
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const displayEvents = events.filter(evt => new Date(evt.startDate).getTime() >= todayStart);
 
     return (
         <section className="relative py-24 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden">

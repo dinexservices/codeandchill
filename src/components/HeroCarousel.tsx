@@ -17,12 +17,19 @@ const HeroCarousel = () => {
         dispatch(fetchAllEvents());
     }, [dispatch]);
 
+    // Determine baseline timestamp bounded strictly to the start of today
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+
     // Use fetched events for the carousel
-    // Filter for featured if possible, or just take first 5
-    const activeEvents = events.slice(0, 5).map(evt => ({
-        ...evt,
-        image: evt.imageUrl || '/images/default-event.jpg', // Fallback image
-        shortDescription: evt.description ? evt.description.slice(0, 150) + '...' : 'Join us for this amazing event!',
+    // Filter out past events, then take first 5
+    const activeEvents = events
+        .filter(evt => new Date(evt.startDate).getTime() >= todayStart)
+        .slice(0, 5)
+        .map(evt => ({
+            ...evt,
+            image: evt.imageUrl || '/images/default-event.jpg', // Fallback image
+            shortDescription: evt.description ? evt.description.slice(0, 150) + '...' : 'Join us for this amazing event!',
         link: evt.slug ? `/events/${evt.slug}` : `/events/${evt.id}`,
         location: evt.venue,
         color: ['cyan', 'blue', 'purple', 'emerald', 'amber'][Math.floor(Math.random() * 5)] // Random color for theme

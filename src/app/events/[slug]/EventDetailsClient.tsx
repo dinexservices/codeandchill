@@ -215,7 +215,7 @@ export default function EventDetailsClient() {
             </div>
 
             {/* ── Tickets Section ─────────────────────────────────────────── */}
-            {(tickets && tickets.length > 0) && (
+            {(tickets && tickets.length > 0 && event.visibilityConfig?.showTickets !== false) && (
                 <div className="container mx-auto px-4 pb-8">
                     <ScrollAnimatedSection>
                         <h2 className="text-3xl font-bold mb-8 text-white text-center">Available Tickets</h2>
@@ -318,6 +318,7 @@ export default function EventDetailsClient() {
                 {/* About & Highlights Split Section */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 items-start">
                     {/* About Section (Left) */}
+                    {event.visibilityConfig?.showAbout !== false && (
                     <div className="lg:col-span-7">
                         <ScrollAnimatedSection>
                             <h2 className="text-4xl font-bold mb-8 text-white">
@@ -328,8 +329,10 @@ export default function EventDetailsClient() {
                             </div>
                         </ScrollAnimatedSection>
                     </div>
+                    )}
 
                     {/* Highlights Section (Right/Card) */}
+                    {event.visibilityConfig?.showHighlights !== false && (
                     <div className="lg:col-span-5">
                         <ScrollAnimatedSection delay={0.2}>
                             <div className="bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 shadow-2xl">
@@ -355,6 +358,7 @@ export default function EventDetailsClient() {
                             </div>
                         </ScrollAnimatedSection>
                     </div>
+                    )}
                 </div>
 
                 {/* Main Content Layout */}
@@ -362,7 +366,7 @@ export default function EventDetailsClient() {
                     {/* Left Column - Main Info */}
                     <div className="lg:col-span-8 space-y-20">
 
-                        {event.speakers && event.speakers.length > 0 && (
+                        {event.speakers && event.speakers.length > 0 && event.visibilityConfig?.showSpeakers !== false && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
                                     Speakers & Mentors
@@ -451,7 +455,7 @@ export default function EventDetailsClient() {
 
 
                         {/* Domains */}
-                        {event.domains && event.domains.length > 0 && (
+                        {event.domains && event.domains.length > 0 && event.visibilityConfig?.showDomains !== false && (
                             <ScrollAnimatedSection>
                                 <div className="text-center mb-12">
                                     <h2 className="text-4xl font-bold mb-4 text-white">Hackathon Domains</h2>
@@ -480,7 +484,7 @@ export default function EventDetailsClient() {
                         )}
 
                         {/* Event Structure */}
-                        {event.eventStructure && event.eventStructure.length > 0 && (
+                        {event.eventStructure && event.eventStructure.length > 0 && event.visibilityConfig?.showSchedule !== false && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
                                     Event Schedule
@@ -507,7 +511,7 @@ export default function EventDetailsClient() {
 
 
                         {/* Hackathon Flow - Timeline */}
-                        {event.hackathonFlow && event.hackathonFlow.length > 0 && (
+                        {event.hackathonFlow && event.hackathonFlow.length > 0 && event.visibilityConfig?.showTimeline !== false && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-12 flex items-center gap-3">
                                     Event Sandbox Timeline
@@ -532,7 +536,7 @@ export default function EventDetailsClient() {
                         )}
 
                         {/* Prizes */}
-                        {event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && (
+                        {event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
                                     Prizes
@@ -574,7 +578,7 @@ export default function EventDetailsClient() {
 
 
                         {/* Sponsors Section */}
-                        {event.sponsors && event.sponsors.length > 0 && (
+                        {event.sponsors && event.sponsors.length > 0 && event.visibilityConfig?.showSponsors !== false && (
                             <ScrollAnimatedSection>
                                 <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
                                     <span className="w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 text-sm">07</span>
@@ -614,6 +618,7 @@ export default function EventDetailsClient() {
 
 
                             {/* Eligibility & Rules */}
+                            {event.visibilityConfig?.showGuidelines !== false && (
                             <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm">
                                 <h3 className="text-xl font-bold mb-6">Participant Deliverables</h3>
                                 <ul className="space-y-4 mb-8">
@@ -654,6 +659,7 @@ export default function EventDetailsClient() {
                                     </div>
                                 )}
                             </div>
+                            )}
                         </div>
                     </div>
                 </div>

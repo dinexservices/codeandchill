@@ -46,6 +46,8 @@ const Navbar = () => {
                         <div className="hidden md:flex items-center gap-8">
                             <Link href="/" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Home</Link>
                             <Link href="/events" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Events</Link>
+                            <Link href="/speakers" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Speakers</Link>
+                            <Link href="/partners" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Partners</Link>
                             <Link href="/careers" className="text-slate-300 hover:text-blue-400 font-medium transition-colors">Career</Link>
                             <Link href="/contact" className="px-5 py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50">
                                 Contact Us
@@ -87,6 +89,14 @@ const Navbar = () => {
 
                         <Link href="/events" className="block text-lg font-medium text-slate-300 hover:text-blue-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                             Events
+                        </Link>
+
+                        <Link href="/speakers" className="block text-lg font-medium text-slate-300 hover:text-blue-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                            Speakers
+                        </Link>
+
+                        <Link href="/partners" className="block text-lg font-medium text-slate-300 hover:text-blue-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                            Partners
                         </Link>
 
                         <Link href="/career" className="block text-lg font-medium text-slate-300 hover:text-blue-400 transition-colors" onClick={() => setIsMobileMenuOpen(false)}>

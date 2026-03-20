@@ -28,6 +28,45 @@ const EventsPage = () => {
 
     const targetEventDate = upcomingEvent ? upcomingEvent.startDate : "";
 
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const todayEnd = todayStart + 24 * 60 * 60 * 1000 - 1;
+
+    const liveEvents = events.filter(e => {
+        const start = new Date(e.startDate).getTime();
+        return start >= todayStart && start <= todayEnd;
+    });
+
+    const upcomingEvents = events.filter(e => {
+        const start = new Date(e.startDate).getTime();
+        return start > todayEnd;
+    });
+
+    const pastEvents = events.filter(e => {
+        const start = new Date(e.startDate).getTime();
+        return start < todayStart;
+    });
+
+    const renderEventGrid = (eventList: typeof events, emptyMessage: string) => {
+        if (eventList.length === 0) {
+            return <div className="text-gray-500 py-8 italic">{emptyMessage}</div>;
+        }
+        return (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {eventList.map((event) => (
+                    <EventCard
+                        key={event.id}
+                        {...event}
+                        image={event.imageUrl}
+                        time={new Date(event.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        location={event.venue}
+                        link={event.slug ? `/events/${event.slug}` : `/events/${event.id}`}
+                    />
+                ))}
+            </div>
+        );
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-950 to-black text-white">
             <Navbar />
@@ -69,13 +108,6 @@ const EventsPage = () => {
 
             {/* Events Grid */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="flex items-center justify-between mb-12">
-                    <h2 className="text-3xl font-bold text-white flex items-center gap-3">
-                        <Calendar className="w-8 h-8 text-blue-500" />
-                        All Events
-                    </h2>
-                </div>
-
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
@@ -85,17 +117,50 @@ const EventsPage = () => {
                         Failed to load events: {error}
                     </div>
                 ) : (
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {events.map((event) => (
-                            <EventCard
-                                key={event.id}
-                                {...event}
-                                image={event.imageUrl} // Map imageUrl to image prop expected by EventCard
-                                time={new Date(event.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                location={event.venue}
-                                link={event.slug ? `/events/${event.slug}` : `/events/${event.id}`}
-                            />
-                        ))}
+                    <div className="space-y-16">
+                        {/* Live Events */}
+                        {liveEvents.length > 0 && (
+                            <div>
+                                <div className="flex items-center justify-between mb-8">
+                                    <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                                        <div className="relative flex h-5 w-5 mr-1">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-5 w-5 bg-red-500"></span>
+                                        </div>
+                                        Live Events
+                                    </h2>
+                                </div>
+                                {renderEventGrid(liveEvents, "")}
+                            </div>
+                        )}
+
+                        {/* Upcoming Events */}
+                        {(upcomingEvents.length > 0 || (liveEvents.length === 0 && pastEvents.length === 0)) && (
+                            <div>
+                                <div className="flex items-center justify-between mb-8">
+                                    <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                                        <Calendar className="w-8 h-8 text-blue-500" />
+                                        Upcoming Events
+                                    </h2>
+                                </div>
+                                {renderEventGrid(upcomingEvents, "No upcoming events scheduled at the moment.")}
+                            </div>
+                        )}
+
+                        {/* Past Events */}
+                        {pastEvents.length > 0 && (
+                            <div className="pt-8 border-t border-gray-800/50">
+                                <div className="flex items-center justify-between mb-8">
+                                    <h2 className="text-3xl font-bold text-gray-400 flex items-center gap-3 opacity-80">
+                                        <Clock className="w-8 h-8 text-gray-500" />
+                                        Past Events
+                                    </h2>
+                                </div>
+                                <div className="opacity-70 grayscale-[30%] transition-all hover:grayscale-0 hover:opacity-100">
+                                    {renderEventGrid(pastEvents, "")}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

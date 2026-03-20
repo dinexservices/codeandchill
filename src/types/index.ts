@@ -81,6 +81,20 @@ export interface EventData {
     // Timestamps
     createdAt?: string;
     updatedAt?: string;
+
+    // Admin Display Controls
+    visibilityConfig?: {
+        showTickets?: boolean;
+        showAbout?: boolean;
+        showHighlights?: boolean;
+        showSpeakers?: boolean;
+        showDomains?: boolean;
+        showSchedule?: boolean;
+        showTimeline?: boolean;
+        showPrizes?: boolean;
+        showSponsors?: boolean;
+        showGuidelines?: boolean;
+    };
 }
 
 export interface User {
