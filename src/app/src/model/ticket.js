@@ -2,13 +2,22 @@ import mongoose from "mongoose";
 
 // All possible registration fields the admin can choose from
 export const AVAILABLE_FIELDS = [
+  // Standard fields
   "name",
   "email",
   "phone",
   "college",
   "registrationNumber",
   "year",
-  "department"
+  "department",
+  // Startup / founder fields
+  "startupName",
+  "state",
+  "city",
+  "website",
+  "pitchDeck",
+  "stage",
+  "sector",
 ];
 
 const ticketSchema = new mongoose.Schema(

@@ -35,6 +35,10 @@ eventRouter.get("/get-slug/:slug", getEventBySlug);
 import getAllRegistrations from "../controller/Event/get.all.registrations.js";
 eventRouter.get("/all-registrations", getAllRegistrations);
 
+// Export registrations to Excel (admin) — ?eventId=<id> for single, omit for all
+import exportRegistrationsExcel from "../controller/Event/export.registrations.js";
+eventRouter.get("/export-excel", exportRegistrationsExcel);
+
 // ── Ticket Routes ──────────────────────────────────────────────────────────
 import createTicket from "../controller/Ticket/create.ticket.js";
 import { getTicketsByEvent, getAllTickets } from "../controller/Ticket/get.tickets.js";
