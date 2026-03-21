@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 
-// ── Status badge
+const API = process.env.NEXT_PUBLIC_API_URL;
+
+// ── Status badge ────────────────────────────────────────────────────────────
 const PayBadge = ({ status }) => {
   const map = {
     paid:    "bg-emerald-900/40 text-emerald-400 border-emerald-500/30",
@@ -16,8 +18,57 @@ const PayBadge = ({ status }) => {
   );
 };
 
-// ── Single registration row (expandable to show participants)
-const RegistrationRow = ({ reg, index }) => {
+// ── Pretty label for a participant field key ─────────────────────────────────
+const FIELD_LABELS = {
+  name:               "Name",
+  email:              "Email",
+  phone:              "Phone",
+  college:            "College",
+  registrationNumber: "Reg No.",
+  year:               "Year",
+  department:         "Department",
+  startupName:        "Startup Name",
+  state:              "State",
+  city:               "City",
+  website:            "Website",
+  pitchDeck:          "Pitch Deck",
+  stage:              "Stage",
+  sector:             "Sector",
+};
+
+// ── Derive column keys present in participants across all registrations ───────
+function deriveColumns(registrations) {
+  const seen = new Set();
+  for (const reg of registrations) {
+    for (const p of (reg.participants || [])) {
+      for (const key of Object.keys(p)) {
+        if (key !== "_id") seen.add(key);
+      }
+    }
+  }
+  // Preserve a nice order: known fields first, then extras
+  const ORDERED = ["name","email","phone","college","registrationNumber","year","department",
+                   "startupName","state","city","website","pitchDeck","stage","sector"];
+  const ordered = ORDERED.filter(k => seen.has(k));
+  const extras  = [...seen].filter(k => !ORDERED.includes(k));
+  return [...ordered, ...extras];
+}
+
+// ── Excel download helper ────────────────────────────────────────────────────
+function downloadExcel(eventId) {
+  const url = eventId
+    ? `${API}/api/v1/events/export-excel?eventId=${eventId}`
+    : `${API}/api/v1/events/export-excel`;
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// ── Single registration row (expandable) ─────────────────────────────────────
+const RegistrationRow = ({ reg, index, columns }) => {
   const [open, setOpen] = useState(false);
   const lead = reg.participants?.[0];
   return (
@@ -57,7 +108,7 @@ const RegistrationRow = ({ reg, index }) => {
         <span className="text-gray-500 text-xs shrink-0">{open ? "▲" : "▼"}</span>
       </button>
 
-      {/* Participants */}
+      {/* Participants table */}
       {open && (
         <div className="bg-[#090f1f] px-4 pb-4 pt-2 space-y-3">
           {reg.participants?.length > 0 ? (
@@ -65,21 +116,29 @@ const RegistrationRow = ({ reg, index }) => {
               <table className="w-full text-xs text-left">
                 <thead>
                   <tr className="text-gray-500 border-b border-gray-800">
-                    {["Name", "Reg No.", "Email", "Phone", "College", "Department", "Year"].map(h => (
-                      <th key={h} className="pb-2 pr-4 font-semibold whitespace-nowrap">{h}</th>
+                    {columns.map(k => (
+                      <th key={k} className="pb-2 pr-4 font-semibold whitespace-nowrap">
+                        {FIELD_LABELS[k] || k}
+                      </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {reg.participants.map((p, pi) => (
                     <tr key={pi} className="border-b border-gray-800/50 last:border-0">
-                      <td className="py-2 pr-4 text-white whitespace-nowrap">{p.name}</td>
-                      <td className="py-2 pr-4 text-gray-300 whitespace-nowrap">{p.registrationNumber}</td>
-                      <td className="py-2 pr-4 text-gray-300">{p.email}</td>
-                      <td className="py-2 pr-4 text-gray-300 whitespace-nowrap">{p.phoneNum || p.phone}</td>
-                      <td className="py-2 pr-4 text-gray-300">{p.collegeName || p.college}</td>
-                      <td className="py-2 pr-4 text-gray-300">{p.course || p.department}</td>
-                      <td className="py-2 pr-4 text-gray-300 whitespace-nowrap">{p.yearOfStudy || p.year}</td>
+                      {columns.map(k => (
+                        <td key={k} className="py-2 pr-4 text-gray-300 whitespace-nowrap max-w-[200px] truncate">
+                          {/* Handle aliased fields */}
+                          {k === "phone"      ? (p.phone      || p.phoneNum    || "") :
+                           k === "college"    ? (p.college    || p.collegeName || "") :
+                           k === "department" ? (p.department || p.course      || "") :
+                           k === "year"       ? (p.year       || p.yearOfStudy || "") :
+                           k === "name"       ? <span className="text-white font-medium">{p[k] || ""}</span> :
+                           k === "website" || k === "pitchDeck"
+                             ? (p[k] ? <a href={p[k]} target="_blank" rel="noreferrer" className="text-blue-400 underline truncate block max-w-[160px]">{p[k]}</a> : "")
+                             : (p[k] || "")}
+                        </td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>
@@ -98,10 +157,11 @@ const RegistrationRow = ({ reg, index }) => {
   );
 };
 
-// ── Event accordion card
+// ── Event accordion card ──────────────────────────────────────────────────────
 const EventCard = ({ item }) => {
   const [open, setOpen] = useState(false);
   const { event, registrations, totalRegistrations, totalParticipants, totalRevenue } = item;
+  const columns = deriveColumns(registrations);
 
   return (
     <div className="bg-[#0f172a] border border-gray-800 rounded-2xl overflow-hidden">
@@ -145,7 +205,19 @@ const EventCard = ({ item }) => {
           </div>
         </div>
 
-        <span className="text-gray-500 text-sm ml-2">{open ? "▲" : "▼"}</span>
+        {/* Export button (per event) */}
+        <button
+          onClick={(e) => { e.stopPropagation(); downloadExcel(event._id); }}
+          title="Export this event's registrations to Excel"
+          className="shrink-0 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 transition"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Excel
+        </button>
+
+        <span className="text-gray-500 text-sm ml-1">{open ? "▲" : "▼"}</span>
       </button>
 
       {/* Mobile stats row */}
@@ -163,7 +235,7 @@ const EventCard = ({ item }) => {
           ) : (
             <div className="mt-4 space-y-2">
               {registrations.map((reg, i) => (
-                <RegistrationRow key={reg._id} reg={reg} index={i} />
+                <RegistrationRow key={reg._id} reg={reg} index={i} columns={columns} />
               ))}
             </div>
           )}
@@ -173,17 +245,17 @@ const EventCard = ({ item }) => {
   );
 };
 
-// ── Main Page
+// ── Main Page ─────────────────────────────────────────────────────────────────
 export default function RegistrationsPage() {
-  const [data, setData] = useState([]);
+  const [data, setData]       = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [error, setError] = useState(null);
+  const [search, setSearch]   = useState("");
+  const [error, setError]     = useState(null);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/all-registrations`);
+        const res = await fetch(`${API}/api/v1/events/all-registrations`);
         if (!res.ok) throw new Error("Failed to fetch registrations");
         const json = await res.json();
         setData(json.data || []);
@@ -213,18 +285,31 @@ export default function RegistrationsPage() {
   return (
     <div className="max-w-5xl mx-auto pb-16">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Event Registrations</h1>
-        <p className="text-gray-400 text-sm mt-1">All registrations grouped by event.</p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Event Registrations</h1>
+          <p className="text-gray-400 text-sm mt-1">All registrations grouped by event.</p>
+        </div>
+
+        {/* Export All button */}
+        <button
+          onClick={() => downloadExcel(null)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-emerald-600/20 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 transition shrink-0"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Export All to Excel
+        </button>
       </div>
 
       {/* Summary cards */}
       {!loading && !error && (
         <div className="grid grid-cols-3 gap-4 mb-8">
           {[
-            { label: "Total Teams",        value: totals.teams,                                  color: "text-blue-400" },
-            { label: "Total Participants", value: totals.participants,                           color: "text-cyan-400" },
-            { label: "Total Revenue",      value: `₹${totals.revenue.toLocaleString()}`,         color: "text-emerald-400" },
+            { label: "Total Teams",        value: totals.teams,                          color: "text-blue-400" },
+            { label: "Total Participants", value: totals.participants,                   color: "text-cyan-400" },
+            { label: "Total Revenue",      value: `₹${totals.revenue.toLocaleString()}`, color: "text-emerald-400" },
           ].map(({ label, value, color }) => (
             <div key={label} className="bg-[#0f172a] border border-gray-800 rounded-2xl p-5 text-center">
               <p className={`text-3xl font-black ${color}`}>{value}</p>

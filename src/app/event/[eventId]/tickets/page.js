@@ -13,13 +13,22 @@ const Input = ({ className = "", ...props }) => (
 
 // ─── All available registration fields ────────────────────────────────────
 const ALL_FIELDS = [
-  { key: "name",              label: "Full Name" },
-  { key: "email",             label: "Email Address" },
-  { key: "phone",             label: "Phone Number" },
-  { key: "college",           label: "College Name" },
-  { key: "registrationNumber",label: "Registration Number" },
-  { key: "year",              label: "Year of Study" },
-  { key: "department",        label: "Department / Branch" },
+  // Standard
+  { key: "name",               label: "Full Name" },
+  { key: "email",              label: "Email Address" },
+  { key: "phone",              label: "Phone Number" },
+  { key: "college",            label: "College Name" },
+  { key: "registrationNumber", label: "Registration Number" },
+  { key: "year",               label: "Year of Study" },
+  { key: "department",         label: "Department / Branch" },
+  // Startup / founder
+  { key: "startupName",        label: "Startup Name" },
+  { key: "state",              label: "State" },
+  { key: "city",               label: "City" },
+  { key: "website",            label: "Website URL" },
+  { key: "pitchDeck",          label: "Pitch Deck URL" },
+  { key: "stage",              label: "Stage (Idea / MVP / Prototype / Revenue)" },
+  { key: "sector",             label: "Sector / Domain" },
 ];
 
 const TypeBadge = ({ type }) =>
