@@ -8,28 +8,9 @@ import transporter from "./src/config/email.js";
 dotenv.config();
 const app = express();
 
-// Enable CORS for frontend
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://localhost:3002',
-  'https://www.codenchill.tech',
-  'https://codenchill.tech',
-  'https://admin.codenchill.tech',
-  process.env.CORS_ORIGIN
-].filter(Boolean);
 
 app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (like Postman)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      callback(null, origin); // ✅ return exact origin
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: true,
   credentials: true
 }));
 app.use(cookieParser());
