@@ -79,7 +79,9 @@ export const fetchAllEvents = createAsyncThunk(
     'event/fetchAllEvents',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await api.get('/api/v1/events/all');
+            const response = await api.get('/api/v1/events/all', {
+                withCredentials: true
+            });
             return response.data.events.map(mapBackendEvent);
         } catch (error: any) {
             return rejectWithValue(error);
@@ -91,7 +93,9 @@ export const fetchEventById = createAsyncThunk(
     'event/fetchEventById',
     async (eventId: string, { rejectWithValue }) => {
         try {
-            const response = await api.get(`/api/v1/events/get/${eventId}`);
+            const response = await api.get(`/api/v1/events/get/${eventId}`, {
+                withCredentials: true
+            });
             return mapBackendEvent(response.data.event);
         } catch (error: any) {
             return rejectWithValue(error);
@@ -103,7 +107,9 @@ export const fetchEventBySlug = createAsyncThunk(
     'event/fetchEventBySlug',
     async (slug: string, { rejectWithValue }) => {
         try {
-            const response = await api.get(`/api/v1/events/get-slug/${slug}`);
+            const response = await api.get(`/api/v1/events/get-slug/${slug}`, {
+                withCredentials: true
+            });
             return mapBackendEvent(response.data.event);
         } catch (error: any) {
             return rejectWithValue(error);
@@ -115,7 +121,9 @@ export const registerForEvent = createAsyncThunk(
     'event/registerForEvent',
     async ({ eventId, registrationData }: { eventId: string; registrationData: any }, { rejectWithValue }) => {
         try {
-            const response = await api.post(`/api/v1/events/event-register/${eventId}`, registrationData);
+            const response = await api.post(`/api/v1/events/event-register/${eventId}`, registrationData, {
+                withCredentials: true
+            });
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error);
@@ -127,7 +135,9 @@ export const createPayment = createAsyncThunk(
     'event/createPayment',
     async (paymentPayload: any, { rejectWithValue }) => {
         try {
-            const response = await api.post(`/api/v1/events/create-payment`, paymentPayload);
+            const response = await api.post(`/api/v1/events/create-payment`, paymentPayload, {
+                withCredentials: true
+            });
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error);
@@ -139,7 +149,9 @@ export const verifyPayment = createAsyncThunk(
     'event/verifyPayment',
     async (paymentData: any, { rejectWithValue }) => {
         try {
-            const response = await api.post('/api/v1/events/payment-success', paymentData);
+            const response = await api.post('/api/v1/events/payment-success', paymentData, {
+                withCredentials: true
+            });
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error);
