@@ -295,7 +295,7 @@ export default function EventDetailsClient() {
 
             {/* Event Details Grid */}
             <div className="container mx-auto px-4 py-20">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-8 mb-12 md:mb-20">
+                <div className={`grid grid-cols-2 ${event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false ? 'md:grid-cols-3' : 'md:max-w-3xl md:mx-auto'} gap-3 md:gap-8 mb-12 md:mb-20`}>
                     <ScrollAnimatedSection className="p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
                         <Clock className="w-8 h-8 md:w-10 md:h-10 text-purple-400 mb-3 md:mb-4" />
                         <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Duration</h3>
@@ -308,11 +308,13 @@ export default function EventDetailsClient() {
                         <p className="text-sm md:text-base text-gray-400">{event.location}</p>
                     </ScrollAnimatedSection>
 
+                    {event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false && (
                     <ScrollAnimatedSection className="col-span-2 md:col-span-1 p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.4}>
                         <Trophy className="w-8 h-8 md:w-10 md:h-10 text-yellow-400 mb-3 md:mb-4" />
                         <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Prize Pool</h3>
                         <p className="text-sm md:text-base text-gray-400">Total prizes worth significant value</p>
                     </ScrollAnimatedSection>
+                    )}
                 </div>
 
                 {/* About & Highlights Split Section */}
