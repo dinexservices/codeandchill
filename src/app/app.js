@@ -15,6 +15,7 @@ const allowedOrigins = [
     'http://localhost:3002',
     'https://www.codenchill.tech',
     'https://codenchill.tech',
+    'https://admin.codenchill.tech',
     process.env.CORS_ORIGIN
 ].filter(Boolean);
 
