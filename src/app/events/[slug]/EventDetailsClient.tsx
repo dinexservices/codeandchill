@@ -112,19 +112,46 @@ export default function EventDetailsClient() {
     }
 
     return (
-        <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500/30">
+        <div className="min-h-screen bg-black text-white font-sans selection:bg-purple-500/30 relative">
+
+            {/* ── Full-page blurred banner background ── */}
+            {(event as any).coverImage && (
+                <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={(event as any).coverImage}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        style={{ filter: 'blur(60px)', transform: 'scale(1.15)' }}
+                    />
+                    {/* dark overlay so text stays readable */}
+                    <div className="absolute inset-0 bg-black/80" />
+                </div>
+            )}
+
             <Navbar />
 
             {/* Hero Section */}
-            <div className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-                {/* Background effects */}
-                <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
-                <div className="absolute top-0 left-0 right-0 h-[500px] bg-purple-500/10 blur-[100px] rounded-full mix-blend-screen" />
-                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-500/10 blur-[100px] rounded-full mix-blend-screen" />
+            <div className="relative flex flex-col items-center justify-center overflow-hidden pt-20 z-10">
+                {/* Subtle grid overlay */}
+                <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20 [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none" />
 
                 <div className="container mx-auto px-4 relative z-10">
-                    <div className="max-w-4xl mx-auto text-center">
+                    <div className="max-w-4xl mx-auto">
 
+                        {/* ── 16:9 Event Banner ── */}
+                        {(event as any).coverImage && (
+                            <div className="w-full aspect-video rounded-2xl overflow-hidden mb-10 shadow-2xl shadow-black/60 border border-white/10">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                    src={(event as any).coverImage}
+                                    alt={event.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                        )}
+
+                        <div className="text-center">
 
                         <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-purple-400 leading-tight">
                             {event.title}
@@ -210,13 +237,14 @@ export default function EventDetailsClient() {
                                 </div>
                             </div>
                         </div>
+                        </div>{/* text-center */}
                     </div>
                 </div>
             </div>
 
             {/* ── Tickets Section ─────────────────────────────────────────── */}
             {(tickets && tickets.length > 0 && event.visibilityConfig?.showTickets !== false) && (
-                <div className="container mx-auto px-4 pb-8">
+                <div className="container mx-auto px-4 pb-8 relative z-10">
                     <ScrollAnimatedSection>
                         <h2 className="text-3xl font-bold mb-8 text-white text-center">Available Tickets</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -294,7 +322,7 @@ export default function EventDetailsClient() {
             )}
 
             {/* Event Details Grid */}
-            <div className="container mx-auto px-4 py-20">
+            <div className="container mx-auto px-4 py-20 relative z-10">
                 <div className={`grid grid-cols-2 ${event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false ? 'md:grid-cols-3' : 'md:max-w-3xl md:mx-auto'} gap-3 md:gap-8 mb-12 md:mb-20`}>
                     <ScrollAnimatedSection className="p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
                         <Clock className="w-8 h-8 md:w-10 md:h-10 text-purple-400 mb-3 md:mb-4" />
@@ -665,9 +693,10 @@ export default function EventDetailsClient() {
                         </div>
                     </div>
                 </div>
-            </div >
-
-            <Footer />
-        </div >
+            </div>
+            <div className="relative z-10">
+                <Footer />
+            </div>
+        </div>
     );
 }

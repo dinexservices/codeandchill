@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Calendar, Clock, MapPin } from 'lucide-react';
 
 interface EventCardProps {
     id: string;
@@ -26,60 +27,68 @@ const EventCard: React.FC<EventCardProps> = ({
     location,
     image,
     price,
-    rating = 4.8,
     link,
 }) => {
     return (
-        <div className="relative group w-full aspect-3/4 rounded-4xl overflow-hidden isolate shadow-2xl transition-all duration-500 hover:shadow-blue-900/20">
+        <div className="group w-full rounded-2xl overflow-hidden bg-[#0a0f1e] border border-white/8 hover:border-blue-500/30 shadow-xl hover:shadow-blue-900/20 transition-all duration-500 flex flex-col">
 
-            {/* Background Image */}
-            <div className="absolute inset-0">
-                <Image
-                    src={image}
-                    alt={title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    priority
-                />
-                {/* Dark Gradient Overlay */}
-                <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
-            </div>
-
-            {/* Content Container */}
-            <div className="absolute inset-0 p-6 flex flex-col justify-end text-white z-10 transition-transform duration-500">
-
-                {/* Title & Description */}
-                <div className="mb-4 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-2xl font-bold mb-2 drop-shadow-md">
-                        {title}
-                    </h3>
-                    <p className="text-gray-200 text-sm font-light leading-relaxed line-clamp-3 drop-shadow-sm opacity-90 group-hover:opacity-100 transition-opacity">
-                        {description}
-                    </p>
-                </div>
-
-                {/* Badges Row */}
-                <div className="flex items-center gap-3 mb-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-75">
-                    {/* Date Badge */}
-                    <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-medium shadow-lg">
-                        {date}
+            {/* ── 16:9 Poster ── */}
+            <div className="relative w-full aspect-video overflow-hidden">
+                {image ? (
+                    <Image
+                        src={image}
+                        alt={title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        priority
+                    />
+                ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/20 to-black flex items-center justify-center">
+                        <span className="text-white/20 text-6xl font-black select-none">{title.charAt(0)}</span>
                     </div>
+                )}
+                {/* Subtle bottom fade into card body */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] via-transparent to-transparent opacity-60" />
 
-                    {/* Time Badge */}
-                    <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-medium shadow-lg">
-                        {time}
-                    </div>
-
-                    {/* Price Badge */}
-                    <div className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-xs font-medium shadow-lg">
+                {/* Price chip */}
+                {price && (
+                    <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md border border-white/10 text-white text-xs font-bold px-3 py-1 rounded-full">
                         {price === 'Free' ? 'Free' : `₹${price}`}
                     </div>
+                )}
+            </div>
+
+            {/* ── Card Body ── */}
+            <div className="flex flex-col flex-1 p-5">
+                <h3 className="text-lg font-bold text-white mb-2 leading-snug line-clamp-2 group-hover:text-blue-300 transition-colors duration-300">
+                    {title}
+                </h3>
+
+                <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-4">
+                    {description}
+                </p>
+
+                {/* Meta info */}
+                <div className="flex flex-col gap-1.5 mb-5 mt-auto">
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Calendar className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                        <span>{date}</span>
+                        <span className="text-gray-700">·</span>
+                        <Clock className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                        <span>{time}</span>
+                    </div>
+                    {location && (
+                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <MapPin className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                            <span className="truncate">{location}</span>
+                        </div>
+                    )}
                 </div>
 
-                {/* Action Button */}
-                <Link href={link || `/events/${id}`} className="block w-full translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-100">
-                    <button className="w-full bg-white text-black font-bold py-3 rounded-full hover:bg-gray-100 active:scale-[0.98] transition-all shadow-xl hover:shadow-white/20 text-sm">
-                        Reserve now
+                {/* CTA */}
+                <Link href={link || `/events/${id}`} className="block w-full">
+                    <button className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl active:scale-[0.98] transition-all text-sm shadow-lg hover:shadow-blue-500/30">
+                        View Event →
                     </button>
                 </Link>
             </div>
