@@ -1,4 +1,4 @@
-// RegisterClient — 4-step registration flow with Ticket selection + dynamic fields
+// RegisterClient — 3-step registration flow with Ticket selection + dynamic fields
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -11,7 +11,7 @@ import {
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import {
-    Users, User, ArrowRight, Loader2, ChevronLeft,
+    Users, ArrowRight, Loader2, ChevronLeft,
     Ticket as TicketIcon, CheckCircle, Tag, Users2
 } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -37,22 +37,21 @@ const emptyParticipant = (fields: string[]): Participant =>
 
 const steps = [
     { id: 1, name: 'Ticket' },
-    { id: 2, name: 'Type' },
-    { id: 3, name: 'Details' },
-    { id: 4, name: 'Payment' },
+    { id: 2, name: 'Details' },
+    { id: 3, name: 'Payment' },
 ];
 
 // ── DynamicParticipantField ────────────────────────────────────────────────
 function DynamicField({
-    fieldKey, value, onChange
-}: { fieldKey: string; value: string; onChange: (v: string) => void }) {
+    fieldKey, value, onChange, required = true
+}: { fieldKey: string; value: string; onChange: (v: string) => void; required?: boolean }) {
     const meta = FIELD_META[fieldKey] || { label: fieldKey, placeholder: "", type: "text" };
     const baseClass = "w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 focus:outline-none focus:border-cyan-500 text-white placeholder:text-slate-600";
 
     if (meta.type === "select" && fieldKey === "year") {
         return (
             <div className="space-y-1.5">
-                <label className="text-xs font-medium text-slate-400">{meta.label} *</label>
+                <label className="text-xs font-medium text-slate-400">{meta.label} {required && "*"}</label>
                 <select value={value} onChange={e => onChange(e.target.value)} className={`${baseClass} bg-black/40`}>
                     <option value="" disabled>Select year</option>
                     {YEAR_OPTIONS.map(y => <option key={y} value={y}>{y}</option>)}
@@ -62,7 +61,7 @@ function DynamicField({
     }
     return (
         <div className="space-y-1.5">
-            <label className="text-xs font-medium text-slate-400">{meta.label} *</label>
+            <label className="text-xs font-medium text-slate-400">{meta.label} {required && "*"}</label>
             <input
                 type={meta.type}
                 value={value}
@@ -88,19 +87,38 @@ export default function RegisterClient() {
 
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
-    const [participationType, setParticipationType] = useState<'individual' | 'team'>('individual');
     const [teamName, setTeamName] = useState('');
     const [teamLeaderName, setTeamLeaderName] = useState('');
     const [participants, setParticipants] = useState<Participant[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // ── Parse registration fields from ticket (supports both object and string formats) ──────
+    const parseRegistrationFields = (fields: any[]): { field: string; required: boolean }[] => {
+        if (!Array.isArray(fields) || fields.length === 0) {
+            return [
+                { field: "name", required: true },
+                { field: "email", required: true },
+                { field: "phone", required: true }
+            ];
+        }
+        return fields.map(f => {
+            if (typeof f === 'object' && f !== null && f.field) {
+                return { field: f.field, required: f.required !== false };
+            }
+            if (typeof f === 'string') {
+                return { field: f, required: true };
+            }
+            return null;
+        }).filter(Boolean);
+    };
+
     // ── Active registration fields (from selected ticket or fallback) ──────
-    const activeFields: string[] = selectedTicket?.registrationFields?.length
-        ? selectedTicket.registrationFields
-        : ["name", "email", "phone"];
+    const activeFieldsList = parseRegistrationFields(selectedTicket?.registrationFields);
+    const activeFields: string[] = activeFieldsList.map(f => f.field);
 
     // ── Group size constraints ─────────────────────────────────────────────
     const isGroupTicket = selectedTicket?.type === 'group';
+    const isTeam = isGroupTicket;
     const groupMin: number = isGroupTicket ? (selectedTicket.groupMin ?? 1) : 1;
     const groupMax: number = isGroupTicket ? (selectedTicket.groupMax ?? 4) : 1;
 
@@ -126,18 +144,7 @@ export default function RegisterClient() {
         if (!selectedTicket) return;
         const count = isGroupTicket ? groupMin : 1;
         setParticipants(Array.from({ length: count }, () => emptyParticipant(activeFields)));
-        if (isGroupTicket) setParticipationType('team');
-    }, [selectedTicket]);
-
-    // ── Sync participants when type changes (non-group tickets) ───────────
-    useEffect(() => {
-        if (isGroupTicket) return;
-        if (participationType === 'individual') {
-            setParticipants([emptyParticipant(activeFields)]);
-        } else if (participants.length === 0) {
-            setParticipants([emptyParticipant(activeFields)]);
-        }
-    }, [participationType]);
+    }, [selectedTicket, groupMin, isGroupTicket]);
 
     // ── Error toast ────────────────────────────────────────────────────────
     useEffect(() => {
@@ -205,9 +212,8 @@ export default function RegisterClient() {
             if (!selectedTicket) { toast.error('Please select a ticket'); return false; }
             return true;
         }
-        if (step === 2) return true;
-        if (step === 3) {
-            if (participationType === 'team' && selectedTicket?.requiresTeamDetails) {
+        if (step === 2) {
+            if (isTeam && selectedTicket?.requiresTeamDetails) {
                 if (!teamName.trim()) { toast.error('Team Name is required.'); return false; }
                 if (!teamLeaderName.trim()) { toast.error('Team Leader Name is required.'); return false; }
             }
@@ -217,13 +223,16 @@ export default function RegisterClient() {
             }
             for (let i = 0; i < participants.length; i++) {
                 const p = participants[i];
-                for (const field of activeFields) {
-                    if (!p[field]?.trim()) {
-                        toast.error(`Participant ${i + 1}: "${FIELD_META[field]?.label || field}" is required.`);
+                // Only validate required fields
+                const requiredFields = activeFieldsList.filter(f => f.required);
+                for (const fieldInfo of requiredFields) {
+                    if (!p[fieldInfo.field]?.trim()) {
+                        toast.error(`Participant ${i + 1}: "${FIELD_META[fieldInfo.field]?.label || fieldInfo.field}" is required.`);
                         return false;
                     }
                 }
-                if (activeFields.includes('email') && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) {
+                // Email format validation (only if email is provided)
+                if (p.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) {
                     toast.error(`Participant ${i + 1}: Invalid email address.`);
                     return false;
                 }
@@ -233,7 +242,7 @@ export default function RegisterClient() {
         return true;
     };
 
-    const nextStep = () => { if (validateStep(currentStep)) setCurrentStep(p => Math.min(p + 1, 4)); };
+    const nextStep = () => { if (validateStep(currentStep)) setCurrentStep(p => Math.min(p + 1, 3)); };
     const prevStep = () => setCurrentStep(p => Math.max(p - 1, 1));
 
     const handleSubmit = async () => {
@@ -242,8 +251,8 @@ export default function RegisterClient() {
         dispatch(createPayment({
             tktCount: participants.length,
             participants,
-            teamName: participationType === 'team' && selectedTicket?.requiresTeamDetails ? teamName : undefined,
-            teamLeaderName: participationType === 'team' && selectedTicket?.requiresTeamDetails ? teamLeaderName : undefined,
+            teamName: isTeam && selectedTicket?.requiresTeamDetails ? teamName : undefined,
+            teamLeaderName: isTeam && selectedTicket?.requiresTeamDetails ? teamLeaderName : undefined,
             eventId: (event as any).id || (event as any)._id || '',
             ticketId: selectedTicket?._id || selectedTicket?.id || undefined
         }));
@@ -307,7 +316,8 @@ export default function RegisterClient() {
                             <div className="flex flex-col h-full justify-between">
                                 <div>
                                     <h2 className="text-2xl font-bold text-white mb-2">Choose Your Ticket</h2>
-                                    <p className="text-slate-400 text-sm mb-8">Select the ticket that suits you.</p>
+                                    <p className="text-slate-400 text-sm mb-4">Select the ticket that suits you.</p>
+                                    <p className="text-slate-500 text-xs mb-6"><span className="text-cyan-400">*</span> Required field</p>
 
                                     {ticketsLoading ? (
                                         <div className="flex items-center justify-center py-16">
@@ -315,7 +325,23 @@ export default function RegisterClient() {
                                         </div>
                                     ) : !hasTickets ? (
                                         /* Fallback: No tickets configured */
-                                        <button type="button" onClick={() => setSelectedTicket({ _id: null, name: 'Standard', type: 'individual', price: pricePerPerson, groupMin: 1, groupMax: 1, registrationFields: ["name", "email", "phone", "college", "registrationNumber", "year", "department"] })}
+                                        <button type="button" onClick={() => setSelectedTicket({ 
+                                            _id: null, 
+                                            name: 'Standard', 
+                                            type: 'individual', 
+                                            price: pricePerPerson, 
+                                            groupMin: 1, 
+                                            groupMax: 1, 
+                                            registrationFields: [
+                                                { field: "name", required: true },
+                                                { field: "email", required: true },
+                                                { field: "phone", required: true },
+                                                { field: "college", required: true },
+                                                { field: "registrationNumber", required: false },
+                                                { field: "year", required: true },
+                                                { field: "department", required: false }
+                                            ] 
+                                        })}
                                             className={`w-full p-6 rounded-2xl border transition-all text-left ${selectedTicket ? 'border-cyan-500 bg-cyan-900/10' : 'border-white/10 bg-black/20 hover:border-white/30'}`}>
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
@@ -379,15 +405,23 @@ export default function RegisterClient() {
                                                         </div>
 
                                                         {/* Fields this ticket collects */}
-                                                        {tkt.registrationFields?.length > 0 && (
-                                                            <div className="mt-3 flex flex-wrap gap-1.5">
-                                                                {tkt.registrationFields.map((f: string) => (
-                                                                    <span key={f} className="text-xs px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-400">
-                                                                        {FIELD_META[f]?.label || f}
-                                                                    </span>
-                                                                ))}
-                                                            </div>
-                                                        )}
+                                                        {(() => {
+                                                            const fields = parseRegistrationFields(tkt.registrationFields);
+                                                            return fields.length > 0 && (
+                                                                <div className="mt-3 flex flex-wrap gap-1.5">
+                                                                    {fields.map((f, idx) => (
+                                                                        <span key={`${f.field}-${idx}`} className={`text-xs px-1.5 py-0.5 rounded-md border ${
+                                                                            f.required 
+                                                                                ? "bg-cyan-900/20 border-cyan-500/30 text-cyan-300"
+                                                                                : "bg-white/5 border-white/10 text-slate-500"
+                                                                        }`}>
+                                                                            {FIELD_META[f.field]?.label || f.field}
+                                                                            {f.required ? " *" : ""}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            );
+                                                        })()}
 
                                                         {isSelected && <div className="mt-3 flex items-center gap-1.5 text-cyan-400 text-sm font-medium"><CheckCircle className="w-4 h-4" /> Selected</div>}
                                                     </button>
@@ -404,60 +438,15 @@ export default function RegisterClient() {
                             </div>
                         )}
 
-                        {/* ── STEP 2: Type ────────────────────────────────────────────── */}
+                        {/* ── STEP 2: Details ─────────────────────────────────────────── */}
                         {currentStep === 2 && (
-                            <div className="flex flex-col h-full justify-between">
-                                <div>
-                                    <h2 className="text-2xl font-bold text-white mb-8">Registration Type</h2>
-                                    {isGroupTicket ? (
-                                        <div className="p-6 rounded-2xl border border-purple-500/40 bg-purple-900/10 flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                                                <Users2 className="w-6 h-6 text-purple-300" />
-                                            </div>
-                                            <div>
-                                                <p className="text-white font-bold text-lg">Group Ticket selected</p>
-                                                <p className="text-slate-400 text-sm">This ticket allows {groupMin}–{groupMax} members. You can add or remove members in the next step.</p>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="grid md:grid-cols-2 gap-6">
-                                            {(['individual', 'team'] as const).map(type => (
-                                                <button key={type} type="button" onClick={() => setParticipationType(type)}
-                                                    className={`p-8 rounded-2xl border transition-all text-left ${participationType === type ? 'border-cyan-500 bg-cyan-900/10' : 'border-white/10 bg-black/20 hover:border-white/30'}`}>
-                                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${participationType === type ? 'bg-cyan-500 text-black' : 'bg-white/10 text-white'}`}>
-                                                        {type === 'individual' ? <User className="w-6 h-6" /> : <Users className="w-6 h-6" />}
-                                                    </div>
-                                                    <h3 className={`text-xl font-bold mb-2 ${participationType === type ? 'text-white' : 'text-slate-300'}`}>
-                                                        {type === 'individual' ? 'Individual' : 'Team'}
-                                                    </h3>
-                                                    <p className="text-slate-400 text-sm">
-                                                        {type === 'individual' ? 'Register as a solo participant.' : 'Register as a team (2 or more members).'}
-                                                    </p>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="mt-8 flex justify-between">
-                                    <button onClick={prevStep} className="px-6 py-3 border border-white/10 rounded-xl font-bold hover:bg-white/5 transition-colors flex items-center gap-2 text-slate-300">
-                                        <ChevronLeft className="w-5 h-5" /> Back
-                                    </button>
-                                    <button onClick={nextStep} className="px-8 py-3 bg-cyan-600 rounded-xl font-bold hover:bg-cyan-500 transition-colors flex items-center gap-2">
-                                        Next Step <ArrowRight className="w-5 h-5" />
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* ── STEP 3: Details ─────────────────────────────────────────── */}
-                        {currentStep === 3 && (
                             <div className="space-y-6">
                                 <h2 className="text-2xl font-bold text-white mb-2">
-                                    {participationType === 'individual' ? 'Participant Details' : 'Team Details'}
+                                    {isTeam ? 'Team Details' : 'Participant Details'}
                                 </h2>
 
                                 {/* Team name + leader */}
-                                {participationType === 'team' && selectedTicket?.requiresTeamDetails && (
+                                {isTeam && selectedTicket?.requiresTeamDetails && (
                                     <div className="grid md:grid-cols-2 gap-4 p-5 bg-black/20 rounded-xl border border-white/5">
                                         <div className="space-y-1.5">
                                             <label className="text-xs font-medium text-slate-400">Team Name *</label>
@@ -500,20 +489,21 @@ export default function RegisterClient() {
                                                     <span className="w-6 h-6 rounded-full bg-cyan-900/50 text-cyan-400 flex items-center justify-center text-xs border border-cyan-500/30">
                                                         {idx + 1}
                                                     </span>
-                                                    {participationType === 'individual' ? 'Your Details' : `Member ${idx + 1}`}
+                                                    {isTeam ? `Member ${idx + 1}` : 'Your Details'}
                                                 </h3>
-                                                {participationType === 'team' && !isGroupTicket && participants.length > 1 && (
+                                                {isTeam && !isGroupTicket && participants.length > 1 && (
                                                     <button type="button" onClick={() => removeParticipant(idx)} className="text-red-400 hover:text-red-300 text-sm">Remove</button>
                                                 )}
                                             </div>
                                             {/* Dynamic fields grid */}
                                             <div className="grid md:grid-cols-2 gap-4">
-                                                {activeFields.map(fieldKey => (
+                                                {activeFieldsList.map(fieldInfo => (
                                                     <DynamicField
-                                                        key={fieldKey}
-                                                        fieldKey={fieldKey}
-                                                        value={participant[fieldKey] || ''}
-                                                        onChange={v => handleParticipantChange(idx, fieldKey, v)}
+                                                        key={fieldInfo.field}
+                                                        fieldKey={fieldInfo.field}
+                                                        value={participant[fieldInfo.field] || ''}
+                                                        onChange={v => handleParticipantChange(idx, fieldInfo.field, v)}
+                                                        required={fieldInfo.required}
                                                     />
                                                 ))}
                                             </div>
@@ -522,7 +512,7 @@ export default function RegisterClient() {
                                 </div>
 
                                 {/* Add member button (non-group, team type only) */}
-                                {participationType === 'team' && !isGroupTicket && participants.length < 4 && (
+                                {isTeam && !isGroupTicket && participants.length < 4 && (
                                     <button type="button" onClick={addParticipant}
                                         className="w-full py-3 border-2 border-dashed border-white/10 rounded-xl text-slate-400 hover:border-cyan-500/50 hover:text-cyan-400 transition-all font-medium flex items-center justify-center gap-2">
                                         + Add Team Member
@@ -540,8 +530,8 @@ export default function RegisterClient() {
                             </div>
                         )}
 
-                        {/* ── STEP 4: Payment ─────────────────────────────────────────── */}
-                        {currentStep === 4 && (
+                        {/* ── STEP 3: Payment ─────────────────────────────────────────── */}
+                        {currentStep === 3 && (
                             <div className="flex flex-col h-full justify-center max-w-lg mx-auto w-full">
                                 <h2 className="text-2xl font-bold text-white mb-8 text-center">Registration Summary</h2>
 
@@ -572,13 +562,18 @@ export default function RegisterClient() {
                                         </div>
                                     )}
                                     {/* Fields collected */}
-                                    {activeFields.length > 0 && (
+                                    {activeFieldsList.length > 0 && (
                                         <div className="pt-2 border-t border-white/10">
                                             <p className="text-slate-500 text-xs mb-2">Data collected per participant:</p>
                                             <div className="flex flex-wrap gap-1.5">
-                                                {activeFields.map(f => (
-                                                    <span key={f} className="text-xs px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-400">
-                                                        {FIELD_META[f]?.label || f}
+                                                {activeFieldsList.map((f, idx) => (
+                                                    <span key={f.field} className={`text-xs px-2 py-0.5 rounded-md border ${
+                                                        f.required 
+                                                            ? "bg-cyan-900/20 border-cyan-500/30 text-cyan-300"
+                                                            : "bg-white/5 border-white/10 text-slate-500"
+                                                    }`}>
+                                                        {FIELD_META[f.field]?.label || f.field}
+                                                        {f.required ? " *" : ""}
                                                     </span>
                                                 ))}
                                             </div>

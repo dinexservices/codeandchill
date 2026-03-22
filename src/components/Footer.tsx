@@ -12,10 +12,9 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid md:grid-cols-4 gap-8 mb-8">
                     <div className="col-span-1 md:col-span-2">
-                        <div className="flex items-center gap-2 mb-4">
-                            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
-                                Conclave Campus
-                            </span>
+                        <div className="flex items-center gap-3 mb-4">
+                            <img src="/logo.png" alt="Logo" className="h-12 w-auto" />
+                            <img src="/textlogo.png" alt="Text Logo" className="h-9 w-auto" />
                         </div>
                         <p className="text-slate-400 mb-6 max-w-sm">
                             Empowering students to build innovative AI solutions for real-world challenges. Join the movement today.
@@ -58,7 +57,7 @@ const Footer = () => {
 
                 <div className="border-t border-blue-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-slate-500 text-sm">
-                        ©{new Date().getFullYear()} Conclave Campus. All rights reserved.
+                        ©{new Date().getFullYear()} Dinex Services. All rights reserved.
                     </p>
                     <div className="text-slate-500 text-sm flex items-center gap-1">
                         Developed by <span className="font-semibold text-slate-300">Dinex Services</span>

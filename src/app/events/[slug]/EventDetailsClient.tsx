@@ -132,16 +132,16 @@ export default function EventDetailsClient() {
             <Navbar />
 
             {/* Hero Section */}
-            <div className="relative flex flex-col items-center justify-center overflow-hidden pt-20 z-10">
+            <div className="relative flex flex-col items-center justify-center overflow-hidden pt-24 pb-16 z-10">
                 {/* Subtle grid overlay */}
                 <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20 [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none" />
 
-                <div className="container mx-auto px-4 relative z-10">
-                    <div className="max-w-4xl mx-auto">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div className="max-w-5xl mx-auto">
 
                         {/* ── 16:9 Event Banner ── */}
                         {(event as any).coverImage && (
-                            <div className="w-full aspect-video rounded-2xl overflow-hidden mb-10 shadow-2xl shadow-black/60 border border-white/10">
+                            <div className="w-full aspect-video rounded-2xl overflow-hidden mb-12 shadow-2xl shadow-black/60 border border-white/10">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src={(event as any).coverImage}
@@ -153,15 +153,15 @@ export default function EventDetailsClient() {
 
                         <div className="text-center">
 
-                        <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-purple-400 leading-tight">
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-purple-400 leading-tight">
                             {event.title}
                         </h1>
 
-                        <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                        <p className="text-lg sm:text-xl text-gray-400 mb-10 max-w-3xl mx-auto leading-relaxed px-4">
                             {event.shortDescription}
                         </p>
 
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-16">
                             {event.redirectUrl ? (
                                 <a
                                     href={event.redirectUrl}
@@ -190,15 +190,15 @@ export default function EventDetailsClient() {
                         <CountdownTimer targetDate={event.startDate} />
 
                         {/* Date & Time Cards */}
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6 mt-12 px-2">
                             {/* Date Card */}
-                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-8 py-6 rounded-3xl min-w-[280px] hover:border-cyan-500/30 transition-colors group">
-                                <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors">
-                                    <Calendar className="w-7 h-7 text-cyan-400" />
+                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-6 sm:px-8 py-5 sm:py-6 rounded-2xl sm:rounded-3xl min-w-[240px] sm:min-w-[260px] hover:border-cyan-500/30 transition-colors group">
+                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors shrink-0">
+                                    <Calendar className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-400" />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-gray-400 text-sm font-medium mb-1">Event Date</p>
-                                    <p className="text-white text-xl font-bold">
+                                    <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Event Date</p>
+                                    <p className="text-white text-lg sm:text-xl font-bold">
                                         {new Date(event.startDate).toLocaleDateString('en-US', {
                                             month: 'short',
                                             day: 'numeric',
@@ -209,13 +209,13 @@ export default function EventDetailsClient() {
                             </div>
 
                             {/* Time Card */}
-                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-8 py-6 rounded-3xl min-w-[280px] hover:border-cyan-500/30 transition-colors group">
-                                <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors">
-                                    <Clock className="w-7 h-7 text-cyan-400" />
+                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-6 sm:px-8 py-5 sm:py-6 rounded-2xl sm:rounded-3xl min-w-[240px] sm:min-w-[260px] hover:border-cyan-500/30 transition-colors group">
+                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors shrink-0">
+                                    <Clock className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-400" />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-gray-400 text-sm font-medium mb-1">Time</p>
-                                    <p className="text-white text-xl font-bold">
+                                    <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Time</p>
+                                    <p className="text-white text-lg sm:text-xl font-bold">
                                         {new Date(event.startDate).toLocaleTimeString('en-US', {
                                             hour: '2-digit',
                                             minute: '2-digit'
@@ -225,13 +225,13 @@ export default function EventDetailsClient() {
                             </div>
 
                             {/* Registration Fee Card */}
-                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-8 py-6 rounded-3xl min-w-[280px] hover:border-cyan-500/30 transition-colors group">
-                                <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors">
-                                    <Target className="w-7 h-7 text-cyan-400" />
+                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-6 sm:px-8 py-5 sm:py-6 rounded-2xl sm:rounded-3xl min-w-[240px] sm:min-w-[260px] hover:border-cyan-500/30 transition-colors group">
+                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors shrink-0">
+                                    <Target className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-400" />
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-gray-400 text-sm font-medium mb-1">Registration Fee</p>
-                                    <p className="text-white text-xl font-bold">
+                                    <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Registration Fee</p>
+                                    <p className="text-white text-lg sm:text-xl font-bold">
                                         {event.price === 'Free' ? 'Free' : `₹${event.price} / person`}
                                     </p>
                                 </div>
@@ -244,16 +244,16 @@ export default function EventDetailsClient() {
 
             {/* ── Tickets Section ─────────────────────────────────────────── */}
             {(tickets && tickets.length > 0 && event.visibilityConfig?.showTickets !== false) && (
-                <div className="container mx-auto px-4 pb-8 relative z-10">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 relative z-10">
                     <ScrollAnimatedSection>
-                        <h2 className="text-3xl font-bold mb-8 text-white text-center">Available Tickets</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-white text-center">Available Tickets</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                             {tickets.map((tkt: any) => {
                                 const available = tkt.availableSlots;
                                 const isSoldOut = available !== null && available <= 0;
                                 return (
                                     <div key={tkt._id || tkt.id}
-                                        className={`relative p-6 rounded-2xl border transition-all ${
+                                        className={`relative p-5 sm:p-6 rounded-2xl border transition-all ${
                                             isSoldOut
                                                 ? 'border-white/5 bg-white/2 opacity-60'
                                                 : 'border-white/10 bg-white/5 hover:border-cyan-500/40 hover:bg-white/10'
@@ -272,10 +272,10 @@ export default function EventDetailsClient() {
                                         )}
 
                                         <div className="flex items-center gap-3 mb-4 mt-2">
-                                            <div className="w-11 h-11 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                                            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
                                                 {tkt.type === 'group' ? <Users2 className="w-5 h-5 text-cyan-400" /> : <Tag className="w-5 h-5 text-cyan-400" />}
                                             </div>
-                                            <h3 className="text-lg font-bold text-white">{tkt.name}</h3>
+                                            <h3 className="text-base sm:text-lg font-bold text-white">{tkt.name}</h3>
                                         </div>
 
                                         {tkt.description && (
@@ -284,7 +284,7 @@ export default function EventDetailsClient() {
 
                                         <div className="flex items-end justify-between mt-4">
                                             <div>
-                                                <p className="text-3xl font-bold text-cyan-400">
+                                                <p className="text-2xl sm:text-3xl font-bold text-cyan-400">
                                                     {tkt.price === 0 ? 'Free' : `₹${tkt.price}`}
                                                 </p>
                                                 {tkt.price > 0 && <p className="text-slate-500 text-xs mt-0.5">per person</p>}
@@ -322,40 +322,40 @@ export default function EventDetailsClient() {
             )}
 
             {/* Event Details Grid */}
-            <div className="container mx-auto px-4 py-20 relative z-10">
-                <div className={`grid grid-cols-2 ${event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false ? 'md:grid-cols-3' : 'md:max-w-3xl md:mx-auto'} gap-3 md:gap-8 mb-12 md:mb-20`}>
-                    <ScrollAnimatedSection className="p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative z-10">
+                <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false ? '' : 'max-w-3xl'} gap-4 sm:gap-6 lg:gap-8 mb-12 md:mb-20`}>
+                    <ScrollAnimatedSection className="p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
                         <Clock className="w-8 h-8 md:w-10 md:h-10 text-purple-400 mb-3 md:mb-4" />
-                        <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Duration</h3>
+                        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 md:mb-2">Duration</h3>
                         <p className="text-sm md:text-base text-gray-400">{event.durationHours} Hours of non-stop innovation</p>
                     </ScrollAnimatedSection>
 
-                    <ScrollAnimatedSection className="p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.2}>
+                    <ScrollAnimatedSection className="p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.2}>
                         <MapPin className="w-8 h-8 md:w-10 md:h-10 text-blue-400 mb-3 md:mb-4" />
-                        <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Location</h3>
+                        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 md:mb-2">Location</h3>
                         <p className="text-sm md:text-base text-gray-400">{event.location}</p>
                     </ScrollAnimatedSection>
 
                     {event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false && (
-                    <ScrollAnimatedSection className="col-span-2 md:col-span-1 p-5 md:p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.4}>
+                    <ScrollAnimatedSection className="p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.4}>
                         <Trophy className="w-8 h-8 md:w-10 md:h-10 text-yellow-400 mb-3 md:mb-4" />
-                        <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">Prize Pool</h3>
+                        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 md:mb-2">Prize Pool</h3>
                         <p className="text-sm md:text-base text-gray-400">Total prizes worth significant value</p>
                     </ScrollAnimatedSection>
                     )}
                 </div>
 
                 {/* About & Highlights Split Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-16 sm:mb-20 items-start">
                     {/* About Section (Left) */}
                     {event.visibilityConfig?.showAbout !== false && (
                     <div className="lg:col-span-7">
                         <ScrollAnimatedSection>
-                            <h2 className="text-4xl font-bold mb-8 text-white">
+                            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-6 sm:mb-8 text-white">
                                 About The Event
                             </h2>
                             <div className="prose prose-invert max-w-none text-gray-400">
-                                <p className="text-lg leading-relaxed">{event.longDescription || event.description}</p>
+                                <p className="text-base sm:text-lg leading-relaxed">{event.longDescription || event.description}</p>
                             </div>
                         </ScrollAnimatedSection>
                     </div>
@@ -365,14 +365,14 @@ export default function EventDetailsClient() {
                     {event.visibilityConfig?.showHighlights !== false && (
                     <div className="lg:col-span-5">
                         <ScrollAnimatedSection delay={0.2}>
-                            <div className="bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 shadow-2xl">
-                                <div className="flex items-center gap-3 mb-8">
-                                    <Trophy className="w-6 h-6 text-yellow-500" />
-                                    <h3 className="text-xl font-bold text-white">Event Highlights</h3>
+                            <div className="bg-[#0A0A0A] border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 shadow-2xl">
+                                <div className="flex items-center gap-3 mb-6 sm:mb-8">
+                                    <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" />
+                                    <h3 className="text-lg sm:text-xl font-bold text-white">Event Highlights</h3>
                                 </div>
 
                                 {event.highlights && event.highlights.length > 0 ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                         {event.highlights.map((highlight, index) => (
                                             <div key={index} className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors group">
                                                 <div className="mt-1 w-5 h-5 rounded-full border border-cyan-500/30 flex items-center justify-center shrink-0 group-hover:border-cyan-500 transition-colors">
@@ -392,16 +392,16 @@ export default function EventDetailsClient() {
                 </div>
 
                 {/* Main Content Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
                     {/* Left Column - Main Info */}
-                    <div className="lg:col-span-8 space-y-20">
+                    <div className="lg:col-span-8 space-y-16 sm:space-y-20">
 
                         {event.speakers && event.speakers.length > 0 && event.visibilityConfig?.showSpeakers !== false && (
                             <ScrollAnimatedSection>
-                                <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                                <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 flex items-center gap-3">
                                     Speakers & Mentors
                                 </h2>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                                     {event.speakers.map((speaker, index) => (
                                         <div
                                             key={index}
@@ -432,7 +432,7 @@ export default function EventDetailsClient() {
                                 {selectedSpeaker && (
                                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedSpeaker(null)}>
                                         <div
-                                            className="relative w-full max-w-lg max-h-[90vh] flex flex-col bg-[#0A0A0A] border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl overflow-hidden"
+                                            className="relative w-full max-w-lg max-h-[90vh] flex flex-col bg-[#0A0A0A] border border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 shadow-2xl overflow-hidden"
                                             onClick={(e) => e.stopPropagation()}
                                         >
                                             <button
@@ -443,8 +443,8 @@ export default function EventDetailsClient() {
                                             </button>
 
                                             <div className="overflow-y-auto pr-2 custom-scrollbar mt-2">
-                                                <div className="flex flex-col sm:flex-row gap-6 mb-6">
-                                                    <div className="w-24 h-24 sm:w-32 sm:h-32 shrink-0 rounded-2xl overflow-hidden border-2 border-blue-500/30">
+                                                <div className="flex flex-col sm:flex-row gap-5 sm:gap-6 mb-5 sm:mb-6">
+                                                    <div className="w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 shrink-0 rounded-2xl overflow-hidden border-2 border-blue-500/30">
                                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                                         <img
                                                             src={selectedSpeaker.image}
@@ -453,9 +453,9 @@ export default function EventDetailsClient() {
                                                         />
                                                     </div>
                                                     <div className="flex-1">
-                                                        <h3 className="text-2xl font-bold text-white mb-1">{selectedSpeaker.name}</h3>
+                                                        <h3 className="text-xl sm:text-2xl font-bold text-white mb-1">{selectedSpeaker.name}</h3>
                                                         {selectedSpeaker.role && (
-                                                            <p className="text-blue-400 font-medium text-lg mb-3">{selectedSpeaker.role}</p>
+                                                            <p className="text-blue-400 font-medium text-base sm:text-lg mb-3">{selectedSpeaker.role}</p>
                                                         )}
                                                         {selectedSpeaker.linkedin && (
                                                             <a
@@ -473,7 +473,7 @@ export default function EventDetailsClient() {
 
                                                 {selectedSpeaker.about && (
                                                     <div className="prose prose-invert prose-sm max-w-none">
-                                                        <p className="text-gray-300 leading-relaxed">{selectedSpeaker.about}</p>
+                                                        <p className="text-gray-300 leading-relaxed text-sm sm:text-base">{selectedSpeaker.about}</p>
                                                     </div>
                                                 )}
                                             </div>
@@ -487,12 +487,12 @@ export default function EventDetailsClient() {
                         {/* Domains */}
                         {event.domains && event.domains.length > 0 && event.visibilityConfig?.showDomains !== false && (
                             <ScrollAnimatedSection>
-                                <div className="text-center mb-12">
-                                    <h2 className="text-4xl font-bold mb-4 text-white">Hackathon Domains</h2>
-                                    <p className="text-gray-400">Select a domain to build your solution.</p>
+                                <div className="text-center mb-8 sm:mb-12">
+                                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-white">Hackathon Domains</h2>
+                                    <p className="text-gray-400 text-sm sm:text-base">Select a domain to build your solution.</p>
                                 </div>
 
-                                <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                     {event.domains.map((domain, index) => {
                                         const details = DOMAIN_DETAILS[domain] || {
                                             description: "Innovate and build solutions in this domain using cutting-edge AI technologies.",
@@ -501,11 +501,11 @@ export default function EventDetailsClient() {
                                         const Icon = details.icon;
 
                                         return (
-                                            <div key={index} className="group relative p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center text-center">
-                                                <div className="w-12 h-12 mb-4 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 group-hover:border-cyan-500/50 transition-all duration-300">
-                                                    <Icon className="w-6 h-6 text-cyan-400" />
+                                            <div key={index} className="group relative p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-cyan-500/50 hover:bg-white/10 transition-all duration-300 flex flex-col items-center justify-center text-center">
+                                                <div className="w-10 h-10 sm:w-12 sm:h-12 mb-3 sm:mb-4 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:scale-110 group-hover:border-cyan-500/50 transition-all duration-300">
+                                                    <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-cyan-400" />
                                                 </div>
-                                                <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">{domain}</h3>
+                                                <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-cyan-400 transition-colors">{domain}</h3>
                                             </div>
                                         );
                                     })}
@@ -516,20 +516,20 @@ export default function EventDetailsClient() {
                         {/* Event Structure */}
                         {event.eventStructure && event.eventStructure.length > 0 && event.visibilityConfig?.showSchedule !== false && (
                             <ScrollAnimatedSection>
-                                <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                                <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 flex items-center gap-3">
                                     Event Schedule
                                 </h2>
                                 <div className="space-y-4">
                                     {event.eventStructure.map((phase, index) => (
-                                        <div key={index} className="flex flex-col md:flex-row gap-6 p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors">
-                                            <div className="md:w-1/4 flex-shrink-0">
-                                                <span className="px-3 py-1 rounded-md bg-purple-500/20 text-purple-300 font-mono text-sm font-bold border border-purple-500/30 inline-block">
+                                        <div key={index} className="flex flex-col sm:flex-row gap-4 sm:gap-6 p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors">
+                                            <div className="sm:w-1/4 flex-shrink-0">
+                                                <span className="px-3 py-1 rounded-md bg-purple-500/20 text-purple-300 font-mono text-xs sm:text-sm font-bold border border-purple-500/30 inline-block">
                                                     {phase.time}
                                                 </span>
                                             </div>
-                                            <div className="md:w-3/4">
-                                                <h3 className="text-xl font-bold mb-2 text-white">{phase.phaseName}</h3>
-                                                <p className="text-gray-400 leading-relaxed">{phase.description}</p>
+                                            <div className="sm:w-3/4">
+                                                <h3 className="text-lg sm:text-xl font-bold mb-2 text-white">{phase.phaseName}</h3>
+                                                <p className="text-gray-400 text-sm sm:text-base leading-relaxed">{phase.description}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -543,20 +543,20 @@ export default function EventDetailsClient() {
                         {/* Hackathon Flow - Timeline */}
                         {event.hackathonFlow && event.hackathonFlow.length > 0 && event.visibilityConfig?.showTimeline !== false && (
                             <ScrollAnimatedSection>
-                                <h2 className="text-3xl font-bold mb-12 flex items-center gap-3">
+                                <h2 className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 flex items-center gap-3">
                                     Event Sandbox Timeline
                                 </h2>
                                 <div className="relative">
                                     <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-purple-500/0 via-purple-500/50 to-purple-500/0" />
 
                                     {event.hackathonFlow.map((item, index) => (
-                                        <div key={index} className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                                        <div key={index} className={`relative flex items-center mb-10 sm:mb-12 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
                                             <div className="hidden md:block w-1/2" />
                                             <div className="absolute left-4 md:left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-black border-2 border-purple-500 z-10" />
-                                            <div className="flex-1 ml-12 md:ml-0 md:px-12">
-                                                <div className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-all">
+                                            <div className="flex-1 ml-12 md:ml-0 md:px-8 lg:px-12">
+                                                <div className="p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-all">
                                                     {/* <span className="text-sm font-mono text-purple-400 mb-2 block">{item.time}</span> */}
-                                                    <h3 className="text-xl font-bold mb-2">{item.description}</h3>
+                                                    <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-2">{item.description}</h3>
                                                 </div>
                                             </div>
                                         </div>
@@ -568,35 +568,35 @@ export default function EventDetailsClient() {
                         {/* Prizes */}
                         {event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false && (
                             <ScrollAnimatedSection>
-                                <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
+                                <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 flex items-center gap-3">
                                     Prizes
                                 </h2>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                                     {event.prizes.secondPlace && (
-                                        <div className="p-6 rounded-2xl bg-gradient-to-b from-gray-500/5 to-transparent border border-gray-500/10 text-center flex flex-col items-center justify-center mt-0 md:mt-8 order-2 md:order-1 relative overflow-hidden group">
+                                        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-gray-500/5 to-transparent border border-gray-500/10 text-center flex flex-col items-center justify-center mt-0 md:mt-8 order-2 md:order-1 relative overflow-hidden group">
                                             <div className="absolute inset-0 bg-gray-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                            <div className="w-16 h-16 rounded-full bg-gray-500/10 flex items-center justify-center mb-4 border border-gray-500/20">
-                                                <span className="text-2xl font-bold text-gray-400">2</span>
+                                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gray-500/10 flex items-center justify-center mb-3 sm:mb-4 border border-gray-500/20">
+                                                <span className="text-xl sm:text-2xl font-bold text-gray-400">2</span>
                                             </div>
-                                            <h3 className="text-lg font-bold text-gray-300 mb-2">Runner Up</h3>
+                                            <h3 className="text-base sm:text-lg font-bold text-gray-300 mb-2">Runner Up</h3>
                                             <p className="text-gray-400 text-sm">{event.prizes.secondPlace}</p>
                                         </div>
                                     )}
                                     {event.prizes.firstPlace && (
-                                        <div className="p-8 rounded-2xl bg-gradient-to-b from-yellow-500/10 to-transparent border border-yellow-500/20 text-center flex flex-col items-center justify-center order-1 md:order-2 shadow-[0_0_50px_-20px_rgba(234,179,8,0.1)] relative overflow-hidden group">
+                                        <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-b from-yellow-500/10 to-transparent border border-yellow-500/20 text-center flex flex-col items-center justify-center order-1 md:order-2 shadow-[0_0_50px_-20px_rgba(234,179,8,0.1)] relative overflow-hidden group">
                                             <div className="absolute inset-0 bg-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                            <Trophy className="w-12 h-12 text-yellow-400 mb-6 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]" />
-                                            <h3 className="text-2xl font-bold text-yellow-400 mb-3">Winner</h3>
-                                            <p className="text-gray-300 font-medium">{event.prizes.firstPlace}</p>
+                                            <Trophy className="w-10 h-10 sm:w-12 sm:h-12 text-yellow-400 mb-4 sm:mb-6 drop-shadow-[0_0_15px_rgba(234,179,8,0.5)]" />
+                                            <h3 className="text-xl sm:text-2xl font-bold text-yellow-400 mb-2 sm:mb-3">Winner</h3>
+                                            <p className="text-gray-300 font-medium text-sm sm:text-base">{event.prizes.firstPlace}</p>
                                         </div>
                                     )}
                                     {event.prizes.thirdPlace && (
-                                        <div className="p-6 rounded-2xl bg-gradient-to-b from-orange-700/5 to-transparent border border-orange-700/10 text-center flex flex-col items-center justify-center mt-0 md:mt-8 order-3 relative overflow-hidden group">
+                                        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-orange-700/5 to-transparent border border-orange-700/10 text-center flex flex-col items-center justify-center mt-0 md:mt-8 order-3 relative overflow-hidden group">
                                             <div className="absolute inset-0 bg-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                            <div className="w-16 h-16 rounded-full bg-orange-700/10 flex items-center justify-center mb-4 border border-orange-700/20">
-                                                <span className="text-2xl font-bold text-orange-400">3</span>
+                                            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-orange-700/10 flex items-center justify-center mb-3 sm:mb-4 border border-orange-700/20">
+                                                <span className="text-xl sm:text-2xl font-bold text-orange-400">3</span>
                                             </div>
-                                            <h3 className="text-lg font-bold text-orange-400 mb-2">2nd Runner Up</h3>
+                                            <h3 className="text-base sm:text-lg font-bold text-orange-400 mb-2">2nd Runner Up</h3>
                                             <p className="text-gray-400 text-sm">{event.prizes.thirdPlace}</p>
                                         </div>
                                     )}
@@ -610,13 +610,13 @@ export default function EventDetailsClient() {
                         {/* Sponsors Section */}
                         {event.sponsors && event.sponsors.length > 0 && event.visibilityConfig?.showSponsors !== false && (
                             <ScrollAnimatedSection>
-                                <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-                                    <span className="w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 text-sm">07</span>
+                                <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 flex items-center gap-3">
+                                    <span className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 text-xs sm:text-sm">07</span>
                                     Our Sponsors
                                 </h2>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
                                     {event.sponsors.map((sponsor, index) => (
-                                        <div key={index} className="group p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-pink-500/30 transition-all flex items-center justify-center aspect-video relative overflow-hidden hover:bg-white/10">
+                                        <div key={index} className="group p-5 sm:p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-pink-500/30 transition-all flex items-center justify-center aspect-video relative overflow-hidden hover:bg-white/10">
                                             {sponsor.website ? (
                                                 <a href={sponsor.website} target="_blank" rel="noopener noreferrer" className="w-full h-full flex items-center justify-center">
                                                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -642,43 +642,43 @@ export default function EventDetailsClient() {
                     </div>
 
                     {/* Right Column - Sidebar */}
-                    <div className="lg:col-span-4 space-y-8">
+                    <div className="lg:col-span-4 space-y-6 sm:space-y-8">
                         {/* Prizes Widget */}
-                        <div className="sticky top-24 space-y-8">
+                        <div className="sticky top-24 space-y-6 sm:space-y-8">
 
 
                             {/* Eligibility & Rules */}
                             {event.visibilityConfig?.showGuidelines !== false && (
-                            <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm">
-                                <h3 className="text-xl font-bold mb-6">Participant Deliverables</h3>
-                                <ul className="space-y-4 mb-8">
+                            <div className="p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                                <h3 className="text-lg sm:text-xl font-bold mb-5 sm:mb-6">Participant Deliverables</h3>
+                                <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                                     {(event.whatParticipantsWillReceive || []).map((item, i) => (
                                         <li key={i} className="flex gap-3 text-gray-400">
-                                            <Gift className="w-5 h-5 text-pink-400 shrink-0" />
+                                            <Gift className="w-5 h-5 text-pink-400 shrink-0 mt-0.5" />
                                             <span className="text-sm">{item}</span>
                                         </li>
                                     ))}
                                 </ul>
 
-                                <div className="h-px bg-white/10 my-6" />
+                                <div className="h-px bg-white/10 my-5 sm:my-6" />
 
-                                <h3 className="text-xl font-bold mb-6">Submission Checks</h3>
-                                <ul className="space-y-4 mb-8">
+                                <h3 className="text-lg sm:text-xl font-bold mb-5 sm:mb-6">Submission Checks</h3>
+                                <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
                                     {(event.submissionRequirements || []).map((req, i) => (
                                         <li key={i} className="flex gap-3 text-gray-400">
-                                            <ScrollText className="w-5 h-5 text-cyan-400 shrink-0" />
+                                            <ScrollText className="w-5 h-5 text-cyan-400 shrink-0 mt-0.5" />
                                             <span className="text-sm">{req}</span>
                                         </li>
                                     ))}
                                 </ul>
 
-                                <div className="h-px bg-white/10 my-6" />
+                                <div className="h-px bg-white/10 my-5 sm:my-6" />
 
-                                <h3 className="text-xl font-bold mb-6">Rules & Guidelines</h3>
-                                <ul className="space-y-4">
+                                <h3 className="text-lg sm:text-xl font-bold mb-5 sm:mb-6">Rules & Guidelines</h3>
+                                <ul className="space-y-3 sm:space-y-4">
                                     {(event.rulesAndGuidelines || []).slice(0, 5).map((rule, i) => (
                                         <li key={`rule-${i}`} className="flex gap-3 text-gray-400">
-                                            <ShieldAlert className="w-5 h-5 text-red-400 shrink-0" />
+                                            <ShieldAlert className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                                             <span className="text-sm">{rule}</span>
                                         </li>
                                     ))}
