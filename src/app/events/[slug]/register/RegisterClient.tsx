@@ -101,15 +101,15 @@ export default function RegisterClient() {
                 { field: "phone", required: true }
             ];
         }
-        return fields.map(f => {
-            if (typeof f === 'object' && f !== null && f.field) {
-                return { field: f.field, required: f.required !== false };
+        const result: { field: string; required: boolean }[] = [];
+        for (const f of fields) {
+            if (typeof f === 'object' && f !== null && 'field' in f && typeof f.field === 'string') {
+                result.push({ field: f.field, required: f.required !== false });
+            } else if (typeof f === 'string') {
+                result.push({ field: f, required: true });
             }
-            if (typeof f === 'string') {
-                return { field: f, required: true };
-            }
-            return null;
-        }).filter(Boolean);
+        }
+        return result;
     };
 
     // ── Active registration fields (from selected ticket or fallback) ──────
