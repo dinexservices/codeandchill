@@ -69,10 +69,18 @@ const ticketSchema = new mongoose.Schema(
     },
 
     // Which fields the admin wants to collect from each participant
-    // Subset of AVAILABLE_FIELDS
+    // Array of objects with field name and required flag
+    // Example: [{ field: "name", required: true }, { field: "phone", required: false }]
     registrationFields: {
-      type: [String],
-      default: ["name", "email", "phone"]
+      type: [{
+        field: { type: String, required: true },
+        required: { type: Boolean, default: true }
+      }],
+      default: [
+        { field: "name", required: true },
+        { field: "email", required: true },
+        { field: "phone", required: true }
+      ]
     },
 
     // Whether this ticket requires collecting 'teamName' and 'teamLeaderName'

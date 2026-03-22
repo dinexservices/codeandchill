@@ -1,6 +1,4 @@
-import Ticket from "../../model/ticket.js";
-
-const VALID_FIELDS = ["name", "email", "phone", "college", "registrationNumber", "year", "department"];
+import Ticket, { AVAILABLE_FIELDS } from "../../model/ticket.js";
 
 const updateTicket = async (req, res) => {
   try {
@@ -35,10 +33,26 @@ const updateTicket = async (req, res) => {
       ticket.groupMax = 1;
     }
 
-    // Update registration fields
-    if (Array.isArray(registrationFields)) {
-      const valid = registrationFields.filter(f => VALID_FIELDS.includes(f));
-      if (valid.length > 0) ticket.registrationFields = valid;
+    // Update registration fields (supports both new { field, required } and legacy string format)
+    if (Array.isArray(registrationFields) && registrationFields.length > 0) {
+      const normalizedFields = registrationFields
+        .map(f => {
+          if (typeof f === 'object' && f !== null && f.field) {
+            if (AVAILABLE_FIELDS.includes(f.field)) {
+              return { field: f.field, required: f.required !== false };
+            }
+            return null;
+          }
+          if (typeof f === 'string' && AVAILABLE_FIELDS.includes(f)) {
+            return { field: f, required: true };
+          }
+          return null;
+        })
+        .filter(Boolean);
+      
+      if (normalizedFields.length > 0) {
+        ticket.registrationFields = normalizedFields;
+      }
     }
 
     await ticket.save();

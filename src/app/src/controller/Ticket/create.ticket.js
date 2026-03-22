@@ -1,7 +1,5 @@
-import Ticket from "../../model/ticket.js";
+import Ticket, { AVAILABLE_FIELDS } from "../../model/ticket.js";
 import Event from "../../model/event.js";
-
-const VALID_FIELDS = ["name", "email", "phone", "college", "registrationNumber", "year", "department"];
 
 const createTicket = async (req, res) => {
   try {
@@ -22,10 +20,35 @@ const createTicket = async (req, res) => {
       return res.status(400).json({ success: false, message: "Name and price are required" });
     }
 
-    // Validate registration fields
-    const fields = Array.isArray(registrationFields) && registrationFields.length > 0
-      ? registrationFields.filter(f => VALID_FIELDS.includes(f))
-      : ["name", "email", "phone"];
+    // Validate and normalize registration fields
+    // Supports both new format [{ field, required }] and legacy [string] format
+    let normalizedFields;
+    if (Array.isArray(registrationFields) && registrationFields.length > 0) {
+      normalizedFields = registrationFields
+        .map(f => {
+          // New format: { field: "name", required: true }
+          if (typeof f === 'object' && f !== null && f.field) {
+            if (AVAILABLE_FIELDS.includes(f.field)) {
+              return { field: f.field, required: f.required !== false };
+            }
+            return null;
+          }
+          // Legacy format: "name"
+          if (typeof f === 'string' && AVAILABLE_FIELDS.includes(f)) {
+            return { field: f, required: true };
+          }
+          return null;
+        })
+        .filter(Boolean);
+    }
+    
+    const fields = normalizedFields && normalizedFields.length > 0
+      ? normalizedFields
+      : [
+          { field: "name", required: true },
+          { field: "email", required: true },
+          { field: "phone", required: true }
+        ];
 
     const ticket = await Ticket.create({
       event: eventId,
