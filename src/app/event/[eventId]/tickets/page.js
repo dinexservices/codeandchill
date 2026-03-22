@@ -43,44 +43,89 @@ const emptyTicket = () => ({
   price: "",
   groupMin: 1,
   groupMax: 4,
-  registrationFields: ["name", "email", "phone"],
+  registrationFields: [
+    { field: "name", required: true },
+    { field: "email", required: true },
+    { field: "phone", required: true }
+  ],
   requiresTeamDetails: false,
   totalSlots: "",
 });
 
 // ─── FieldSelector component ──────────────────────────────────────────────
 function FieldSelector({ selected, onChange }) {
+  // selected is array of { field, required }
+  const getSelectedFields = () => selected.map(s => typeof s === 'string' ? s : s.field);
+  const isSelected = (key) => getSelectedFields().includes(key);
+  const isRequired = (key) => {
+    const item = selected.find(s => (typeof s === 'object' ? s.field : s) === key);
+    return item && typeof item === 'object' ? item.required : true;
+  };
+
   const toggle = (key) => {
-    if (selected.includes(key)) {
-      onChange(selected.filter(f => f !== key));
+    if (isSelected(key)) {
+      onChange(selected.filter(s => (typeof s === 'object' ? s.field : s) !== key));
     } else {
-      onChange([...selected, key]);
+      onChange([...selected, { field: key, required: true }]);
     }
   };
+
+  const toggleRequired = (key) => {
+    onChange(selected.map(s => {
+      if ((typeof s === 'object' ? s.field : s) === key) {
+        return { field: key, required: !isRequired(key) };
+      }
+      return s;
+    }));
+  };
+
   return (
     <div>
       <Label>Registration Fields to Collect *</Label>
-      <div className="flex flex-wrap gap-2 mt-1">
+      <p className="text-xs text-gray-500 mb-3">Click field to add/remove. Use checkbox to mark as required/optional.</p>
+      <div className="space-y-2 mt-2">
         {ALL_FIELDS.map(f => {
-          const active = selected.includes(f.key);
+          const active = isSelected(f.key);
+          const required = isRequired(f.key);
           return (
-            <button
-              key={f.key}
-              type="button"
-              onClick={() => toggle(f.key)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-                active
-                  ? "bg-blue-600/30 border-blue-500 text-blue-200"
-                  : "bg-gray-900 border-gray-700 text-gray-400 hover:border-gray-500"
-              }`}
-            >
-              {active && "✓ "}{f.label}
-            </button>
+            <div key={f.key} className={`flex items-center gap-3 p-2 rounded-lg border transition-all ${
+              active
+                ? "bg-blue-600/10 border-blue-500/40"
+                : "bg-gray-900/50 border-gray-800"
+            }`}>
+              <button
+                type="button"
+                onClick={() => toggle(f.key)}
+                className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${
+                  active
+                    ? "bg-blue-600 border-blue-500"
+                    : "border-gray-600 hover:border-gray-500"
+                }`}
+              >
+                {active && <span className="text-white text-xs">✓</span>}
+              </button>
+              <span className={`flex-1 text-sm ${active ? "text-gray-200" : "text-gray-500"}`}>
+                {f.label}
+              </span>
+              {active && (
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={required}
+                    onChange={() => toggleRequired(f.key)}
+                    className="w-3.5 h-3.5 rounded border-gray-600 bg-gray-800 text-blue-500 cursor-pointer"
+                  />
+                  <span className={`text-xs ${required ? "text-cyan-400" : "text-gray-500"}`}>
+                    {required ? "Required" : "Optional"}
+                  </span>
+                </label>
+              )}
+            </div>
           );
         })}
       </div>
       {selected.length === 0 && (
-        <p className="text-red-400 text-xs mt-1">Select at least one field.</p>
+        <p className="text-red-400 text-xs mt-2">Select at least one field.</p>
       )}
     </div>
   );
@@ -163,6 +208,20 @@ export default function TicketManagementPage() {
     } finally {
       setSaving(false);
     }
+  };
+
+  // Helper to normalize registrationFields format (handles legacy string arrays)
+  const normalizeRegistrationFields = (fields) => {
+    if (!Array.isArray(fields)) return [];
+    return fields.map(f => {
+      if (typeof f === 'object' && f !== null) {
+        return { field: f.field, required: f.required !== false };
+      }
+      if (typeof f === 'string') {
+        return { field: f, required: true };
+      }
+      return null;
+    }).filter(Boolean);
   };
 
   // ── Update ───────────────────────────────────────────────────────────────
@@ -369,7 +428,7 @@ export default function TicketManagementPage() {
                                 price: tkt.price,
                                 groupMin: tkt.groupMin || 1,
                                 groupMax: tkt.groupMax || 4,
-                                registrationFields: tkt.registrationFields || ["name", "email", "phone"],
+                                registrationFields: normalizeRegistrationFields(tkt.registrationFields),
                                 requiresTeamDetails: tkt.requiresTeamDetails || false,
                                 totalSlots: tkt.totalSlots,
                                 isActive: tkt.isActive,
@@ -401,11 +460,18 @@ export default function TicketManagementPage() {
                       </div>
                       {/* Registration fields */}
                       <div className="flex flex-wrap gap-1.5">
-                        {(tkt.registrationFields || []).map(f => {
-                          const fieldMeta = ALL_FIELDS.find(a => a.key === f);
+                        {(tkt.registrationFields || []).map((f, idx) => {
+                          const fieldKey = typeof f === 'string' ? f : f.field;
+                          const isRequired = typeof f === 'object' ? f.required !== false : true;
+                          const fieldMeta = ALL_FIELDS.find(a => a.key === fieldKey);
                           return (
-                            <span key={f} className="text-xs px-2 py-0.5 rounded-full bg-gray-800 border border-gray-700 text-gray-300">
-                              {fieldMeta?.label || f}
+                            <span key={`${fieldKey}-${idx}`} className={`text-xs px-2 py-0.5 rounded-full border ${
+                              isRequired 
+                                ? "bg-cyan-900/30 border-cyan-500/40 text-cyan-300" 
+                                : "bg-gray-800 border-gray-700 text-gray-400"
+                            }`}>
+                              {fieldMeta?.label || fieldKey}
+                              {isRequired ? " *" : ""}
                             </span>
                           );
                         })}
@@ -459,7 +525,7 @@ export default function TicketManagementPage() {
                         </div>
                       </div>
                       <FieldSelector
-                        selected={editData.registrationFields || []}
+                        selected={normalizeRegistrationFields(editData.registrationFields)}
                         onChange={v => setEditData(p => ({ ...p, registrationFields: v }))}
                       />
                       <div className="flex items-center gap-2 mt-4">
