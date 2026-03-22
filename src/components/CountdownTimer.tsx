@@ -46,11 +46,11 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
         }
 
         return (
-            <div key={interval} className="flex flex-col items-center bg-black/50 backdrop-blur-sm border border-blue-900/50 rounded-xl p-4 min-w-[80px] sm:min-w-[100px]">
-                <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tabular-nums">
+            <div key={interval} className="flex flex-col items-center bg-black/50 backdrop-blur-sm border border-blue-900/50 rounded-xl p-2.5 sm:p-4">
+                <span className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tabular-nums">
                     {String(timeLeft[interval as keyof typeof timeLeft]).padStart(2, '0')}
                 </span>
-                <span className="text-xs sm:text-sm text-slate-400 uppercase tracking-wider mt-1">
+                <span className="text-[10px] sm:text-sm text-slate-400 uppercase tracking-wider mt-1">
                     {interval}
                 </span>
             </div>
@@ -58,8 +58,8 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
     });
 
     return (
-        <div className="flex flex-wrap justify-center gap-4">
-            {timerComponents.length ? timerComponents : <span className="text-xl text-white">Event Started!</span>}
+        <div className="grid grid-cols-4 gap-2 sm:gap-4 w-full max-w-xs sm:max-w-sm mx-auto">
+            {timerComponents.length ? timerComponents : <span className="col-span-4 text-xl text-white text-center">Event Started!</span>}
         </div>
     );
 };

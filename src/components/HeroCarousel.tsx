@@ -115,20 +115,20 @@ const HeroCarousel = () => {
             </div>
 
             {/* Content */}
-            <div className="relative z-20 h-full flex items-center justify-center text-center px-4 sm:px-6 lg:px-8">
-                <div className="max-w-5xl mx-auto space-y-8">
+            <div className="relative z-20 h-full flex items-center justify-center text-center px-10 sm:px-12 lg:px-8">
+                <div className="max-w-5xl mx-auto space-y-4 sm:space-y-8">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        <span className={`inline-block px-4 py-1.5 bg-${event.color}-500/20 border border-${event.color}-400/30 text-${event.color}-300 rounded-full text-sm font-semibold`}>
+                        <span className={`inline-block px-4 py-1.5 bg-${event.color}-500/20 border border-${event.color}-400/30 text-${event.color}-300 rounded-full text-xs sm:text-sm font-semibold`}>
                             {event.date}
                         </span>
                     </motion.div>
 
                     <motion.h1
-                        className="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight leading-tight"
+                        className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight leading-tight"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
@@ -137,7 +137,7 @@ const HeroCarousel = () => {
                     </motion.h1>
 
                     <motion.p
-                        className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed"
+                        className="text-sm sm:text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed line-clamp-3 sm:line-clamp-none"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
@@ -146,20 +146,20 @@ const HeroCarousel = () => {
                     </motion.p>
 
                     <motion.div
-                        className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+                        className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-2 sm:pt-4"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.8 }}
                     >
                         <Link
                             href={event.link}
-                            className={`px-8 py-4 bg-${event.color}-500 text-white font-bold rounded-full hover:bg-${event.color}-400 transition-colors shadow-lg shadow-${event.color}-500/25 min-w-[200px] flex items-center justify-center gap-2`}
+                            className={`px-6 sm:px-8 py-3 sm:py-4 bg-${event.color}-500 text-white font-bold rounded-full hover:bg-${event.color}-400 transition-colors shadow-lg shadow-${event.color}-500/25 w-full sm:min-w-[200px] sm:w-auto flex items-center justify-center gap-2 text-sm sm:text-base`}
                         >
-                            Register Now <ArrowRight className="w-5 h-5" />
+                            Register Now <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                         </Link>
                         <Link
                             href={event.link}
-                            className="px-8 py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-full border border-white/20 hover:bg-white/20 transition-colors min-w-[200px]"
+                            className="px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-full border border-white/20 hover:bg-white/20 transition-colors w-full sm:min-w-[200px] sm:w-auto text-sm sm:text-base"
                         >
                             Learn More
                         </Link>
@@ -167,19 +167,19 @@ const HeroCarousel = () => {
 
                     {/* Quick Stats */}
                     <motion.div
-                        className="flex items-center justify-center gap-8 pt-8 text-slate-400"
+                        className="flex flex-wrap items-center justify-center gap-3 sm:gap-8 pt-2 sm:pt-8 text-slate-400 text-xs sm:text-base"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 1 }}
                     >
-                        <div className="flex items-center gap-2">
-                            <Calendar className="w-5 h-5" />
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                             <span>{event.date}</span>
                         </div>
-                        <div className="w-1.5 h-1.5 rounded-full bg-slate-600" />
-                        <div className="flex items-center gap-2">
-                            <MapPin className="w-5 h-5" />
-                            <span>{event.location}</span>
+                        <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-slate-600" />
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                            <span className="truncate max-w-[160px] sm:max-w-none">{event.location}</span>
                         </div>
                     </motion.div>
                 </div>
@@ -188,29 +188,31 @@ const HeroCarousel = () => {
             {/* Navigation Controls (Only if > 1 event) */}
             {activeEvents.length > 1 && (
                 <>
+                    {/* On mobile: arrows at bottom corners; on sm+: vertically centered */}
                     <button
                         onClick={prevSlide}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors"
+                        className="absolute left-2 sm:left-4 bottom-16 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors"
                     >
-                        <ChevronLeft className="w-6 h-6" />
+                        <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
                     <button
                         onClick={nextSlide}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors"
+                        className="absolute right-2 sm:right-4 bottom-16 sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 transition-colors"
                     >
-                        <ChevronRight className="w-6 h-6" />
+                        <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
 
                     {/* Dots */}
-                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex gap-2">
                         {activeEvents.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => setCurrentIndex(index)}
-                                className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentIndex
-                                    ? `bg-${event.color}-500 w-8`
-                                    : 'bg-white/30 hover:bg-white/50'
-                                    }`}
+                                className={`h-2 sm:h-3 rounded-full transition-all duration-300 ${
+                                    index === currentIndex
+                                        ? `bg-${event.color}-500 w-6 sm:w-8`
+                                        : 'w-2 sm:w-3 bg-white/30 hover:bg-white/50'
+                                }`}
                             />
                         ))}
                     </div>

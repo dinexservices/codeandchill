@@ -181,24 +181,21 @@ export default function EventDetailsClient() {
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </Link>
                             )}
-                            <div className="flex items-center gap-2 text-gray-400">
-                                <Users className="w-5 h-5" />
-                                <span>500+ Registered</span>
-                            </div>
+                         
                         </div>
 
                         <CountdownTimer targetDate={event.startDate} />
 
                         {/* Date & Time Cards */}
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-4 sm:gap-6 mt-12 px-2">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-6 mt-8 sm:mt-12 px-2 max-w-xl mx-auto w-full">
                             {/* Date Card */}
-                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-6 sm:px-8 py-5 sm:py-6 rounded-2xl sm:rounded-3xl min-w-[240px] sm:min-w-[260px] hover:border-cyan-500/30 transition-colors group">
-                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors shrink-0">
-                                    <Calendar className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-400" />
+                            <div className="flex items-center gap-2 sm:gap-4 bg-[#0A0A0A] border border-white/10 px-3 sm:px-8 py-4 sm:py-6 rounded-2xl sm:rounded-3xl hover:border-cyan-500/30 transition-colors group">
+                                <div className="w-9 h-9 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors shrink-0">
+                                    <Calendar className="w-5 h-5 sm:w-7 sm:h-7 text-cyan-400" />
                                 </div>
-                                <div className="text-left">
-                                    <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Event Date</p>
-                                    <p className="text-white text-lg sm:text-xl font-bold">
+                                <div className="text-left min-w-0">
+                                    <p className="text-gray-400 text-[10px] sm:text-sm font-medium mb-0.5 sm:mb-1">Event Date</p>
+                                    <p className="text-white text-sm sm:text-xl font-bold truncate">
                                         {new Date(event.startDate).toLocaleDateString('en-US', {
                                             month: 'short',
                                             day: 'numeric',
@@ -209,13 +206,13 @@ export default function EventDetailsClient() {
                             </div>
 
                             {/* Time Card */}
-                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-6 sm:px-8 py-5 sm:py-6 rounded-2xl sm:rounded-3xl min-w-[240px] sm:min-w-[260px] hover:border-cyan-500/30 transition-colors group">
-                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors shrink-0">
-                                    <Clock className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-400" />
+                            <div className="flex items-center gap-2 sm:gap-4 bg-[#0A0A0A] border border-white/10 px-3 sm:px-8 py-4 sm:py-6 rounded-2xl sm:rounded-3xl hover:border-cyan-500/30 transition-colors group">
+                                <div className="w-9 h-9 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors shrink-0">
+                                    <Clock className="w-5 h-5 sm:w-7 sm:h-7 text-cyan-400" />
                                 </div>
-                                <div className="text-left">
-                                    <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Time</p>
-                                    <p className="text-white text-lg sm:text-xl font-bold">
+                                <div className="text-left min-w-0">
+                                    <p className="text-gray-400 text-[10px] sm:text-sm font-medium mb-0.5 sm:mb-1">Time</p>
+                                    <p className="text-white text-sm sm:text-xl font-bold">
                                         {new Date(event.startDate).toLocaleTimeString('en-US', {
                                             hour: '2-digit',
                                             minute: '2-digit'
@@ -224,18 +221,7 @@ export default function EventDetailsClient() {
                                 </div>
                             </div>
 
-                            {/* Registration Fee Card */}
-                            <div className="flex items-center gap-4 bg-[#0A0A0A] border border-white/10 px-6 sm:px-8 py-5 sm:py-6 rounded-2xl sm:rounded-3xl min-w-[240px] sm:min-w-[260px] hover:border-cyan-500/30 transition-colors group">
-                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20 group-hover:border-cyan-500/50 transition-colors shrink-0">
-                                    <Target className="w-6 h-6 sm:w-7 sm:h-7 text-cyan-400" />
-                                </div>
-                                <div className="text-left">
-                                    <p className="text-gray-400 text-xs sm:text-sm font-medium mb-1">Registration Fee</p>
-                                    <p className="text-white text-lg sm:text-xl font-bold">
-                                        {event.price === 'Free' ? 'Free' : `₹${event.price} / person`}
-                                    </p>
-                                </div>
-                            </div>
+                      
                         </div>
                         </div>{/* text-center */}
                     </div>
@@ -323,24 +309,30 @@ export default function EventDetailsClient() {
 
             {/* Event Details Grid */}
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 relative z-10">
-                <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false ? '' : 'max-w-3xl'} gap-4 sm:gap-6 lg:gap-8 mb-12 md:mb-20`}>
-                    <ScrollAnimatedSection className="p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
-                        <Clock className="w-8 h-8 md:w-10 md:h-10 text-purple-400 mb-3 md:mb-4" />
-                        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 md:mb-2">Duration</h3>
-                        <p className="text-sm md:text-base text-gray-400">{event.durationHours} Hours of non-stop innovation</p>
+                <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false ? '' : 'max-w-3xl'} gap-3 sm:gap-6 lg:gap-8 mb-8 md:mb-20`}>
+                    <ScrollAnimatedSection className="flex sm:flex-col items-center sm:items-start gap-4 sm:gap-0 px-4 py-3 sm:p-6 lg:p-8 rounded-xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors">
+                        <Clock className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-purple-400 shrink-0 sm:mb-3 md:mb-4" />
+                        <div>
+                            <h3 className="text-sm sm:text-lg md:text-xl font-bold sm:mb-1 md:mb-2">Duration</h3>
+                            <p className="text-xs sm:text-sm md:text-base text-gray-400">{event.durationHours} Hours of non-stop innovation</p>
+                        </div>
                     </ScrollAnimatedSection>
 
-                    <ScrollAnimatedSection className="p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.2}>
-                        <MapPin className="w-8 h-8 md:w-10 md:h-10 text-blue-400 mb-3 md:mb-4" />
-                        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 md:mb-2">Location</h3>
-                        <p className="text-sm md:text-base text-gray-400">{event.location}</p>
+                    <ScrollAnimatedSection className="flex sm:flex-col items-center sm:items-start gap-4 sm:gap-0 px-4 py-3 sm:p-6 lg:p-8 rounded-xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.2}>
+                        <MapPin className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-blue-400 shrink-0 sm:mb-3 md:mb-4" />
+                        <div>
+                            <h3 className="text-sm sm:text-lg md:text-xl font-bold sm:mb-1 md:mb-2">Location</h3>
+                            <p className="text-xs sm:text-sm md:text-base text-gray-400">{event.location}</p>
+                        </div>
                     </ScrollAnimatedSection>
 
                     {event.prizes && (event.prizes.firstPlace || event.prizes.secondPlace || event.prizes.thirdPlace) && event.visibilityConfig?.showPrizes !== false && (
-                    <ScrollAnimatedSection className="p-5 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.4}>
-                        <Trophy className="w-8 h-8 md:w-10 md:h-10 text-yellow-400 mb-3 md:mb-4" />
-                        <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1 md:mb-2">Prize Pool</h3>
-                        <p className="text-sm md:text-base text-gray-400">Total prizes worth significant value</p>
+                    <ScrollAnimatedSection className="flex sm:flex-col items-center sm:items-start gap-4 sm:gap-0 px-4 py-3 sm:p-6 lg:p-8 rounded-xl sm:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-colors" delay={0.4}>
+                        <Trophy className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 text-yellow-400 shrink-0 sm:mb-3 md:mb-4" />
+                        <div>
+                            <h3 className="text-sm sm:text-lg md:text-xl font-bold sm:mb-1 md:mb-2">Prize Pool</h3>
+                            <p className="text-xs sm:text-sm md:text-base text-gray-400">Total prizes worth significant value</p>
+                        </div>
                     </ScrollAnimatedSection>
                     )}
                 </div>
