@@ -3,6 +3,8 @@
 import Toast from "@/component/Toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { updateEvent } from "@/store/slices/eventSlice";
 
 export default function EditableEvent({ initialEvent }) {
   const router = useRouter();
@@ -18,22 +20,16 @@ export default function EditableEvent({ initialEvent }) {
     });
   };
 
+  const dispatch = useDispatch();
+
   const handleSave = async () => {
     try {
       setLoading(true);
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/event-update/${event._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(event),
-        },
-      );
-
-      if (!res.ok) throw new Error("Update failed");
+      await dispatch(updateEvent({
+        eventId: event._id,
+        eventData: event
+      })).unwrap();
 
       setIsEditing(false);
       setToast({

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { fetchEventById, deleteEvent, updateEvent } from "@/store/slices/eventSlice";
 
 const Label = ({ children }) => (
   <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1.5">
@@ -92,6 +94,7 @@ export default function EditEventPage() {
   const router = useRouter();
   const params = useParams();
   const eventId = params?.eventId;
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(true);
   const [fetching, setFetching] = useState(true);
@@ -104,11 +107,9 @@ export default function EditEventPage() {
 
     const fetchEvent = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/get/${eventId}`);
-        const data = await res.json();
+        const ev = await dispatch(fetchEventById(eventId)).unwrap();
         
-        if (data.event) {
-          const ev = data.event;
+        if (ev) {
           setForm({
             title: ev.title || "",
             slug: ev.slug || "",
@@ -141,7 +142,7 @@ export default function EditEventPage() {
         }
       } catch (err) {
         console.error(err);
-        setToast({ type: "error", msg: "Failed to load event data" });
+        setToast({ type: "error", msg: typeof err === 'string' ? err : "Failed to load event data" });
       } finally {
         setFetching(false);
       }
@@ -177,15 +178,11 @@ export default function EditEventPage() {
     if (!confirm("⚠️ This will permanently delete the event and deactivate all its tickets. Are you sure?")) return;
     setDeleting(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/event-delete/${eventId}`, {
-        method: "DELETE",
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to delete event");
+      await dispatch(deleteEvent(eventId)).unwrap();
       setToast({ type: "success", msg: "Event deleted successfully!" });
       setTimeout(() => router.push("/"), 1500);
     } catch (err) {
-      setToast({ type: "error", msg: err.message || "Could not delete event." });
+      setToast({ type: "error", msg: typeof err === 'string' ? err : "Could not delete event." });
     } finally {
       setDeleting(false);
       setTimeout(() => setToast(null), 3500);
@@ -201,17 +198,11 @@ export default function EditEventPage() {
         durationHours: Number(form.durationHours) || 0,
         registrationFee: Number(form.registrationFee) || 0,
       };
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/event-update/${eventId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed");
+      await dispatch(updateEvent({ eventId, eventData: payload })).unwrap();
       setToast({ type: "success", msg: "Event updated successfully!" });
       setTimeout(() => router.push(`/event/${eventId}`), 1500);
     } catch (err) {
-      setToast({ type: "error", msg: err.message || "Something went wrong." });
+      setToast({ type: "error", msg: typeof err === 'string' ? err : "Something went wrong." });
     } finally {
       setSubmitting(false);
       setTimeout(() => setToast(null), 3500);

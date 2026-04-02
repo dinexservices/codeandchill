@@ -1,40 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchParticipants, clearError } from "@/store/slices/participantSlice";
 
 export default function UsersPage() {
   const { eventId } = useParams();
-
-  const [participants, setParticipants] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  
+  const { participants, loading, error } = useSelector((state) => state.participants);
 
   useEffect(() => {
-    const fetchParticipants = async () => {
-      try {
-        setLoading(true);
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/participation/${eventId}`,
-        );
-
-        if (!res.ok) throw new Error("Failed to fetch participants");
-
-        const data = await res.json();
-
-        // 🔥 FIX HERE
-        setParticipants(data.data || []);
-      } catch (err) {
-        console.error(err);
-        setError("Unable to load participants");
-      } finally {
-        setLoading(false);
-      }
+    if (eventId) {
+      dispatch(fetchParticipants(eventId));
+    }
+    return () => {
+      dispatch(clearError());
     };
-
-    if (eventId) fetchParticipants();
-  }, [eventId]);
+  }, [eventId, dispatch]);
 
   if (loading) {
     return (

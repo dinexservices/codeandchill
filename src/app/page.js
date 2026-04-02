@@ -3,11 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEvents, deleteEvent } from "@/store/slices/eventSlice";
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { events, loading, error } = useSelector((state) => state.events);
+
   const [deletingId, setDeletingId] = useState(null);
   const [toast, setToast] = useState(null);
 
@@ -16,20 +19,16 @@ export default function DashboardPage() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  const fetchEvents = async () => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/all`);
-      if (!res.ok) throw new Error("Failed to fetch");
-      const data = await res.json();
-      setEvents(Array.isArray(data.events) ? data.events : []);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    dispatch(fetchEvents());
+  }, [dispatch]);
 
-  useEffect(() => { fetchEvents(); }, []);
+  // Optionally show error toast if there is a global error fetching
+  useEffect(() => {
+    if (error) {
+      showToast("error", error);
+    }
+  }, [error]);
 
   const handleDelete = async (e, eventId) => {
     e.preventDefault();
@@ -37,15 +36,10 @@ export default function DashboardPage() {
     if (!confirm("⚠️ Permanently delete this event and deactivate all its tickets?")) return;
     setDeletingId(eventId);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/event-delete/${eventId}`, {
-        method: "DELETE",
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed");
+      await dispatch(deleteEvent(eventId)).unwrap();
       showToast("success", "Event deleted!");
-      setEvents(prev => prev.filter(ev => ev._id !== eventId));
     } catch (err) {
-      showToast("error", err.message || "Could not delete event");
+      showToast("error", typeof err === 'string' ? err : "Could not delete event");
     } finally {
       setDeletingId(null);
     }

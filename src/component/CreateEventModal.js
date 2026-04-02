@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createEvent } from "@/store/slices/eventSlice";
 import RichTextEditor from "./RichTextEditor.js";
 
 export default function CreateEventModal({ onClose }) {
@@ -48,26 +50,17 @@ export default function CreateEventModal({ onClose }) {
     }));
   };
 
+  const dispatch = useDispatch();
+
   const handleSubmit = async () => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/event-create`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        },
-      );
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message);
+      await dispatch(createEvent(form)).unwrap();
 
       alert("Event Created Successfully!");
       onClose();
     } catch (err) {
       console.error(err);
-      alert("Failed to create event");
+      alert(typeof err === 'string' ? err : "Failed to create event");
     }
   };
 

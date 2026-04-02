@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchRegistrations, clearError } from "@/store/slices/registrationSlice";
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -247,26 +249,17 @@ const EventCard = ({ item }) => {
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function RegistrationsPage() {
-  const [data, setData]       = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch]   = useState("");
-  const [error, setError]     = useState(null);
+  const dispatch = useDispatch();
+  const { registrations: data, loading, error } = useSelector((state) => state.registrations);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await fetch(`${API}/api/v1/events/all-registrations`);
-        if (!res.ok) throw new Error("Failed to fetch registrations");
-        const json = await res.json();
-        setData(json.data || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+    dispatch(fetchRegistrations());
+
+    return () => {
+      dispatch(clearError());
     };
-    load();
-  }, []);
+  }, [dispatch]);
 
   // Summary totals
   const totals = data.reduce(

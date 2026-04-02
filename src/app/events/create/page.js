@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { createEvent } from "@/store/slices/eventSlice";
+import { createTicket } from "@/store/slices/ticketSlice";
 
 // ─── Primitives ───────────────────────────────────────────────────────────
 const Label = ({ children }) => (
@@ -110,6 +113,7 @@ const initialForm = {
 // ─── Main Page ─────────────────────────────────────────────────────────────
 export default function CreateEventPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [form, setForm] = useState(initialForm);
   const [tickets, setTickets] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -146,22 +150,15 @@ export default function CreateEventPage() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const API = process.env.NEXT_PUBLIC_API_URL;
-      const res = await fetch(`${API}/api/v1/events/event-create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, durationHours: Number(form.durationHours) || 0, registrationFee: Number(form.registrationFee) || 0 }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to create event");
-      const eventId = data.data._id;
+      const eventData = { ...form, durationHours: Number(form.durationHours) || 0, registrationFee: Number(form.registrationFee) || 0 };
+      const createdEvent = await dispatch(createEvent(eventData)).unwrap();
+      const eventId = createdEvent._id;
 
       for (const tkt of tickets) {
         if (!tkt.name.trim()) continue;
-        await fetch(`${API}/api/v1/events/${eventId}/tickets`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+        await dispatch(createTicket({
+          eventId,
+          ticketData: {
             name: tkt.name, description: tkt.description,
             type: tkt.type,
             price: Number(tkt.price) || 0,
@@ -169,13 +166,13 @@ export default function CreateEventPage() {
             groupMax: tkt.type === "group" ? Number(tkt.groupMax) || 4 : 1,
             registrationFields: tkt.registrationFields,
             totalSlots: tkt.totalSlots ? Number(tkt.totalSlots) : null,
-          }),
-        });
+          }
+        })).unwrap();
       }
       setToast({ type: "success", msg: "Event created!" });
       setTimeout(() => router.push("/"), 1500);
     } catch (err) {
-      setToast({ type: "error", msg: err.message });
+      setToast({ type: "error", msg: typeof err === "string" ? err : err.message || "Failed to create event" });
     } finally {
       setSubmitting(false);
       setTimeout(() => setToast(null), 3500);

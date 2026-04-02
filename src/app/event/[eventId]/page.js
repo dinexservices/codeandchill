@@ -1,33 +1,32 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEventById, clearCurrentEvent } from "@/store/slices/eventSlice";
 import EditableEvent from "./EditableEvent";
+import { useParams } from "next/navigation";
 
-async function fetchEvent(id) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/events/get/${id}`,
-      { cache: "no-store" }
-    );
+export default function EventPage() {
+  const { eventId } = useParams();
+  const dispatch = useDispatch();
+  const { currentEvent, loading } = useSelector((state) => state.events);
 
-    if (!res.ok) return null;
+  useEffect(() => {
+    if (eventId) {
+      dispatch(fetchEventById(eventId));
+    }
+    return () => {
+      dispatch(clearCurrentEvent());
+    };
+  }, [dispatch, eventId]);
 
-    const data = await res.json();
-  
-    return data.event; // adjust if API structure differs
-  } catch (error) {
-    console.error("Fetch event error:", error);
-    return null;
-  }
-}
-
-export default async function EventPage({ params }) {
-
-  const { eventId } = await params;
-  const event = await fetchEvent(eventId);
-
-  if (!event) {
-    notFound();
+  if (loading) {
+    return <div className="min-h-screen bg-black text-white p-10 flex items-center justify-center">Loading event...</div>;
   }
 
-    return <EditableEvent initialEvent={event} />;
+  if (!currentEvent) {
+    return <div className="min-h-screen bg-black text-red-500 p-10 flex items-center justify-center">Event not found</div>;
+  }
 
+  return <EditableEvent initialEvent={currentEvent} />;
 }

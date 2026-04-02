@@ -1,7 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEventTickets, createTicket, updateTicket, deleteTicket, clearError } from "@/store/slices/ticketSlice";
+import api from "@/lib/api";
 
 // ─── Primitives ────────────────────────────────────────────────────────────
 const Label = ({ children }) => (
@@ -135,10 +138,9 @@ function FieldSelector({ selected, onChange }) {
 export default function TicketManagementPage() {
   const { eventId } = useParams();
   const router = useRouter();
-  const API = process.env.NEXT_PUBLIC_API_URL;
+  const dispatch = useDispatch();
 
-  const [tickets, setTickets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { tickets, loading, error, actionLoading } = useSelector((state) => state.tickets);
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -151,30 +153,20 @@ export default function TicketManagementPage() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  // ── Fetch tickets ────────────────────────────────────────────────────────
-  const fetchTickets = async () => {
-    setLoading(true);
-    try {
-      const resAll = await fetch(`${API}/api/v1/events/admin/all-tickets`);
-      const dataAll = await resAll.json();
-      const eventTickets = (dataAll.tickets || []).filter(
-        (t) => (t.event?._id || t.event) === eventId
-      );
-      if (eventTickets.length === 0) {
-        const resPub = await fetch(`${API}/api/v1/events/${eventId}/tickets`);
-        const dataPub = await resPub.json();
-        setTickets(dataPub.tickets || []);
-      } else {
-        setTickets(eventTickets);
-      }
-    } catch {
-      showToast("error", "Failed to load tickets");
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (eventId) {
+      dispatch(fetchEventTickets(eventId));
     }
-  };
+  }, [eventId, dispatch]);
 
-  useState(() => { if (eventId) fetchTickets(); }, [eventId]);
+  useEffect(() => {
+    if (error) {
+      showToast("error", typeof error === "string" ? error : "An error occurred");
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
+
+
 
   // ── Create ───────────────────────────────────────────────────────────────
   const handleCreate = async (e) => {
@@ -183,10 +175,9 @@ export default function TicketManagementPage() {
     if (newTicket.registrationFields.length === 0) return showToast("error", "Select at least one registration field");
     setSaving(true);
     try {
-      const res = await fetch(`${API}/api/v1/events/${eventId}/tickets`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      await dispatch(createTicket({
+        eventId,
+        ticketData: {
           name: newTicket.name,
           description: newTicket.description,
           type: newTicket.type,
@@ -196,15 +187,15 @@ export default function TicketManagementPage() {
           registrationFields: newTicket.registrationFields,
           requiresTeamDetails: newTicket.requiresTeamDetails,
           totalSlots: newTicket.totalSlots ? Number(newTicket.totalSlots) : null,
-        }),
-      });
-      if (!res.ok) throw new Error("Failed to create ticket");
+        }
+      })).unwrap();
+      
       showToast("success", "Ticket created!");
       setNewTicket(emptyTicket());
       setShowAddForm(false);
-      fetchTickets();
+      dispatch(fetchEventTickets(eventId));
     } catch (err) {
-      showToast("error", err.message);
+      showToast("error", typeof err === 'string' ? err : err.message);
     } finally {
       setSaving(false);
     }
@@ -224,52 +215,56 @@ export default function TicketManagementPage() {
     }).filter(Boolean);
   };
 
-  // ── Update ───────────────────────────────────────────────────────────────
   const handleUpdate = async (ticketId) => {
     if (!editData.registrationFields || editData.registrationFields.length === 0) {
       return showToast("error", "Select at least one registration field");
     }
     setSaving(true);
     try {
-      const res = await fetch(`${API}/api/v1/events/tickets/${ticketId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      await dispatch(updateTicket({
+        ticketId,
+        ticketData: {
           ...editData,
           price: Number(editData.price) || 0,
           groupMin: editData.type === "group" ? Number(editData.groupMin) || 1 : 1,
           groupMax: editData.type === "group" ? Number(editData.groupMax) || 4 : 1,
           requiresTeamDetails: editData.requiresTeamDetails,
           totalSlots: editData.totalSlots ? Number(editData.totalSlots) : null,
-        }),
-      });
-      if (!res.ok) throw new Error("Failed to update");
+        }
+      })).unwrap();
+
       showToast("success", "Ticket updated!");
       setEditingId(null);
-      fetchTickets();
+      dispatch(fetchEventTickets(eventId));
     } catch (err) {
-      showToast("error", err.message);
+      showToast("error", typeof err === 'string' ? err : err.message);
     } finally {
       setSaving(false);
     }
   };
 
-  // ── Delete / Activate ─────────────────────────────────────────────────
   const handleDelete = async (ticketId) => {
     if (!confirm("Deactivate this ticket?")) return;
-    await fetch(`${API}/api/v1/events/tickets/${ticketId}`, { method: "DELETE" });
-    showToast("success", "Deactivated");
-    fetchTickets();
+    try {
+      await dispatch(deleteTicket(ticketId)).unwrap();
+      showToast("success", "Deactivated");
+      dispatch(fetchEventTickets(eventId));
+    } catch (err) {
+      showToast("error", typeof err === 'string' ? err : "Failed to deactivate");
+    }
   };
 
   const handleActivate = async (ticketId) => {
-    await fetch(`${API}/api/v1/events/tickets/${ticketId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isActive: true }),
-    });
-    showToast("success", "Activated");
-    fetchTickets();
+    try {
+      await dispatch(updateTicket({
+        ticketId,
+        ticketData: { isActive: true }
+      })).unwrap();
+      showToast("success", "Activated");
+      dispatch(fetchEventTickets(eventId));
+    } catch (err) {
+      showToast("error", typeof err === 'string' ? err : "Failed to activate");
+    }
   };
 
   // ── Render ────────────────────────────────────────────────────────────
