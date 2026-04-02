@@ -8,6 +8,8 @@ import transporter from "./src/config/email.js";
 dotenv.config();
 const app = express();
 
+// Completely disable Express generating ETags to prevent '304 Not Modified' browser cache CORS issues
+app.set('etag', false);
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -21,16 +23,31 @@ const allowedOrigins = [
   "https://api.codenchill.tech"
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-}));
+// Custom robust CORS middleware to prevent CDN/Browser caching mismatches
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (!origin || allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin || "*");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+  }
+  
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  
+  // CRITICAL: Tells CDNs and browsers to cache responses separately per Origin
+  res.setHeader("Vary", "Origin");
+  
+  // Prevent aggressive browser caching on API routes completely to avoid 304 CORS loop
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+  
+  next();
+});
 app.use(cookieParser());
 import webhookPayment from "./src/controller/webhookPayment.js";
 
