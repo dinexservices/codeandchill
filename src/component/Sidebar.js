@@ -50,8 +50,8 @@ export default function Sidebar() {
           </li>
         )}
 
-        {/* Settings */}
-        {navLink("/admin/settings", "Settings")}
+        {/* Settings - Commented out to prevent 404 errors as page does not exist yet */}
+        {/* {navLink("/admin/settings", "Settings")} */}
       </ul>
     </div>
   );

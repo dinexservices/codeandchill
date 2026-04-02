@@ -4,7 +4,7 @@ import api from '@/lib/api';
 export const fetchRegistrations = createAsyncThunk('registrations/fetchAll', async (_, { rejectWithValue }) => {
   try {
     const response = await api.get('/api/v1/events/all-registrations');
-    return response.data.registrations || response.data;
+    return response.data.data || response.data.registrations || response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || 'Failed to fetch registrations');
   }
