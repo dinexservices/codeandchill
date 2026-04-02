@@ -9,8 +9,26 @@ dotenv.config();
 const app = express();
 
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:3002",
+  "http://localhost:3003",
+  "https://www.codenchill.tech",
+  "https://codenchill.tech",
+  "https://admin.codenchill.tech",
+  "https://organizer.codenchill.tech",
+  "https://api.codenchill.tech"
+];
+
 app.use(cors({
-  origin: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 app.use(cookieParser());
